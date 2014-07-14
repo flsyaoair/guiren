@@ -1,0 +1,109 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li class="active"><a href="/Project/Issue/((ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="IssueCtrl" ng-init="query()">
+    <div class="panel-heading"><i class="fa fa-bug fa-fw"></i>问题列表</div>
+    <div class="panel-body">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <a href="/Issue/Create/((ProjectId))" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新问题</a>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="问题标题" name="Subject" ng-model="Query.Subject" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" ng-model="Query.AssignTo">
+                        <option value="0">所有人</option>
+                        <option value="-1">指派给->我</option>
+                        {% for member in MemberList %}
+                        <option value="((member.UserId))">((member.Nick))</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" ng-model="Query.CategoryId">
+                        <option value="-1">所有分类</option>
+                        {% for category in Category %}
+                        <option value="((category.CategoryId))">((category.CategoryName))</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active" ng-click="Query.Open=!Query.Open">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Open"></i>打开
+                        </label>
+                        <label class="btn btn-default" ng-click="Query.Fixed=!Query.Fixed">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Fixed"></i>已解决
+                        </label>
+                        <label class="btn btn-default" ng-click="Query.Closed=!Query.Closed">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Closed"></i>已关闭
+                        </label>
+                        <label class="btn btn-default" ng-click="Query.Canceled=!Query.Canceled">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Canceled"></i>已取消
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找问题</button>
+                </div>
+            </div>
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-show="IssueList.length<=0">
+                    <div class="alert alert-success text-center">
+                        <h1>未找到任何问题<i class="fa fa-smile-o"></i></h1>
+                    </div>
+                </div>
+                <div ng-repeat="Issue in IssueList">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <s ng-show="Issue.Status==3||Issue.Status==4">
+                                <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead">
+                                    {{Issue.Subject}}
+                                </a>
+                            </s>
+                            <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead" ng-show="Issue.Status==1||Issue.Status==2">
+                                {{Issue.Subject}}
+                            </a>
+                            <span ng-switch on="Issue.Priority">
+                                <strong class="label label-danger" ng-switch-when="1">高</strong>
+                                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                <strong class="label label-default" ng-switch-when="3">低</strong>
+                            </span>
+                            <span ng-switch on="Issue.Status">
+                                <strong class="label label-info" ng-switch-when="1">打开</strong>
+                                <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                                <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                                <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="问题分类 {{Issue.Category}}">{{Issue.Category}}</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="指派给 {{Issue.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Issue.AssignTo}}</span>
+                        </div>
+                        <div class="col-sm-3">
+                            更新于 {{Issue.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                <div class="text-center">
+                    <ul class="pager">
+                        <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
+                        <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
+                        <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

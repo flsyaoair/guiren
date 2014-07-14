@@ -1,0 +1,48 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li class="active"><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li><a href="/Project/Issue/((ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="TaskCreateCtrl" ng-init="Task.ProjectId=((ProjectId))">
+    <div class="panel-heading"><i class="fa fa-plus fa-fw"></i>创建新任务</div>
+    <div class="panel-body">
+        <form role="form" name="createTaskForm">
+            <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>创建新任务成功!</strong>
+            </div>
+            <div class="form-group">
+                <label>任务名称<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="TaskName" name="TaskName" ng-model="Task.TaskName" placeholder="任务名称" required />
+                <div ng-show="createTaskForm.TaskName.$dirty&&createTaskForm.TaskName.$error.required" class="text-danger">请输入任务名称</div>
+            </div>
+            <div class="form-group">
+                <label>指派给<span class="text-danger">*</span></label>
+                <select class="form-control" ng-model="Task.AssignTo">
+                    <option value="-1">我</option>
+                    {% for member in MemberList %}
+                    <option value="((member.UserId))">((member.Nick))</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>优先级<span class="text-danger">*</span></label>
+                <select class="form-control" ng-model="Task.Priority">
+                    <option value="1">高</option>
+                    <option value="2">中</option>
+                    <option value="3">低</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>详细描述</label>
+                <script id="editor" type="text/plain">
+                </script>
+            </div>
+            <button type="button" id="btnCreate" class="btn btn-primary" ng-disabled="createTaskForm.$invalid" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>创建</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

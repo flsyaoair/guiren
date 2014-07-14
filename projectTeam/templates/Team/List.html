@@ -1,0 +1,67 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li><a href="/Project/Issue/((ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li class="active"><a href="/Project/Team/((ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="TeamCtrl" ng-init="ProjectId=((ProjectId));GetMemberCandidate();GetMemberInProject();Creator=((Creator));CurrentUser=((CurrentUser))">
+    <div class="panel-heading"><i class="fa fa-tasks fa-fw"></i>项目团队</div>
+    <div class="panel-body">
+        <form class="form-inline" role="form" ng-show="Creator==CurrentUser">
+            <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>添加新成员成功!</strong>
+            </div>
+            <div class="alert alert-success alert-dismissable" ng-show="RemoveSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>删除成员成功!</strong>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                <input type="text" class="form-control" ng-model="Word" placeholder="请输入待添加成员的电子邮件/昵称" />
+                <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+            </div>
+            <div class="notice notice-info row" ng-show="(MemberCandidate | filter:Word).length>0 && Word.length>0">
+                <div ng-repeat="Member in MemberCandidate | filter:Word">
+                    <div class="col-sm-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body text-center">
+                                <p>
+                                    <strong>{{Member.Nick}}</strong>
+                                </p>
+                                <p class="text-muted">{{Member.Email}}</p>
+                                <p>
+                                    <button type="button" class="btn btn-success" ng-click="AddMember(Member.Email)"><i class="fa fa-plus-square fa-fw"></i>添加</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div ng-repeat="Member in MemberList">
+                        <div class="col-sm-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <p>
+                                        <strong>{{Member.Nick}}</strong>
+                                    </p>
+                                    <p class="text-muted">{{Member.Email}}</p>
+                                    <p>
+                                        <button ng-show="Creator==CurrentUser" type="button" ng-disabled="Creator==Member.UserId" class="btn btn-danger" ng-click="RemoveMember(Member.UserId)"><i class="fa fa-trash-o fa-fw"></i>移除</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

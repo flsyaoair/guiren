@@ -1,0 +1,105 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li class="active"><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li><a href="/Project/Issue/((ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="TaskCtrl" ng-init="query()">
+    <div class="panel-heading"><i class="fa fa-tasks fa-fw"></i>任务列表</div>
+    <div class="panel-body">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <a href="/Task/Create/((ProjectId))" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新任务</a>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="任务名称" name="TaskName" ng-model="Query.TaskName" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" ng-model="Query.AssignTo">
+                        <option value="0">所有人</option>
+                        <option value="-1">指派给->我</option>
+                        {% for member in MemberList %}
+                        <option value="((member.UserId))">((member.Nick))</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active" ng-click="Query.New=!Query.New">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.New"></i>新创建
+                        </label>
+                        <label class="btn btn-default active" ng-click="Query.InProgress=!Query.InProgress">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.InProgress"></i>进行中
+                        </label>
+                        <label class="btn btn-default" ng-click="Query.Completed=!Query.Completed">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Completed"></i>已完成
+                        </label>
+                        <label class="btn btn-default" ng-click="Query.Canceled=!Query.Canceled">
+                            <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Canceled"></i>已取消
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找任务</button>
+                </div>
+            </div>
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-show="TaskList.length<=0">
+                    <div class="alert alert-success text-center">
+                        <h1>未找到任何任务<i class="fa fa-smile-o"></i></h1>
+                    </div>
+                </div>
+                <div ng-repeat="Task in TaskList">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <s ng-show="Task.Status==3||Task.Status==4">
+                                <a href="/Task/Detail/{{Task.TaskId}}" class="lead">{{Task.TaskName}}</a>
+                            </s>
+                            <a href="/Task/Detail/{{Task.TaskId}}" class="lead" ng-show="Task.Status==1||Task.Status==2">{{Task.TaskName}}</a>
+                            <span ng-switch on="Task.Priority" class="text-right">
+                                <strong class="label label-danger" ng-switch-when="1">高</strong>
+                                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                <strong class="label label-default" ng-switch-when="3">低</strong>
+                            </span>
+                            <span ng-switch on="Task.Status" class="text-right">
+                                <strong class="label label-info" ng-switch-when="1">新创建</strong>
+                                <strong class="label label-primary" ng-switch-when="2">进行中</strong>
+                                <strong class="label label-success" ng-switch-when="3">已完成</strong>
+                                <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="工时：{{Task.Effort}} 小时"><i class="fa fa-clock-o fa-fw"></i>{{Task.Effort}} 小时</span>
+                        </div>
+                        <div class="col-sm-3">
+                            更新于 {{Task.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{Task.Progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ Task .Progress; }}%">
+                                    <strong>{{Task.Progress}}%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <ul class="pager">
+                        <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
+                        <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
+                        <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

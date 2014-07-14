@@ -1,0 +1,89 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((Task.ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li class="active"><a href="/Project/Task/((Task.ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li><a href="/Project/Issue/((Task.ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((Task.ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="TaskUpdateCtrl" ng-init="Task.TaskId=((Task.TaskId));Task.TaskName='((Task.TaskName))';Task.AssignTo=((Task.AssignTo));Task.Priority=((Task.Priority));Task.Progress=((Task.Progress));Task.Status=((Task.Status));Task.Effort=0;Task.ProjectId=((Task.ProjectId))">
+    <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Task.TaskName}}</strong><strong class="pull-right">((Creator)) 创建于 ((Task.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+    <div class="panel-body">
+        <form role="form" name="updateTaskForm">
+            <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>任务更新成功!</strong>
+            </div>
+            <div class="alert alert-success alert-dismissable" ng-show="DeleteSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>任务删除成功!</strong>
+            </div>
+            <div class="form-group">
+                <label>任务名称<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="TaskName" ng-model="Task.TaskName" placeholder="任务名称" required />
+                <div ng-show="updateTaskForm.TaskName.$dirty&&updateTaskForm.TaskName.$error.required" class="text-danger">请输入任务名称</div>
+            </div>
+            <div class="form-group">
+                <label>指派给</label>
+                <select class="form-control" ng-model="Task.AssignTo">
+                    <option value="-1">我</option>
+                    {% for member in MemberList %}
+                    <option value="((member.UserId))">((member.Nick))</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>优先级</label>
+                <select class="form-control" ng-model="Task.Priority">
+                    <option value="1">高</option>
+                    <option value="2">中</option>
+                    <option value="3">低</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>进度</label>
+                <select class="form-control" ng-model="Task.Progress">
+                    <option value="0">0%</option>
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50">50%</option>
+                    <option value="60">60%</option>
+                    <option value="70">70%</option>
+                    <option value="80">80%</option>
+                    <option value="90">90%</option>
+                    <option value="100">100%</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select class="form-control" ng-model="Task.Status">
+                    <option value="1">新创建</option>
+                    <option value="2">进行中</option>
+                    <option value="3">已完成</option>
+                    <option value="4">已取消</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>累加工时(小时)</label>
+                <input type="text" class="form-control" name="Effort" ng-model="Task.Effort" integer placeholder="本次任务新加工时" />
+                <div ng-show="updateTaskForm.Effort.$dirty&&updateTaskForm.Effort.$error.integer" class="text-danger">请输入一个整数</div>
+            </div>
+            <div class="form-group">
+                <label>详细描述</label>
+                <script id="editor" type="text/plain">
+                    ((Task.Description|safe))
+                </script>
+            </div>
+            <button type="button" id="btnUpdate" ng-disabled="updateTaskForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
+            {% if Task.Creator==CurrentUser %}
+            <button type="button" id="btnDelete" class="btn btn-danger" data-loading-text="正在删除" ng-click="Delete()"><i class="fa fa-trash-o fa-fw"></i>删除</button>
+            {% else %}
+            <button type="button" id="btnDelete" class="btn btn-danger" disabled="disabled"><i class="fa fa-trash-o fa-fw"></i>删除-((Creator))</button>
+            {% endif %}
+            <a href="/Project/Task/((Task.ProjectId))" class="btn btn-default"><i class="fa fa-reply fa-fw"></i>返回</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

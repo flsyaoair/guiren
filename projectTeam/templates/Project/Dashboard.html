@@ -1,0 +1,130 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li class="active"><a href="/Project/Dashboard/((Project.ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li><a href="/Project/Task/((Project.ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li><a href="/Project/Issue/((Project.ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((Project.ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div>
+    <div class="panel panel-primary">
+        <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>((Project.ProjectName))</strong><strong class="pull-right">((Project.UserProfile.Nick)) 创建于 ((Project.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-group">
+                                <a href="/Project/Task/((Project.ProjectId))" class="list-group-item active">
+                                    <i class="fa fa-tasks fa-fw"></i>任务状态统计
+                                </a>
+                                {% if TaskStatus|length <=0 %}
+                                <div class="alert alert-success text-center">
+                                    <h1>未创建任务<i class="fa fa-smile-o"></i></h1>
+                                </div>
+                                {% else%}
+                                {% for p in TaskStatus %}
+                                <li class="list-group-item">
+                                    <span class="badge">((p[1]))</span>
+                                    <span ng-switch on="((p[0]))">
+                                        <strong class="label label-info" ng-switch-when="1">新创建</strong>
+                                        <strong class="label label-primary" ng-switch-when="2">进行中</strong>
+                                        <strong class="label label-success" ng-switch-when="3">已完成</strong>
+                                        <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                                    </span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="list-group">
+                                <a href="/Project/Task/((Project.ProjectId))" class="list-group-item active">
+                                    <i class="fa fa-tasks fa-fw"></i>任务优先级统计
+                                </a>
+                                {% if TaskPriority|length <=0 %}
+                                <div class="alert alert-success text-center">
+                                    <h1>未创建任务<i class="fa fa-smile-o"></i></h1>
+                                </div>
+                                {% else%}
+                                {% for p in TaskPriority %}
+                                <li class="list-group-item">
+                                    <span class="badge">((p[1]))</span>
+                                    <span ng-switch on="((p[0]))">
+                                        <strong class="label label-danger" ng-switch-when="1">高</strong>
+                                        <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                        <strong class="label label-default" ng-switch-when="3">低</strong>
+                                    </span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-group">
+                                <a href="/Project/Issue/((Project.ProjectId))" class="list-group-item active">
+                                    <i class="fa fa-bug fa-fw"></i>问题状态统计
+                                </a>
+                                {% if IssueStatus|length <=0 %}
+                                <div class="alert alert-success text-center">
+                                    <h1>未发现问题<i class="fa fa-smile-o"></i></h1>
+                                </div>
+                                {% else%}
+                                {% for p in IssueStatus %}
+                                <li class="list-group-item">
+                                    <span class="badge">((p[1]))</span>
+                                    <span ng-switch on="((p[0]))">
+                                        <strong class="label label-info" ng-switch-when="1">打开</strong>
+                                        <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                                        <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                                        <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                                    </span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="list-group">
+                                <a href="/Project/Issue/((Project.ProjectId))" class="list-group-item active">
+                                    <i class="fa fa-bug fa-fw"></i>问题优先级统计
+                                </a>
+                                {% if IssuePriority|length <=0 %}
+                                <div class="alert alert-success text-center">
+                                    <h1>未发现问题<i class="fa fa-smile-o"></i></h1>
+                                </div>
+                                {% else%}
+                                {% for p in IssuePriority %}
+                                <li class="list-group-item">
+                                    <span class="badge">((p[1]))</span>
+                                    <span ng-switch on="((p[0]))">
+                                        <strong class="label label-danger" ng-switch-when="1">高</strong>
+                                        <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                        <strong class="label label-default" ng-switch-when="3">低</strong>
+                                    </span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <ul class="list-group">
+                        <a href="/Project/Team/((Project.ProjectId))" class="list-group-item active">
+                            团队成员
+                        </a>
+                        {% for m in MemberList %}
+                        <li class="list-group-item">
+                            ((m.Nick))
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

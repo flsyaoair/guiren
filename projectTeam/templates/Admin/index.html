@@ -1,0 +1,80 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+{% if session['isadmin'] %}
+<li class="active"><a href="/Admin"><i class="fa fa-gear fa-fw"></i>系统设置</a></li>
+{% endif %}
+{% endblock %}
+{% block subcontent %}
+<div class="row">
+    <div class="col-sm-2">
+        <div class="list-group">
+            <a href="/Admin" class="list-group-item active">用户管理</a>
+            <a href="/Admin/CategorySetting" class="list-group-item">问题分类设置</a>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="panel panel-primary" ng-controller="UserManagementCtrl" ng-init="query()">
+            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>系统用户</div>
+            <div class="panel-body">
+                <div class="alert alert-success alert-dismissable" ng-show="Success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>操作成功!</strong>
+                </div>
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="sr-only">电子邮件/昵称</label>
+                            <input type="text" class="form-control" placeholder="电子邮件/昵称" name="Word" ng-model="Query.Word" />
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" ng-model="Query.Status">
+                                <option value="-1">全部</option>
+                                <option value="1">启用</option>
+                                <option value="2">禁用</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找用户</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div ng-show="UserList.length<=0">
+                            <div class="alert alert-success text-center">
+                                <h1>未找到任何用户<i class="fa fa-smile-o"></i></h1>
+                            </div>
+                        </div>
+                        <div ng-repeat="User in UserList">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h4>{{User.Nick}} <small>{{User.Email}}</small></h4>
+                                </div>
+                                <div class="col-sm-3">
+                                    注册时间：{{ User.RegDate | date:'yyyy-MM-dd' }}
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="btn-group">
+                                        <button class="btn btn-success btn-xs" ng-click="enable(User.UserId)" ng-show="User.Status==2"><i class="fa fa-edit fa-fw"></i>启用</button>
+                                        <button class="btn btn-danger btn-xs" ng-click="disable(User.UserId)" ng-show="User.Status==1"><i class="fa fa-ban fa-fw"></i>禁用</button>
+                                        <button class="btn btn-primary btn-xs" ng-click="resetpass(User.UserId)"><i class="fa fa-key fa-fw"></i>重设密码123</button>
+                                        <button class="btn btn-success btn-xs" ng-click="assignadmin(User.UserId)" ng-show="!User.IsAdmin"><i class="fa fa-rocket fa-fw"></i>设为管理员</button>
+                                        <button class="btn btn-danger btn-xs" ng-click="assignadmin(User.UserId)" ng-show="User.IsAdmin"><i class="fa fa-ban fa-fw"></i>去除管理员</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <ul class="pager">
+                                <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
+                                <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
+                                <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

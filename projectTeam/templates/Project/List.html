@@ -1,0 +1,107 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+{% if session['isadmin'] %}
+<li><a href="/Admin"><i class="fa fa-gear fa-fw"></i>系统设置</a></li>
+{% endif %}
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="ProjectCtrl" ng-init="query()">
+    <div class="panel-heading"><i class="fa fa-user fa-fw"></i>我参与的项目</div>
+    <div class="panel-body">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#project_add"><i class="fa fa-plus fa-fw"></i>新项目</button>
+                <div class="form-group">
+                    <label class="sr-only">项目名称</label>
+                    <input type="text" class="form-control" placeholder="项目名称" name="ProjectName" ng-model="Query.ProjectName" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" ng-model="Query.Status">
+                        <option value="-1">全部</option>
+                        <option value="1" selected="selected">进行中</option>
+                        <option value="2">已完成</option>
+                        <option value="3">已取消</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找项目</button>
+                </div>
+            </div>
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-show="ProjectList.length<=0">
+                    <div class="alert alert-success text-center">
+                        <h1>未找到任何项目<i class="fa fa-smile-o"></i></h1>
+                    </div>
+                </div>
+                <div ng-repeat="Project in ProjectList">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <s ng-show="Project.Status==2||Task.Status==3">
+                                <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}}</a>
+                            </s>
+                            <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
+                        </div>
+                        <div class="col-sm-2">创建人：{{Project.Creator}}</div>
+                        <div class="col-sm-2">
+                            创建时间：{{ Project.CreateDate | date:'yyyy-MM-dd' }}
+                        </div>
+                        <div class="col-sm-2" ng-switch on="Project.Status">
+                            状态：
+                            <strong class="label label-primary" ng-switch-when="1">进行中</strong>
+                            <strong class="label label-success" ng-switch-when="2">已完成</strong>
+                            <strong class="label label-default" ng-switch-when="3">已取消</strong>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="btn-group">
+                                <a href="/Project/Detail/{{Project.ProjectId}}" class="btn btn-default btn-xs"><i class="fa fa-edit fa-fw"></i>编辑</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{Project.Progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ Project .Progress; }}%">
+                                    <strong>{{Project.Progress}}%</strong>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <ul class="pager">
+                        <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
+                        <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
+                        <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="project_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus fa-fw"></i>创建新项目</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" name="createProjectForm">
+                        <div class="form-group">
+                            <label for="ProjectName">项目名称<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ProjectName" name="ProjectName" ng-model="Project.ProjectName" placeholder="项目名称" required />
+                            <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
+                    <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

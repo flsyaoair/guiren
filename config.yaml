@@ -1,0 +1,8 @@
+FLASK:
+    DEBUG: True
+    DEBUG_WITH_APTANA: True
+﻿name: powerteamtest
+version: 1
+handlers:
+- url: /static
+  static_dir: powerteam/static

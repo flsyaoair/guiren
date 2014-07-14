@@ -1,0 +1,154 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+<li><a href="/Project/Dashboard/((Issue.ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
+<li><a href="/Project/Task/((Issue.ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
+<li class="active"><a href="/Project/Issue/((Issue.ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Project/Team/((Issue.ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="IssueUpdateCtrl" ng-init="Issue.IssueId=((Issue.IssueId));Issue.ProjectId=((Issue.ProjectId));Issue.Subject='((Issue.Subject))';Issue.AssignTo=((Issue.AssignTo));Issue.CategoryId=((Issue.CategoryId));Issue.Status=((Issue.Status));Issue.Priority=((Issue.Priority))">
+    <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Issue.Subject}}</strong><strong class="pull-right">((Issue.CreatorProfile.Nick)) 创建于 ((Issue.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+    <div class="panel-body">
+        <div class="row text-center">
+            <div class="col-sm-2">
+                问题分类:((Issue.Category.CategoryName))
+            </div>
+            <div class="col-sm-3">
+                指派给:((Issue.AssignToProfile.Nick))
+            </div>
+            <div class="col-sm-3" ng-switch on="Issue.Priority">
+                优先级:
+                <strong class="label label-danger" ng-switch-when="1">高</strong>
+                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                <strong class="label label-default" ng-switch-when="3">低</strong>
+            </div>
+            <div class="col-sm-2" ng-switch on="Issue.Status">
+                状态:
+                <strong class="label label-info" ng-switch-when="1">打开</strong>
+                <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                <strong class="label label-default" ng-switch-when="4">已取消</strong>
+            </div>
+            <div class="col-sm-2">
+                <div class="btn-group">
+                    <a href="/Project/Issue/((Issue.ProjectId))" class="btn btn-default btn-xs">返回</a>
+                    <button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
+                    {% if Issue.Creator==CurrentUser %}
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-xs" data-loading-text="正在删除" ng-click="Delete()">删除</button>
+                    {% else %}
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-xs" disabled="disabled">删除-((Issue.CreatorProfile.Nick))</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr />
+        ((Issue.Description|safe))
+        <hr />
+        <div ng-show="!ShowUpdate">
+            {% for history in HistoryList %}
+            <div class="notice notice-info">
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
+                        状态 从 <span ng-switch on="((history.RawStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                    </p>
+                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
+                        优先级 从 <span ng-switch on="((history.RawPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                    </p>
+                    <p ng-show="((history.RawCategoryId))!=((history.NewCategoryId))">
+                        问题分类 从 ((history.RawIssueCategory.CategoryName)) 变为 ((history.NewIssueCategory.CategoryName))
+                    </p>
+                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
+                        指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
+                    </p>
+                    <hr />
+                </div>
+                <div ng-show="'((history.Feedback))'!=''">
+                    ((history.Feedback|safe))
+                    <hr />
+                </div>
+                <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
+            </div>
+            {% endfor %}
+        </div>
+        <form role="form" name="updateIssueForm" ng-show="ShowUpdate">
+            <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>任务更新成功!</strong>
+            </div>
+            <div class="alert alert-success alert-dismissable" ng-show="DeleteSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>任务删除成功!</strong>
+            </div>
+            <div class="form-group">
+                <label>问题标题<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="Subject" ng-model="Issue.Subject" placeholder="任务名称" required />
+                <div ng-show="updateIssueForm.Subject.$dirty&&updateIssueForm.Subject.$error.required" class="text-danger">请输入任务名称</div>
+            </div>
+            <div class="form-group">
+                <label>问题分类<span class="text-danger">*</span></label>
+                <select class="form-control" name="CategoryId" ng-model="Issue.CategoryId">
+                    <option value="-1">请选择</option>
+                    {% for category in Category %}
+                    <option value="((category.CategoryId))">((category.CategoryName))</option>
+                    {% endfor %}
+                </select>
+                <div ng-show="createIssueForm.CategoryId.$dirty&&Issue.CategoryId==-1" class="text-danger">请选择问题分类</div>
+            </div>
+            <div class="form-group">
+                <label>指派给</label>
+                <select class="form-control" ng-model="Issue.AssignTo">
+                    <option value="-1">我</option>
+                    {% for member in MemberList %}
+                    <option value="((member.UserId))">((member.Nick))</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>优先级</label>
+                <select class="form-control" ng-model="Issue.Priority">
+                    <option value="1">高</option>
+                    <option value="2">中</option>
+                    <option value="3">低</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select class="form-control" ng-model="Issue.Status">
+                    <option value="1">打开</option>
+                    <option value="2">已解决</option>
+                    <option value="3">已关闭</option>
+                    <option value="4">已取消</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>反馈</label>
+                <script id="editor" type="text/plain">
+                </script>
+            </div>
+            <button type="button" id="btnUpdate" ng-disabled="updateTaskForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

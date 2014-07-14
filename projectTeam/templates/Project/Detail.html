@@ -1,0 +1,38 @@
+﻿{% extends 'PowerTeamLayout.html'%}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="ProjectUpdateCtrl" ng-init="Project.ProjectId=((Project.ProjectId));Project.ProjectName='((Project.ProjectName))';Project.Status=((Project.Status));Project.Creator=((Project.Creator))">
+    <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Project.ProjectName}}</strong><strong class="pull-right">((CreatorName)) 创建于 ((Project.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+    <div class="panel-body">
+        <form role="form" name="updateProjectForm">
+            <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>项目更新成功!</strong>
+            </div>
+            <div class="alert alert-success alert-dismissable" ng-show="DeleteSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>项目删除成功!</strong>
+            </div>
+            <div class="form-group">
+                <label>项目名称<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="ProjectName" ng-model="Project.ProjectName" placeholder="项目名称" required />
+                <div ng-show="updateProjectForm.ProjectName.$dirty&&updateProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
+            </div>
+            <div class="form-group">
+                <label>项目状态</label>
+                <select class="form-control" ng-model="Project.Status">
+                    <option value="1">进行中</option>
+                    <option value="2">已完成</option>
+                    <option value="3">已取消</option>
+                </select>
+            </div>
+            <button type="button" id="btnUpdate" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
+            {% if Project.Creator==CurrentUser %}
+            <button type="button" id="btnDelete" class="btn btn-danger" data-loading-text="正在删除" ng-click="Delete()"><i class="fa fa-trash-o fa-fw"></i>删除</button>
+            {% else %}
+            <button type="button" id="btnDelete" class="btn btn-danger" disabled="disabled"><i class="fa fa-trash-o fa-fw"></i>删除-((CreatorName))</button>
+            {% endif %}
+            <a href="/Project" class="btn btn-default"><i class="fa fa-reply fa-fw"></i>返回</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
