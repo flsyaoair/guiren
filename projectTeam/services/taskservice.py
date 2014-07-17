@@ -1,6 +1,7 @@
-# -*- coding: UTF-8 -*- 
+﻿# -*- coding: utf-8 -*-
 
 from projectTeam.models import Task, TaskStatus, UserProfile, database
+from projectTeam.models.task import Task, TaskStatus,  TaskHistory
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 from projectTeam.powerteamconfig import *
@@ -37,7 +38,7 @@ def create(project_id,task_name,priority,assign_to,description,creator):
     if ENABLE_MAIL_NOTICE:
         u = userservice.get_user_by_id(assign_to)
         body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
-        mailservice.send_mail(u.Email, u'ָ�ɸ���������� ' + task_name,body)
+        mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
 
 def query(task_name,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no):
     session = database.get_session()
@@ -77,14 +78,40 @@ def get(task_id):
     session.close()
     return task
 
-def update(task_id,task_name,assign_to,priority,progress,status,effort,description):
+def get_history(task_id):
+    session = database.get_session()
+
+    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
+
+    session.close()
+
+    return history_list
+
+def update(task_id,task_name,assign_to,priority,progress,status,effort,description,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
     task = session.query(Task).filter(Task.TaskId == task_id).one()
 
     changeAssignTo = not (task.AssignTo == assign_to)
+    description = task.Description
 
+    if (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
+        history = TaskHistory()
+        history.TaskId = task.TaskId
+        history.RawStatus = task.Status
+        history.NewStatus = status
+        history.RawPriority = task.Priority
+        history.NewPriority = priority
+        history.RawAssignTo = task.AssignTo
+        history.NewAssignTo = assign_to
+#        history.RawCategoryId = issue.CategoryId
+#        history.NewCategoryId = category_id
+        history.Feedback = feedback
+        history.Creator = current_user
+        history.CreateDate = datetime.now()
+
+        session.add(history)
     task.TaskName = task_name
     task.AssignTo = assign_to
     task.Priority = priority
@@ -102,7 +129,7 @@ def update(task_id,task_name,assign_to,priority,progress,status,effort,descripti
     if ENABLE_MAIL_NOTICE and changeAssignTo:
         u = userservice.get_user_by_id(assign_to)
         body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
-        mailservice.send_mail(u.Email, u'指派给您的新任务'+ task_name,body)
+        mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
 
     return True
 

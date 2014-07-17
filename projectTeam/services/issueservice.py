@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*- 
+﻿# -*- coding: utf-8 -*-
 
 from projectTeam.models import database
 from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
@@ -35,7 +35,7 @@ def create(project_id,subject,priority,assign_to,description,category_id,creator
     if ENABLE_MAIL_NOTICE:
         u = userservice.get_user_by_id(assign_to)
         body = mailservice.render_mail_template('Issue/NoticeAssignTo.html',Subject=subject,Description=description,SystemUrl=HOST)
-        mailservice.send_mail(u.Email, u'ָ�ɸ���������� ' + subject,body)
+        mailservice.send_mail(u.Email, u'指派给您的新问题 ' + subject,body)
 
 def available_category():
     session = database.get_session()
@@ -137,7 +137,7 @@ def update(issue_id,subject,category_id,assign_to,priority,status,feedback,curre
     if ENABLE_MAIL_NOTICE and changeAssignTo:
         u = userservice.get_user_by_id(assign_to)
         body = mailservice.render_mail_template('Issue/NoticeAssignTo.html',Subject=subject,Description=description,SystemUrl=HOST)
-        mailservice.send_mail(u.Email, u'指派给您的新问题'+ subject,body)
+        mailservice.send_mail(u.Email, u'指派给您的新问题 ' + subject,body)
 
     return True
 
