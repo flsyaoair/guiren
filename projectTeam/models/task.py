@@ -15,6 +15,30 @@ class TaskStatus:
     Completed = 3
     Canceled = 4
 
+class TaskHistory(BaseModel):
+
+    __tablename__ = 'TaskHistory'
+    HistoryId = Column('HistoryId', Integer,primary_key=True,nullable=False,autoincrement=True)
+    TaskId = Column('TaskId', Integer,ForeignKey('Task.TaskId'),nullable = False)
+    RawStatus = Column('RawStatus', SMALLINT,nullable = False)
+    NewStatus = Column('NewStatus', SMALLINT,nullable = False)
+    RawPriority = Column('RawPriority', SMALLINT,nullable = False)
+    NewPriority = Column('NewPriority', SMALLINT,nullable = False)
+    RawAssignTo = Column('RawAssignTo', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
+    RawAssignToProfile = relationship('UserProfile', foreign_keys=RawAssignTo,primaryjoin=RawAssignTo == UserProfile.UserId)
+    NewAssignTo = Column('NewAssignTo', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
+    NewAssignToProfile = relationship('UserProfile', foreign_keys=NewAssignTo,primaryjoin=NewAssignTo == UserProfile.UserId)
+#    RawCategoryId = Column('RawCategoryId', Integer,ForeignKey('IssueCategory.CategoryId'),nullable = False)
+#    RawIssueCategory = relationship('IssueCategory', foreign_keys=RawCategoryId,primaryjoin=RawCategoryId == IssueCategory.CategoryId)
+#    NewCategoryId = Column('NewCategoryId', Integer,ForeignKey('IssueCategory.CategoryId'),nullable = False)
+#    NewIssueCategory = relationship('IssueCategory', foreign_keys=NewCategoryId,primaryjoin=NewCategoryId == IssueCategory.CategoryId)
+    Feedback = Column('Feedback', UnicodeText)
+    Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
+    CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
+    CreateDate = Column('CreateDate', DateTime,nullable=False)
+
+
+
 class Task(BaseModel):
 
     __tablename__ = 'Task'
