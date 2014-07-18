@@ -1,4 +1,4 @@
-﻿#-*- coding: utf-8 -*-
+﻿# -*- coding: UTF-8 -*-
 
 from projectTeam.models import Task, TaskStatus, UserProfile, database
 from projectTeam.models.task import Task, TaskStatus,  TaskHistory
