@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿#-*- coding: utf-8 -*-
 
 from projectTeam.models import database
 from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
