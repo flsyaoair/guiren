@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import taskservice, teamservice
+from projectTeam.services import teamservice,taskservice
 
 task = Module(__name__)
 task.before_request(login_filter)
@@ -47,6 +47,7 @@ def update():
     task_id = request.json['TaskId']
     project_id = request.json['ProjectId']
     task_name = request.json['TaskName']
+    feedback = request.json['Feedback']
     assign_to = request.json['AssignTo']
     if assign_to == -1:
         assign_to = g.user_id
@@ -54,8 +55,8 @@ def update():
     progress = request.json['Progress']
     status = request.json['Status']
     effort = request.json['Effort']
-    description = request.json['Description']
-    taskservice.update(task_id,task_name,assign_to,priority,progress,status,effort,description)
+#    description = request.json['Description']
+    taskservice.update(task_id,task_name,assign_to,priority,progress,status,effort,feedback)
     return jsonify(updated=True)
 
 @task.route('/Task/Delete',methods=['POST'])
