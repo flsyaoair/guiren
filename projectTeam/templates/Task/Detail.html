@@ -1,4 +1,4 @@
-﻿{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 <li><a href="/Project/Dashboard/((Task.ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li class="active"><a href="/Project/Task/((Task.ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
@@ -9,7 +9,88 @@
 <div class="panel panel-primary" ng-controller="TaskUpdateCtrl" ng-init="Task.TaskId=((Task.TaskId));Task.TaskName='((Task.TaskName))';Task.AssignTo=((Task.AssignTo));Task.Priority=((Task.Priority));Task.Progress=((Task.Progress));Task.Status=((Task.Status));Task.Effort=0;Task.ProjectId=((Task.ProjectId))">
     <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Task.TaskName}}</strong><strong class="pull-right">((Creator)) 创建于 ((Task.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
-        <form role="form" name="updateTaskForm">
+            <div class="row text-center">
+            <div class="col-sm-2">
+                任务:((Task.TaskName))
+            </div>
+            <div class="col-sm-3">
+                指派给:((Task.AssignToProfile.Nick))
+            </div>
+            <div class="col-sm-3" ng-switch on="Task.Priority">
+                优先级:
+                <strong class="label label-danger" ng-switch-when="1">高</strong>
+                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                <strong class="label label-default" ng-switch-when="3">低</strong>
+            </div>
+            <div class="col-sm-2" ng-switch on="Task.Status">
+                状态:
+                <strong class="label label-info" ng-switch-when="1">打开</strong>
+                <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                <strong class="label label-default" ng-switch-when="4">已取消</strong>
+            </div>
+            <div class="col-sm-2">
+                <div class="btn-group">
+                    <a href="/Project/Task/((Task.ProjectId))" class="btn btn-default btn-xs">返回</a>
+                    <button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
+                    {% if Task.Creator==CurrentUser %}
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-xs" data-loading-text="正在删除" ng-click="Delete()">删除</button>
+                    {% else %}
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-xs" disabled="disabled">删除-((Task.CreatorProfile.Nick))</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr />
+        ((Task.Description|safe))
+        <hr />
+        <div ng-show="!ShowUpdate">
+            {% for history in HistoryList %}
+            <div class="notice notice-info">
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
+                        状态 从 <span ng-switch on="((history.RawStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                    </p>
+                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
+                        优先级 从 <span ng-switch on="((history.RawPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                    </p>
+                  
+                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
+                        指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
+                    </p>
+                    <hr />
+                </div>
+                <div ng-show="'((history.Feedback))'!=''">
+                    ((history.Feedback|safe))
+                    <hr />
+                </div>
+                <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
+            </div>
+            {% endfor %}
+        </div>
+        <form role="form" name="updateTaskForm" ng-show="ShowUpdate">
             <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <strong>任务更新成功!</strong>
@@ -71,18 +152,13 @@
                 <div ng-show="updateTaskForm.Effort.$dirty&&updateTaskForm.Effort.$error.integer" class="text-danger">请输入一个整数</div>
             </div>
             <div class="form-group">
-                <label>详细描述</label>
+                <label>反馈</label>
                 <script id="editor" type="text/plain">
-                    ((Task.Description|safe))
+                    
                 </script>
             </div>
             <button type="button" id="btnUpdate" ng-disabled="updateTaskForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
-            {% if Task.Creator==CurrentUser %}
-            <button type="button" id="btnDelete" class="btn btn-danger" data-loading-text="正在删除" ng-click="Delete()"><i class="fa fa-trash-o fa-fw"></i>删除</button>
-            {% else %}
-            <button type="button" id="btnDelete" class="btn btn-danger" disabled="disabled"><i class="fa fa-trash-o fa-fw"></i>删除-((Creator))</button>
-            {% endif %}
-            <a href="/Project/Task/((Task.ProjectId))" class="btn btn-default"><i class="fa fa-reply fa-fw"></i>返回</a>
+            
         </form>
     </div>
 </div>

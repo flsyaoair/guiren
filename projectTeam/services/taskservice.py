@@ -73,7 +73,7 @@ def query(task_name,assign_to,status_new,status_in_progress,status_completed,sta
 def get(task_id):
     session = database.get_session()
 
-    task = session.query(Task).options(joinedload(Task.CreatorProfile)).filter(Task.TaskId == task_id).one()
+    task = session.query(Task).options(joinedload(Task.AssignToProfile),joinedload(Task.CreatorProfile)).filter(Task.TaskId == task_id).one()
 
     session.close()
     return task
@@ -81,13 +81,13 @@ def get(task_id):
 def get_history(task_id):
     session = database.get_session()
 
-    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
-
+    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
+                  
     session.close()
 
     return history_list
 
-def update(task_id,task_name,assign_to,priority,progress,status,effort,description,feedback,current_user):
+def update(task_id,task_name,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
@@ -117,8 +117,8 @@ def update(task_id,task_name,assign_to,priority,progress,status,effort,descripti
     task.Priority = priority
     task.Progress = progress
     task.Status = status
-    task.Description = description
-    task.Effort = task.Effort + float(effort)
+#    task.Description = description
+#    task.Effort = task.Effort + float(effort)
     task.LastUpdateDate = datetime.now()
     project_id = task.ProjectId
     session.commit()

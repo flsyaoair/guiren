@@ -159,11 +159,27 @@ function TaskCreateCtrl($scope, $http) {
 function TaskUpdateCtrl($scope, $http) {
     $scope.UpdateSuccess = false;
     $scope.DeleteSuccess = false;
-    editor = UE.getEditor('editor');
+    $scope.ShowUpdate = false;
+    $scope.edit = function () {
+        $scope.ShowUpdate = !$scope.ShowUpdate;
+        UE.getEditor('editor');
+    }
     $scope.update = function () {
         var btn = $("#btnUpdate");
         btn.button('loading');
-        $scope.Task.Description = editor.getContent();
+        $scope.Task.Feedback = UE.getEditor('editor').getContent();
+//        $http.post('/Issue/Update', $scope.Issue).success(function (result) {
+//            if (result.updated) {
+//                $scope.UpdateSuccess = true;
+//                btn.button('reset');
+//                window.location.href = "/Project/Issue/" + $scope.Issue.ProjectId;
+//            }
+//        });
+//    }
+//    $scope.update = function () {
+//        var btn = $("#btnUpdate");
+//        btn.button('loading');
+//        $scope.Task.Description = editor.getContent();
         $http.post('/Task/Update', $scope.Task).success(function (result) {
             if (result.updated) {
                 $scope.UpdateSuccess = true;

@@ -35,13 +35,15 @@ def create(project_id):
 
 @task.route('/Task/Detail/<int:task_id>')
 def detail(task_id):
-    t = taskservice.get(task_id)
-    member_list = teamservice.member_in_project(t.ProjectId)
-    if t.AssignTo == g.user_id:
-        t.AssignTo = -1
-
-    return render_template('Task/Detail.html',Task=t,Creator=t.CreatorProfile.Nick,MemberList=member_list,CurrentUser=g.user_id)
-
+    task = taskservice.get(task_id)
+    history_list = taskservice.get_history(task_id)
+    member_list = teamservice.member_in_project(task.ProjectId)
+    if task.AssignTo == g.user_id:
+        task.AssignTo = -1
+    
+   
+    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,MemberList=member_list,CurrentUser=g.user_id)
+                                              
 @task.route('/Task/Update',methods=['POST'])
 def update():
     task_id = request.json['TaskId']
@@ -54,9 +56,9 @@ def update():
     priority = request.json['Priority']
     progress = request.json['Progress']
     status = request.json['Status']
-    effort = request.json['Effort']
+#    effort = request.json['Effort']
 #    description = request.json['Description']
-    taskservice.update(task_id,task_name,assign_to,priority,progress,status,effort,feedback)
+    taskservice.update(task_id, task_name, assign_to, priority, progress, status, feedback, g.user_id)                  
     return jsonify(updated=True)
 
 @task.route('/Task/Delete',methods=['POST'])
