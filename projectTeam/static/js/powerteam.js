@@ -124,7 +124,7 @@ function ProjectUpdateCtrl($scope, $http) {
 
 function TaskCtrl($scope, $http) {
     $scope.TaskList = [];
-    $scope.Query = { PageNo: 1, TaskName: '', AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, TaskName: '',AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
         var btn = $("#btnQuery");
         btn.button('loading');
@@ -141,7 +141,7 @@ function TaskCtrl($scope, $http) {
 function TaskCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Task = { TaskName: null, Priority: 2, AssignTo: -1, Description: null };
+    $scope.Task = { TaskName: null, Versions: null,Priority: 2, AssignTo: -1, Description: null };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');
