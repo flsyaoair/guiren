@@ -9,12 +9,14 @@ from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 
-def create(project_id,task_name,priority,assign_to,description,creator):
+def create(project_id,task_name,version,priority,assign_to,description,creator):
     session = database.get_session()
     task_name = task_name.strip()
+    version =version.strip()
     t = Task()
     t.ProjectId = project_id
     t.TaskName = task_name
+    t.Versions = version
     t.Priority = priority
     t.Progress = 0
     if assign_to == -1:
@@ -87,12 +89,13 @@ def get_history(task_id):
 
     return history_list
 
-def update(task_id,task_name,assign_to,priority,progress,status,feedback,current_user):
+def update(task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
+    version =version.strip()
     task = session.query(Task).filter(Task.TaskId == task_id).one()
-
+    
     changeAssignTo = not (task.AssignTo == assign_to)
     description = task.Description
 
@@ -113,6 +116,7 @@ def update(task_id,task_name,assign_to,priority,progress,status,feedback,current
 
         session.add(history)
     task.TaskName = task_name
+    task.Versions = version
     task.AssignTo = assign_to
     task.Priority = priority
     task.Progress = progress

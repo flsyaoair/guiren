@@ -49,6 +49,7 @@ def update():
     task_id = request.json['TaskId']
     project_id = request.json['ProjectId']
     task_name = request.json['TaskName']
+    version =  request.json['Versions']
     feedback = request.json['Feedback']
     assign_to = request.json['AssignTo']
     if assign_to == -1:
@@ -58,7 +59,7 @@ def update():
     status = request.json['Status']
 #    effort = request.json['Effort']
 #    description = request.json['Description']
-    taskservice.update(task_id, task_name, assign_to, priority, progress, status, feedback, g.user_id)                  
+    taskservice.update(task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
     return jsonify(updated=True)
 
 @task.route('/Task/Delete',methods=['POST'])
@@ -68,5 +69,5 @@ def delete():
 
 @task.route('/Task/CreateNew',methods=['POST'])
 def create_new():
-    taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
+    taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])

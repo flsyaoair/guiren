@@ -45,6 +45,7 @@ class Task(BaseModel):
     TaskId = Column('TaskId', Integer,primary_key=True,nullable=False,autoincrement=True)
     ProjectId = Column('ProjectId', Integer,ForeignKey('Project.ProjectId'),nullable = False)
     TaskName = Column('TaskName', NVARCHAR(30),nullable = False)
+    Versions = Column('Versions', NVARCHAR(30),nullable = False)
     Priority = Column('Priority', SMALLINT,nullable=False)
     Progress = Column('Progress', SMALLINT,nullable=False)
     AssignTo = Column('AssignTo', Integer,ForeignKey('UserProfile.UserId'),nullable = False)

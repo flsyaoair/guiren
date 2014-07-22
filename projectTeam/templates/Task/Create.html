@@ -1,4 +1,4 @@
-﻿{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 <li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li class="active"><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
@@ -18,6 +18,11 @@
                 <label>任务名称<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="TaskName" name="TaskName" ng-model="Task.TaskName" placeholder="任务名称" required />
                 <div ng-show="createTaskForm.TaskName.$dirty&&createTaskForm.TaskName.$error.required" class="text-danger">请输入任务名称</div>
+            </div>
+            <div class="form-group">
+                <label>版本<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="Versions" ng-model="Task.Versions" placeholder="版本" required />
+                <div ng-show="createTaskForm.Versions.$dirty&&createTaskForm.Versions.$error.required" class="text-danger">请输入版本</div>
             </div>
             <div class="form-group">
                 <label>指派给<span class="text-danger">*</span></label>
