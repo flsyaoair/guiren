@@ -13,6 +13,9 @@
             <div class="col-sm-2">
                 任务:((Task.TaskName))
             </div>
+            <div class="col-sm-2">
+               版本:((Task.Versions))
+            </div>
             <div class="col-sm-3">
                 指派给:((Task.AssignToProfile.Nick))
             </div>
@@ -105,6 +108,11 @@
                 <div ng-show="updateTaskForm.TaskName.$dirty&&updateTaskForm.TaskName.$error.required" class="text-danger">请输入任务名称</div>
             </div>
             <div class="form-group">
+                <label>版本<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="Versions" ng-model="Task.Versions" placeholder="版本" required />
+                <div ng-show="updateTaskForm.Versions.$dirty&&updateTaskForm.Versions.$error.required" class="text-danger">请输入版本</div>
+            </div>
+            <div class="form-group">
                 <label>指派给</label>
                 <select class="form-control" ng-model="Task.AssignTo">
                     <option value="-1">我</option>
@@ -152,7 +160,7 @@
                 <div ng-show="updateTaskForm.Effort.$dirty&&updateTaskForm.Effort.$error.integer" class="text-danger">请输入一个整数</div>
             </div>
             <div class="form-group">
-                <label>反馈</label>
+                <label>备注</label>
                 <script id="editor" type="text/plain">
                     
                 </script>
