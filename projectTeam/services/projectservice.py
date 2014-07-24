@@ -72,9 +72,9 @@ def update(project_id,project_name,status):
     return True
 
 
-def projectlist(project_id):
+def projectlist():
     session = database.get_session()
 
-    projectlist = session.query(Project).filter(Project.ProjectId == project_id)
+    projectlist = session.query(Project)
     session.close()
     return projectlist

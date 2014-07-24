@@ -42,7 +42,7 @@ def create(project_id,task_name,version,priority,assign_to,description,creator):
         body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
         mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
 
-def query(task_name,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no):
+def query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no):
     session = database.get_session()
 
     filters = []
@@ -51,6 +51,8 @@ def query(task_name,assign_to,status_new,status_in_progress,status_completed,sta
     task_name = task_name.strip()
     if len(task_name) > 0:
         filters.append(Task.TaskName.like('%' + task_name + '%'))
+    if not project_id == 0:
+        filters.append(Task.ProjectId == project_id)    
     if not assign_to == 0:
         filters.append(Task.AssignTo == assign_to)
     if status_new:
@@ -64,7 +66,7 @@ def query(task_name,assign_to,status_new,status_in_progress,status_completed,sta
     if len(status) > 0:
         filters.append(Task.Status.in_(status))
 
-    q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo)
+    q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId)
     for f in filters:
         q = q.filter(f)
     (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
@@ -75,7 +77,7 @@ def query(task_name,assign_to,status_new,status_in_progress,status_completed,sta
 def get(task_id):
     session = database.get_session()
 
-    task = session.query(Task).options(joinedload(Task.AssignToProfile),joinedload(Task.CreatorProfile)).filter(Task.TaskId == task_id).one()
+    task = session.query(Task).options(joinedload(Task.AssignToProfile),joinedload(Task.ProjectProfile),joinedload(Task.CreatorProfile)).filter(Task.TaskId == task_id).one()
 
     session.close()
     return task

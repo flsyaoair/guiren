@@ -26,9 +26,9 @@
                 </div>
                 <div class="form-group" >
                     <select class="form-control" ng-model="Query.ProjectId">
-                        <option value="">项目</option>
+                        <option value="-1">项目</option>
                        {% for project in ProjectNameList %}
-                        <option value="((project.ProjectId))">((project.ProjectName))</option>
+                        <option value="((project.ProjectName))">((project.ProjectName))</option>
                         {% endfor %}
                     </select>
                 </div>

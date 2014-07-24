@@ -11,13 +11,13 @@ task.before_request(login_filter)
 def list(project_id):
     member_list = teamservice.member_in_project(project_id)
 #    project_name= Project.ProjectName
-    project_name = projectservice.projectlist(project_id)
+    project_name = projectservice.projectlist()
     return render_template('Task/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)
 
 @task.route('/Task/Query',methods=['POST'])
 def query():
     task_name = request.json['TaskName']
-#    project_id = request.json['ProjectId']
+#    project_id =int(request.json["ProjectId"])
 #    project_name = request.json['ProjectName']
     assign_to = int(request.json['AssignTo'])
     if assign_to == -1:
@@ -27,10 +27,10 @@ def query():
     status_completed = request.json['Completed']
     status_canceled = request.json['Canceled']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no)
+    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,1,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no)
     tasks = []
     for t in data.all():
-        tasks.append({'TaskId':t.TaskId,'TaskName':t.TaskName,'Priority':t.Priority,'Progress':t.Progress,'Status':t.Status,'Effort':t.Effort,'AssignTo':t.AssignToProfile.Nick,'Creator':t.CreatorProfile.Nick,'LastUpdateDate':t.LastUpdateDate.isoformat()})
+        tasks.append({'TaskId':t.TaskId,'ProjectId':1,'TaskName':t.TaskName,'Priority':t.Priority,'Progress':t.Progress,'Status':t.Status,'Effort':t.Effort,'AssignTo':t.AssignToProfile.Nick,'Creator':t.CreatorProfile.Nick,'LastUpdateDate':t.LastUpdateDate.isoformat()})
     return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=tasks)
 
 @task.route('/Task/Create/<int:project_id>')

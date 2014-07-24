@@ -125,7 +125,7 @@ function ProjectUpdateCtrl($scope, $http) {
 
 function TaskCtrl($scope, $http) {
     $scope.TaskList = [];
-    $scope.Query = { PageNo: 1, TaskName: '',AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, TaskName: '',ProjectId:-1,AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
         var btn = $("#btnQuery");
         btn.button('loading');
