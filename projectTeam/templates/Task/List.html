@@ -1,4 +1,4 @@
-﻿{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 <li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li class="active"><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
@@ -24,6 +24,14 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="form-group" >
+                    <select class="form-control" ng-model="Query.ProjectId">
+                        <option value="">项目</option>
+                       {% for project in ProjectNameList %}
+                        <option value="((project.ProjectId))">((project.ProjectName))</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="form-group">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-default active" ng-click="Query.New=!Query.New">
@@ -38,6 +46,7 @@
                         <label class="btn btn-default" ng-click="Query.Canceled=!Query.Canceled">
                             <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Canceled"></i>已取消
                         </label>
+                      
                     </div>
                 </div>
                 <div class="form-group">
@@ -70,10 +79,12 @@
                                 <strong class="label label-success" ng-switch-when="3">已完成</strong>
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
+
                         </div>
                         <div class="col-sm-2">
                             <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>
                         </div>
+                     
                         <div class="col-sm-2">
                             <span data-toggle="tooltip" title="工时：{{Task.Effort}} 小时"><i class="fa fa-clock-o fa-fw"></i>{{Task.Effort}} 小时</span>
                         </div>

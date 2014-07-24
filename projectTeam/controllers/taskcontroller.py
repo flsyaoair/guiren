@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice,taskservice
+from projectTeam.services import teamservice,taskservice,projectservice
+from projectTeam.models import Project
 
 task = Module(__name__)
 task.before_request(login_filter)
@@ -9,11 +10,15 @@ task.before_request(login_filter)
 @task.route('/Project/Task/<int:project_id>')
 def list(project_id):
     member_list = teamservice.member_in_project(project_id)
-    return render_template('Task/List.html',ProjectId=project_id,MemberList=member_list)
+#    project_name= Project.ProjectName
+    project_name = projectservice.projectlist(project_id)
+    return render_template('Task/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)
 
 @task.route('/Task/Query',methods=['POST'])
 def query():
     task_name = request.json['TaskName']
+#    project_id = request.json['ProjectId']
+#    project_name = request.json['ProjectName']
     assign_to = int(request.json['AssignTo'])
     if assign_to == -1:
         assign_to = g.user_id

@@ -70,3 +70,11 @@ def update(project_id,project_name,status):
     session.close()
 
     return True
+
+
+def projectlist(project_id):
+    session = database.get_session()
+
+    projectlist = session.query(Project).filter(Project.ProjectId == project_id)
+    session.close()
+    return projectlist
