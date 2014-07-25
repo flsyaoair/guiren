@@ -6,7 +6,7 @@ from projectTeam.powerteamconfig import *
 app = create_projectTeam_app()
 
 if __name__ == '__main__':
-    app.debug = False
+    app.debug = True
     app.run(host= HOST,port=PORT)
 
 
