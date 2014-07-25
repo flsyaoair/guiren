@@ -58,7 +58,7 @@
             <div class="panel-body">
                 <div ng-show="TaskList.length<=0">
                     <div class="alert alert-success text-center">
-                        <h1>未找到任何任务<i class="fa fa-smile-o"></i></h1>
+                        <h1>没有符合条件的任务<i class="fa fa-smile-o"></i></h1>
                     </div>
                 </div>
                 <div ng-repeat="Task in TaskList">
@@ -70,7 +70,7 @@
                             <a href="/Task/Detail/{{Task.TaskId}}" class="lead" ng-show="Task.Status==1||Task.Status==2">{{Task.TaskName}}</a>
                             <span ng-switch on="Task.Priority" class="text-right">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
-                                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                <strong class="label label-success" ng-switch-when="2">中</strong>
                                 <strong class="label label-default" ng-switch-when="3">低</strong>
                             </span>
                             <span ng-switch on="Task.Status" class="text-right">

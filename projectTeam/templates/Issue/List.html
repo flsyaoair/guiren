@@ -57,7 +57,7 @@
             <div class="panel-body">
                 <div ng-show="IssueList.length<=0">
                     <div class="alert alert-success text-center">
-                        <h1>未找到任何问题<i class="fa fa-smile-o"></i></h1>
+                        <h1>没有符合条件的问题<i class="fa fa-smile-o"></i></h1>
                     </div>
                 </div>
                 <div ng-repeat="Issue in IssueList">
@@ -73,7 +73,7 @@
                             </a>
                             <span ng-switch on="Issue.Priority">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
-                                <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                <strong class="label label-success" ng-switch-when="2">中</strong>
                                 <strong class="label label-default" ng-switch-when="3">低</strong>
                             </span>
                             <span ng-switch on="Issue.Status">

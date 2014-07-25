@@ -1,4 +1,4 @@
-﻿{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 <li class="active"><a href="/Project/Dashboard/((Project.ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li><a href="/Project/Task/((Project.ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
@@ -69,7 +69,7 @@
                                 </a>
                                 {% if IssueStatus|length <=0 %}
                                 <div class="alert alert-success text-center">
-                                    <h1>未发现问题<i class="fa fa-smile-o"></i></h1>
+                                    <h1>未发现问题<i class="fa fa-smile-o "></i></h1>
                                 </div>
                                 {% else%}
                                 {% for p in IssueStatus %}
@@ -101,7 +101,7 @@
                                     <span class="badge">((p[1]))</span>
                                     <span ng-switch on="((p[0]))">
                                         <strong class="label label-danger" ng-switch-when="1">高</strong>
-                                        <strong class="label label-Primary" ng-switch-when="2">中</strong>
+                                        <strong class="label label-success" ng-switch-when="2">中</strong>
                                         <strong class="label label-default" ng-switch-when="3">低</strong>
                                     </span>
                                 </li>
