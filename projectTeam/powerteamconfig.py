@@ -5,7 +5,7 @@ VERSION = '1.0'
 DEBUG = True
 
 
-HOST = '10.3.0.92'
+HOST = '0.0.0.0'
 
 
 PORT = 8081
