@@ -1,2 +1,4 @@
 taskkill /im python.exe /f
-python index.py
+echo test >>test.txt
+C:\Python27\python.exe index.py
+ping 127.0.0.1
