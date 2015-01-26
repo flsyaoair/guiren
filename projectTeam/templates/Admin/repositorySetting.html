@@ -1,0 +1,63 @@
+{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+{% if session['isadmin'] %}
+<li class="active"><a href="/Admin"><i class="fa fa-gear fa-fw"></i>系统设置</a></li>
+{% endif %}
+{% endblock %}
+{% block subcontent %}
+<div class="row">
+    <div class="col-sm-2">
+        <div class="list-group">
+            <a href="/Admin" class="list-group-item">用户管理</a>
+            <a href="/Admin/CategorySetting" class="list-group-item">问题分类设置</a>
+            <a href="/Admin/repositorySetting" class="list-group-item active">库类型</a>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="panel panel-primary" ng-controller="CategoryCtrl" ng-init="query()">
+            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>问题分类设置</div>
+            <div class="panel-body">
+                <div class="alert alert-success alert-dismissable" ng-show="Success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>添加成功!</strong>
+                </div>
+                <div class="alert alert-warning alert-dismissable" ng-show="Exist">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>分类已存在!</strong>
+                </div>
+                <form class="form-inline" role="form" name="categoryForm">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="sr-only">问题分类</label>
+                            <input type="text" class="form-control" placeholder="新分类名称" name="CategoryName" ng-model="CategoryName" required />
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="categoryForm.$invalid" ng-click="create()"><i class="fa fa-plus fa-fw"></i>添加分类</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div ng-show="CategoryList.length<=0">
+                            <div class="alert alert-success text-center">
+                                <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
+                            </div>
+                        </div>
+                        <div ng-repeat="category in CategoryList">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{category.CategoryName}}
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-success btn-xs" ng-click="enable(category.CategoryId)" ng-show="category.Status==2"><i class="fa fa-edit fa-fw"></i>启用</button>
+                                    <button class="btn btn-danger btn-xs" ng-click="disable(category.CategoryId)" ng-show="category.Status==1"><i class="fa fa-ban fa-fw"></i>禁用</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
