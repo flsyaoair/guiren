@@ -42,6 +42,7 @@
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}}</a>
                             </s>
                             <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
+                            <a data-toggle="collapse" href="#moreabout"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
                         </div>
                         <div class="col-sm-2">创建人：{{Project.Creator}}</div>
                         <div class="col-sm-2">
@@ -66,9 +67,13 @@
                                     <strong>{{Project.Progress}}%</strong>
                                 </div>
                             </div>
-                            <hr />
+                            
                         </div>
                     </div>
+                    <div id="moreabout" class="panel-collapse collapse">
+                        <div class="row panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. </div>
+                    </div>
+                    <hr />
                 </div>
                 <div class="text-center">
                     <ul class="pager">
