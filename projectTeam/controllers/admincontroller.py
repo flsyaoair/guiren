@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify
 from projectTeam.controllers.filters import admin_filter
-from projectTeam.services import userservice, issueservice
+from projectTeam.services import userservice,issueservice,repositoryservice
 
 admin = Module(__name__)
 admin.before_request(admin_filter)
@@ -13,6 +13,10 @@ def index():
 @admin.route('/Admin/CategorySetting')
 def category():
     return render_template('Admin/CategorySetting.html')
+
+@admin.route('/Admin/RepositorySetting')
+def repository():
+    return render_template('Admin/RepositorySetting.html')
 
 @admin.route('/QueryUser',methods=['POST'])
 def query():
@@ -77,3 +81,20 @@ def create_category():
     if not exist:
         issueservice.create_category(categoryname)
     return jsonify(status=exist)
+@admin.route('/CreateRepository',methods=['POST'])
+def create_Repository():
+    repositoryname = request.json['RepositoryName']
+    exist = repositoryservice.exist_repository(repositoryname)
+    if not exist:
+        repositoryservice.create_repository(repositoryname)
+    return jsonify(status=exist)
+@admin.route('/QueryRepository',methods=['POST'])
+def query_Repository():
+    
+    data = repositoryservice.query_repository()
+    repository_list = []
+    for i in data:
+        repository_list.append({'RepositoryId':i.RepositoryId,'RepositoryName':i.RepositoryName})
+    return jsonify(data=repository_list)
+        
+   

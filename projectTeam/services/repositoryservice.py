@@ -20,3 +20,37 @@ def create_repository(repositoryname):
 
     session.commit()
     session.close()
+    
+def exist_repository(repositoryname):
+    session = database.get_session()
+
+    c = session.query(Repository).filter(Repository.RepositoryName == repositoryname).count()
+
+    session.close()
+
+    return c > 0
+def query_repository():
+    
+    session = database.get_session()
+
+    list = session.query(Repository).all()
+    session.close()
+    return list
+#    filters=[]
+#    
+#    session = database.get_session()
+#
+#    if len(repositoryname) > 0:
+#        filters.append(Repository.RepositoryName.like('%' + repositoryname + '%'))
+##    if not status == '-1':
+##        filters.append(Repository.Status == status)
+#    R = session.query(Repository).filter(Repository.RepositoryId.in_(project_list))
+#    for f in filters:
+#        R = R.filter(f)
+#
+#    (row_count,page_count,page_no,page_size,data) = database.pager(R,order_by,page_no,PAGESIZE)
+#    session.close()
+#
+#    return (row_count,page_count,page_no,page_size,data)
+
+    

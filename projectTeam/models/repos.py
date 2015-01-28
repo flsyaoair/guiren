@@ -13,10 +13,10 @@ class Repository(BaseModel):
 
     __tablename__ = 'Repository'
     RepositoryId = Column('RepositoryId', Integer,primary_key=True,nullable=False,autoincrement=True)
-    RepositoryName = Column('RepositoryName', NVARCHAR(10),nullable = False)
+    RepositoryName = Column('RepositoryName', NVARCHAR(30),nullable = False)
 #    Repositories = relationship("RepositoryProfile")
-    RepositoryCategoryId = Column('RepositoryCategoryId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
-    RepositoryCategory = relationship('RepositoryProfile', foreign_keys=RepositoryCategoryId,primaryjoin=RepositoryCategoryId == RepositoryProfile.RepositoryCategoryId)
+#    RepositoryCategoryId = Column('RepositoryCategoryId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
+#    RepositoryCategory = relationship('RepositoryProfile', foreign_keys=RepositoryCategoryId,primaryjoin=RepositoryCategoryId == RepositoryProfile.RepositoryCategoryId)
 #    TaskId = Column('TaskId', Integer,ForeignKey('Task.TaskId'),nullable = False)
 #    Task = relationship('Task', foreign_keys=TaskId,primaryjoin=TaskId == Task.TaskId)
 #    Status = Column('Status', SMALLINT,nullable = False)
