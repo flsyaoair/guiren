@@ -435,3 +435,28 @@ function CategoryCtrl($scope, $http) {
         });
     }
 }
+
+function RepositoryCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+    $scope.RepositoryList = [];
+    $scope.query = function () {
+        $http.post('/QueryRepository').success(function (result) {
+            $scope.RepositoryList = result.data;
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $http.post('/CreateRepository', { RepositoryName: $scope.RepositoryName }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+            $scope.query();
+        });
+    }
+}
