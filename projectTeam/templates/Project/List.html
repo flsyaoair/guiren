@@ -39,10 +39,10 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <s ng-show="Project.Status==2||Task.Status==3">
-                                <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}} + 介绍{{Project.Introduction}}</a>
+                                <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}}</a>
                             </s>
-                            <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}} + 介绍{{Project.Introduction}}</a>
-                            <a data-toggle="collapse" href="#moreabout"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
+                            <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
+                            <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
                         </div>
                         <div class="col-sm-2">创建人：{{Project.Creator}}</div>
                         <div class="col-sm-2">
@@ -70,8 +70,8 @@
                             
                         </div>
                     </div>
-                    <div id="moreabout" class="panel-collapse collapse">
-                        <div class="row panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. </div>
+                    <div id="introduction{{Project.ProjectId}}" class="panel-collapse collapse">
+                        <div class="row panel-body"> {{Project.Introduction}} </div>
                     </div>
                     <hr />
                 </div>
