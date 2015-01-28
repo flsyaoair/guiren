@@ -71,7 +71,7 @@ function RegisterCtrl($scope, $http) {
 function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
     $scope.p = [];
-    $scope.Query = { PageNo: 1, ProjectName: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, ProjectName: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
         var btn = $("#btnCreateProject");
         btn.button('loading');

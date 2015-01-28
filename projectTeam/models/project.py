@@ -21,3 +21,4 @@ class Project(BaseModel):
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
     Members = relationship("Member")
+    Introduction = Column('Introduction', NVARCHAR(1000),nullable=False)
