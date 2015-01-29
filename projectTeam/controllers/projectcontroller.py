@@ -43,9 +43,9 @@ def detail(project_id):
 def update():
     project_id = request.json['ProjectId']
     project_name = request.json['ProjectName']
-    #introduction = request.json['Introduction']
+    project_introduction = request.json['Introduction']
     status = request.json['Status']
-    projectservice.update(project_id,project_name,status)
+    projectservice.update(project_id,project_name,project_introduction,status)
     return jsonify(updated=True)
 
 @project.route('/Project/Dashboard/<int:project_id>')

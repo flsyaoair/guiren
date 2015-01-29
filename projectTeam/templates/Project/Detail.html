@@ -1,6 +1,6 @@
 ﻿{% extends 'PowerTeamLayout.html'%}
 {% block subcontent %}
-<div class="panel panel-primary" ng-controller="ProjectUpdateCtrl" ng-init="Project.ProjectId=((Project.ProjectId));Project.ProjectName='((Project.ProjectName))';Project.Status=((Project.Status));Project.Creator=((Project.Creator))">
+<div class="panel panel-primary" ng-controller="ProjectUpdateCtrl" ng-init="Project.ProjectId=((Project.ProjectId));Project.ProjectName='((Project.ProjectName))';Project.Introduction='((Project.Introduction))';Project.Status=((Project.Status));Project.Creator=((Project.Creator))">
     <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Project.ProjectName}}</strong><strong class="pull-right">((CreatorName)) 创建于 ((Project.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
         <form role="form" name="updateProjectForm">
@@ -16,6 +16,10 @@
                 <label>项目名称<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="ProjectName" ng-model="Project.ProjectName" placeholder="项目名称" required />
                 <div ng-show="updateProjectForm.ProjectName.$dirty&&updateProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
+            </div>
+            <div class="form-group">
+                <label>项目介绍</label>
+                <input type="text" class="form-control" name="Introduction" ng-model="Project.Introduction" placeholder="项目介绍">
             </div>
             <div class="form-group">
                 <label>项目状态</label>
