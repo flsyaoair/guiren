@@ -99,6 +99,9 @@
                             <input type="text" class="form-control" id="ProjectName" name="ProjectName" ng-model="Project.ProjectName" placeholder="项目名称" required />
                             <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                             <br>
+                            <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" ng-model="Project.ProjectKey" placeholder="项目Key值" /> 
+                            <br>
                             <label for="ProjectName">项目介绍</label>
                             <input type="text" class="form-control" id="Introduction" name="Introduction" ng-model="Project.Introduction" placeholder="项目介绍" /> 
                         </div>

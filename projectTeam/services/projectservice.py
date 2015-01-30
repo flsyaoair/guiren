@@ -4,7 +4,7 @@ from projectTeam.models import Project, ProjectStatus,database, Member, Task
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 
-def create(project_name,project_introduction,creator):
+def create(project_name,project_key,project_introduction,creator):
     session = database.get_session()
 
     p = Project()
@@ -15,6 +15,7 @@ def create(project_name,project_introduction,creator):
     p.CreateDate = datetime.now()
     p.LastUpdateDate = datetime.now()
     p.Introduction = project_introduction.strip()
+    p.ProjectKey = project_key.strip()
 
     m = Member()
     m.UserId = creator
