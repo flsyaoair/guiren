@@ -2,7 +2,7 @@ from projectTeam.models.database import BaseModel
 from projectTeam.models.userprofile import UserProfile 
 from projectTeam.models.project import Project 
 
-from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey, Float, UnicodeText
+from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey, Float, UnicodeText, VARCHAR
 from sqlalchemy.orm import relationship
 
 class TaskPriority:
@@ -59,3 +59,5 @@ class Task(BaseModel):
     CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
+    ProjectKey = Column('ProjectKey', VARCHAR(255),ForeignKey('Project.ProjectKey'),nullable=True)
+    ProjectKeyProfile = relationship('Project', foreign_keys=ProjectKey,primaryjoin=ProjectKey == Project.ProjectKey)

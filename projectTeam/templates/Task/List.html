@@ -63,7 +63,7 @@
                 </div>
                 <div ng-repeat="Task in TaskList">
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <s ng-show="Task.Status==3||Task.Status==4">
                                 <a href="/Task/Detail/{{Task.TaskId}}" class="lead">{{Task.TaskName}}</a>
                             </s>
@@ -82,13 +82,15 @@
 
                         </div>
                         <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="Key ：{{Task.ProjectKey}}-T{{Task.TaskId}}"><i class="fa fa-key fa-fw"></i> {{Task.ProjectKey}}-T{{Task.TaskId}}</span>
+                        </div>
+                        <div class="col-sm-2">
                             <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>
                         </div>
-                     
                         <div class="col-sm-2">
                             <span data-toggle="tooltip" title="工时：{{Task.Effort}} 小时"><i class="fa fa-clock-o fa-fw"></i>{{Task.Effort}} 小时</span>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             更新于 {{Task.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
                     </div>
