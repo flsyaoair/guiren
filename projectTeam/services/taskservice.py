@@ -9,13 +9,12 @@ from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 
-def create(project_id,project_key,task_name,version,priority,assign_to,description,creator):
+def create(project_id,task_name,version,priority,assign_to,description,creator):
     session = database.get_session()
     task_name = task_name.strip()
     version =version.strip()
     t = Task()
     t.ProjectId = project_id
-    t.ProjectKey = project_key
     t.TaskName = task_name
     t.Versions = version
     t.Priority = priority
