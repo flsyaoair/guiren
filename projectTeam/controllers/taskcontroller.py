@@ -37,7 +37,7 @@ def query():
 def create(project_id):
     member_list = teamservice.member_in_project(project_id)
 #    task = taskservice.get(member_list.TaskId)
-    return render_template('Task/Create.html',ProjectId=project_id,ProjectKey='key',MemberList=member_list)
+    return render_template('Task/Create.html',ProjectId=project_id,MemberList=member_list)
 
 @task.route('/Task/Detail/<int:task_id>')
 def detail(task_id):
@@ -48,7 +48,7 @@ def detail(task_id):
         task.AssignTo = -1
     
    
-    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,MemberList=member_list,CurrentUser=g.user_id)
+    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id)
                                               
 @task.route('/Task/Update',methods=['POST'])
 def update():

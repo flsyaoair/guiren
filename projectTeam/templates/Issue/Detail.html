@@ -7,16 +7,19 @@
 {% endblock %}
 {% block subcontent %}
 <div class="panel panel-primary" ng-controller="IssueUpdateCtrl" ng-init="Issue.IssueId=((Issue.IssueId));Issue.ProjectId=((Issue.ProjectId));Issue.Subject='((Issue.Subject))';Issue.AssignTo=((Issue.AssignTo));Issue.CategoryId=((Issue.CategoryId));Issue.Status=((Issue.Status));Issue.Priority=((Issue.Priority))">
-    <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Issue.Subject}}</strong><strong class="pull-right">((Issue.CreatorProfile.Nick)) 创建于 ((Issue.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+        <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Issue.Subject}}</strong><strong class="pull-right">((Creator)) 创建于 ((Issue.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
         <div class="row text-center">
             <div class="col-sm-2">
-                问题分类:((Issue.Category.CategoryName))
+                问题分类:<strong class="label label-danger">((Issue.Category.CategoryName))</strong>
             </div>
-            <div class="col-sm-3">
-                指派给:((Issue.AssignToProfile.Nick))
+            <div class="col-sm-2">
+                Key:<strong class="label label-success">((ProjectKey))-I((Issue.IssueId))</strong>
             </div>
-            <div class="col-sm-3" ng-switch on="Issue.Priority">
+            <div class="col-sm-2">
+                指派给:<strong class="label label-success">((Issue.AssignToProfile.Nick))</strong>
+            </div>
+            <div class="col-sm-2" ng-switch on="Issue.Priority">
                 优先级:
                 <strong class="label label-danger" ng-switch-when="1">高</strong>
                 <strong class="label label-success" ng-switch-when="2">中</strong>

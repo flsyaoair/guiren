@@ -4,6 +4,7 @@ from projectTeam.models.database import BaseModel
 from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey, Float, UnicodeText
 from sqlalchemy.orm import relationship
 from projectTeam.models.userprofile import UserProfile
+from projectTeam.models.project import Project 
 
 class IssueStatus:
     Open = 1
@@ -54,6 +55,7 @@ class Issue(BaseModel):
     __tablename__ = 'Issue'
     IssueId = Column('IssueId', Integer,primary_key=True,nullable=False,autoincrement=True)
     ProjectId = Column('ProjectId', Integer,ForeignKey('Project.ProjectId'),nullable = False)
+    ProjectProfile = relationship('Project', lazy='subquery', foreign_keys=ProjectId,primaryjoin=ProjectId == Project.ProjectId)
     CategoryId = Column('CategoryId', Integer,ForeignKey('IssueCategory.CategoryId'),nullable = False)
     Category = relationship('IssueCategory', foreign_keys=CategoryId,primaryjoin=CategoryId == IssueCategory.CategoryId)
     Subject = Column('Subject', NVARCHAR(30),nullable = False)

@@ -62,7 +62,7 @@
                 </div>
                 <div ng-repeat="Issue in IssueList">
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <s ng-show="Issue.Status==3||Issue.Status==4">
                                 <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead">
                                     {{Issue.Subject}}
@@ -84,12 +84,15 @@
                             </span>
                         </div>
                         <div class="col-sm-2">
-                            <span data-toggle="tooltip" title="问题分类 {{Issue.Category}}">{{Issue.Category}}</span>
+                            <span data-toggle="tooltip" title="Key: {{Issue.ProjectKey}}-I{{Issue.IssueId}}"><i class="fa fa-key fa-fw"></i>{{Issue.ProjectKey}}-I{{Issue.IssueId}}</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span data-toggle="tooltip" title="问题分类: {{Issue.Category}}"><i class="fa fa-bug fa-fw"></i>{{Issue.Category}}</span>
                         </div>
                         <div class="col-sm-2">
                             <span data-toggle="tooltip" title="指派给 {{Issue.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Issue.AssignTo}}</span>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             更新于 {{Issue.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
                     </div>

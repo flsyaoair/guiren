@@ -39,7 +39,7 @@ def query():
     (row_count,page_count,page_no,page_size,data) = issueservice.query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,'CreateDate',page_no)
     issue_list = []
     for i in data.all():
-        issue_list.append({'IssueId':i.IssueId,'ProjectId':i.ProjectId,'Category':i.Category.CategoryName,'Subject':i.Subject,'Priority':i.Priority,'Status':i.Status,'AssignTo':i.AssignToProfile.Nick,'Creator':i.CreatorProfile.Nick,'LastUpdateDate':i.LastUpdateDate.isoformat()})
+        issue_list.append({'IssueId':i.IssueId,'ProjectId':i.ProjectId,'ProjectKey':i.ProjectProfile.ProjectKey,'Category':i.Category.CategoryName,'Subject':i.Subject,'Priority':i.Priority,'Status':i.Status,'AssignTo':i.AssignToProfile.Nick,'Creator':i.CreatorProfile.Nick,'LastUpdateDate':i.LastUpdateDate.isoformat()})
     return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=issue_list)
 
 @issue.route('/Issue/Detail/<int:issue_id>')
@@ -50,7 +50,7 @@ def detail(issue_id):
     if issue.AssignTo == g.user_id:
         issue.AssignTo = -1
     history_list = issueservice.get_history(issue_id)
-    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,MemberList=member_list,Category=category,CurrentUser=g.user_id)
+    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,Creator=issue.CreatorProfile.Nick,ProjectKey=issue.ProjectProfile.ProjectKey,MemberList=member_list,Category=category,CurrentUser=g.user_id)
 
 @issue.route('/Issue/Update',methods=['POST'])
 def update():
