@@ -4,7 +4,7 @@
     <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Project.ProjectName}}</strong><strong class="pull-right">((CreatorName)) 创建于 ((Project.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
         <div class="">
-            <p><label>项目Key值 : {{Project.ProjectKey}}</label>
+            <p><label>项目Key值 : ((ProjectKey))</label>
         </div>
         <form role="form" name="updateProjectForm">
             <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">

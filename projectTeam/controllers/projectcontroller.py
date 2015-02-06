@@ -20,7 +20,7 @@ def query():
     (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'CreateDate desc',g.user_id)
     projects = []
     for p in data.all():
-        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'Creator':p.UserProfile.Nick})
+        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
     return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects)
 
 @project.route('/Project/Create',methods=['POST'])
@@ -37,7 +37,7 @@ def delete():
 def detail(project_id):
     project = projectservice.get(project_id)
 
-    return render_template('Project/Detail.html',Project=project,CreatorName=project.UserProfile.Nick,CurrentUser=g.user_id)
+    return render_template('Project/Detail.html',Project=project,ProjectKey=project.ProjectKey,CreatorName=project.UserProfile.Nick,CurrentUser=g.user_id)
 
 @project.route('/Project/Update',methods=['POST'])
 def update():

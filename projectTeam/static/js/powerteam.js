@@ -460,3 +460,41 @@ function RepositoryCtrl($scope, $http) {
         });
     }
 }
+
+
+
+function onChange( obj )
+{
+    if(obj == "ProjectKey")
+    /*用于验证ProjectKey的输入是否符合规范*/
+        {
+            document.getElementById("message").innerHTML="";
+            document.getElementById("btnCreateProject").disabled=false;
+            var keyObj = document.getElementById(obj);
+            var key = new String(keyObj.value);
+            if( (key.length > 255) )
+            {
+                document.getElementById("message").innerHTML="key值不能超过255个字符";
+            }
+            var Regex = /^([\.a-zA-Z0-9_-])+$/;
+
+            if (!Regex.test(key))
+            {                
+                document.getElementById("message").innerHTML = "输入格式不正确，请重新输入；";                    
+                document.getElementById("btnCreateProject").disabled=true; 
+                //keyObj.value = "";
+                return false;            
+            }            
+            
+            /*
+            for (i=0; i<key.length; i++)
+            {
+                if (key.charAt(i) != "/^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/")
+                    {
+                        document.getElementById("message").innerHTML="key值输入格式不对";
+                        return false;
+                    }
+            }
+            */
+        }
+}

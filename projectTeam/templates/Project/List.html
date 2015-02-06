@@ -100,11 +100,14 @@
                             <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                             <br>
                             <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" ng-model="Project.ProjectKey" placeholder="项目Key值" required /> 
+                            <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值" ng-maxlength="255" required /> 
                             <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
+                            <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
+                            <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
+                            <div id="message" class="text-danger"></div>
                             <br>
                             <label for="ProjectName">项目介绍</label>
-                            <input type="text" class="form-control" id="Introduction" name="Introduction" ng-model="Project.Introduction" placeholder="项目介绍" /> 
+                            <textarea row="3" type="text" class="form-control" id="Introduction" name="Introduction" ng-model="Project.Introduction" placeholder="项目介绍" /></textarea> 
                         </div>
                     </form>
                 </div>
@@ -114,6 +117,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="panel panel-primary" ng-controller="ProjectCtrl" ng-init="query()">
+    <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
+    <div class="panel-body">
+        
     </div>
 </div>
 {% endblock %}
