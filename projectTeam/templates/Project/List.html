@@ -122,7 +122,23 @@
 <div class="panel panel-primary" ng-controller="ProjectCtrl" ng-init="query()">
     <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
     <div class="panel-body">
-        
+        <form class="form-inline" role="form">
+            
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-show="ProjectList.length<=0">
+                    <div class="alert alert-success text-center">
+                        <h1>没有变更记录<i class="fa fa-smile-o"></i></h1>
+                    </div>
+                </div>
+                <div ng-repeat="Project in ProjectList">
+                    <p>
+                    {{ Project.CreateDate | date:'yyyy-MM-dd HH:MM' }}  {{Project.Creator}} 新建项目 <a href="/Project/Dashboard/{{Project.ProjectId}}">{{Project.ProjectName}}</a><br>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
