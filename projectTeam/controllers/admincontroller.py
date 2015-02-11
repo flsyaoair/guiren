@@ -96,5 +96,27 @@ def query_Repository():
     for i in data:
         repository_list.append({'RepositoryId':i.RepositoryId,'RepositoryName':i.RepositoryName})
     return jsonify(data=repository_list)
-        
-   
+@admin.route('/Repository/Detail/<int:repository_id>')
+def detail_Repository(repository_id):   
+    repository = repositoryservice.get(repository_id)
+#    tt=repository.RepositoryName
+    return render_template('Repository/Detail.html',RepositoryId=repository_id,Repository=repository) 
+@admin.route('/CreateRepositoryCategory',methods=['POST'])
+def create_RepositoryCategory():
+    repositorycategoryname = request.json['RepositoryCategoryName']
+    repositoryid = request.json['RepositoryId']
+#    repository = repositoryservice.get(repository_id)
+#    repositoryid=repository.RepositoryId
+    exist = repositoryservice.exist_repositoryprofile(repositorycategoryname)
+    if not exist:
+        repositoryservice.create_repositoryprofile(repositoryid,repositorycategoryname)
+    return jsonify(status=exist,RepositoryId=repositoryid)  
+@admin.route('/QueryRepositoryCategory',methods=['POST'])
+def query_RepositoryCategory():
+    
+    repository_id = request.json['RepositoryId']
+    data = repositoryservice.query_repositoryprofile(repository_id)
+    repositoryCategory_list = []
+    for i in data:
+        repositoryCategory_list.append({'RepositoryCategoryId':i.RepositoryCategoryId,'RepositoryCategoryName':i.RepositoryCategoryName})
+    return jsonify(data=repositoryCategory_list)    

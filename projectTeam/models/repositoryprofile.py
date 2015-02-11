@@ -14,8 +14,8 @@ class RepositoryProfile(BaseModel):
     RepositoryCategoryId = Column('RepositoryCategoryId', Integer,primary_key=True,nullable=False,autoincrement=True)
     RepositoryCategoryName = Column('RepositoryCategoryName', NVARCHAR(10),nullable = False)
     
-#    RepositoryId = Column('RepositoryId', Integer,ForeignKey('Repository.RepositoryId'),nullable = False)
+    RepositoryId = Column('RepositoryId', Integer,ForeignKey('Repository.RepositoryId'),nullable = False)
 #    Repository = relationship('Repository', foreign_keys=RepositoryId,primaryjoin=RepositoryId == Repository.RepositoryId)
 #    Status = Column('Status', SMALLINT,nullable = False)
 
-
+ 

@@ -460,3 +460,31 @@ function RepositoryCtrl($scope, $http) {
         });
     }
 }
+function RepositoryCategoryCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+//    $scope.RepositoryId = $scope
+//    $scope.Query = { RepositoryId: RepositoryId, RepositoryCategoryName: '', RepositoryCategoryId: '' };
+    $scope.RepositoryCategoryList = [];
+    $scope.query = function () {
+        $http.post('/QueryRepositoryCategory',{"RepositoryId": $scope.RepositoryId}).success(function (result) {
+            $scope.RepositoryCategoryList = result.data;
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $http.post('/CreateRepositoryCategory', {RepositoryId: $scope.RepositoryId,RepositoryCategoryName: $scope.RepositoryCategoryName }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+//            $scope.RepositoryId=result.RepositoryId
+            $scope.query();
+        });
+    }
+}
+
