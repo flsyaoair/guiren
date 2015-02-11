@@ -184,6 +184,6 @@ def member_task(current_user):
     session = database.get_session()
     
     project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
-    task_list = session.query(Task.TaskId).filter(Task.ProjectId.in_(project_list)).all()
+    task_list = session.query(Task).filter(Task.ProjectId.in_(project_list)).all()
     
     return (task_list)

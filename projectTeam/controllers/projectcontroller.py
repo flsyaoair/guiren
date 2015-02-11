@@ -11,11 +11,13 @@ project.before_request(login_filter)
 def index():
     #history_list = taskservice.get_user_history(g.user_id)
     task_list = taskservice.member_task(g.user_id)
-    taskname_list = []
-    #for t in task_list:
-    #    taskname_list.append(t.TaskName)
-    
-    return render_template('Project/List.html', TaskList=task_list, TaskNameList='taskname_list', HistoryList='22history_list')
+    history_list_all = []
+    for task in task_list:
+        history_list = taskservice.get_history(task.TaskId)
+        for history in history_list:
+            history_list_all.append(history)
+
+    return render_template('Project/List.html', TaskList=task_list, HistoryList=history_list_all)
 
 @project.route('/Project/Query',methods=['POST'])
 def query():
