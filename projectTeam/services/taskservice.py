@@ -1,6 +1,6 @@
 ﻿# -*- coding: UTF-8 -*-
 
-from projectTeam.models import Task, TaskStatus, UserProfile, database
+from projectTeam.models import Task, TaskStatus, UserProfile, database, Member
 from projectTeam.models.task import Task, TaskStatus,  TaskHistory
 from datetime import datetime
 from sqlalchemy.orm import joinedload
@@ -90,6 +90,15 @@ def get_history(task_id):
     session.close()
 
     return history_list
+    
+#def get_user_history(g.user_id):
+#    session = database.get_session()
+#
+#    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
+#                  
+#    session.close()
+
+#    return history_list
 
 def update(task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
@@ -170,3 +179,11 @@ def statistics(project_id):
     session.close()
 
     return (task_status,task_priority)
+    
+def member_task(current_user):
+    session = database.get_session()
+    
+    project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
+    task_list = session.query(Task.TaskId).filter(Task.ProjectId.in_(project_list)).all()
+    
+    return (task_list)
