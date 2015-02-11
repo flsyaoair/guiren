@@ -42,6 +42,7 @@
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}}</a>
                             </s>
                             <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
+                            <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
                         </div>
                         <div class="col-sm-2">创建人：{{Project.Creator}}</div>
                         <div class="col-sm-2">
@@ -66,9 +67,13 @@
                                     <strong>{{Project.Progress}}%</strong>
                                 </div>
                             </div>
-                            <hr />
+                            
                         </div>
                     </div>
+                    <div id="introduction{{Project.ProjectId}}" class="panel-collapse collapse">
+                        <div class="row panel-body"> {{Project.Introduction}} </div>
+                    </div>
+                    <hr />
                 </div>
                 <div class="text-center">
                     <ul class="pager">
@@ -93,12 +98,44 @@
                             <label for="ProjectName">项目名称<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="ProjectName" name="ProjectName" ng-model="Project.ProjectName" placeholder="项目名称" required />
                             <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
+                            <br>
+                            <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值" ng-maxlength="255" required /> 
+                            <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
+                            <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
+                            <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
+                            <div id="message" class="text-danger"></div>
+                            <br>
+                            <label for="ProjectName">项目介绍</label>
+                            <textarea row="3" type="text" class="form-control" id="Introduction" name="Introduction" ng-model="Project.Introduction" placeholder="项目介绍" /></textarea> 
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
                     <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-primary" ng-controller="ProjectCtrl" ng-init="query()">
+    <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
+    <div class="panel-body">
+        <form class="form-inline" role="form">
+            
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-show="ProjectList.length<=0">
+                    <div class="alert alert-success text-center">
+                        <h1>没有变更记录<i class="fa fa-smile-o"></i></h1>
+                    </div>
+                </div>
+                <div ng-repeat="Project in ProjectList">
+                    <p>
+                    {{ Project.CreateDate | date:'yyyy-MM-dd HH:MM' }}  {{Project.Creator}} 新建项目 <a href="/Project/Dashboard/{{Project.ProjectId}}">{{Project.ProjectName}}</a><br>
+                    </p>
                 </div>
             </div>
         </div>

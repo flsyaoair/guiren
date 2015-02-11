@@ -14,17 +14,18 @@ def index():
 @project.route('/Project/Query',methods=['POST'])
 def query():
     project_name = request.json['ProjectName']
+    project_introduction = request.json['Introduction']
     status = request.json['Status']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,status,page_no,'CreateDate desc',g.user_id)
+    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'CreateDate desc',g.user_id)
     projects = []
     for p in data.all():
-        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'Creator':p.UserProfile.Nick})
+        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
     return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects)
 
 @project.route('/Project/Create',methods=['POST'])
 def create():
-    projectservice.create(request.json['ProjectName'],g.user_id)
+    projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],request.json['Introduction'],g.user_id)
     return jsonify(created=True)
 
 @project.route('/Project/Delete',methods=['POST'])
@@ -36,14 +37,15 @@ def delete():
 def detail(project_id):
     project = projectservice.get(project_id)
 
-    return render_template('Project/Detail.html',Project=project,CreatorName=project.UserProfile.Nick,CurrentUser=g.user_id)
+    return render_template('Project/Detail.html',Project=project,ProjectKey=project.ProjectKey,CreatorName=project.UserProfile.Nick,CurrentUser=g.user_id)
 
 @project.route('/Project/Update',methods=['POST'])
 def update():
     project_id = request.json['ProjectId']
     project_name = request.json['ProjectName']
+    project_introduction = request.json['Introduction']
     status = request.json['Status']
-    projectservice.update(project_id,project_name,status)
+    projectservice.update(project_id,project_name,project_introduction,status)
     return jsonify(updated=True)
 
 @project.route('/Project/Dashboard/<int:project_id>')

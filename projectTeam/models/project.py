@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from projectTeam.models.database import BaseModel
 
-from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey
+from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey,UnicodeText,VARCHAR
 from sqlalchemy.orm import relationship
 
 class ProjectStatus:
@@ -21,3 +21,5 @@ class Project(BaseModel):
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
     Members = relationship("Member")
+    Introduction = Column('Introduction', UnicodeText)
+    ProjectKey = Column('ProjectKey', VARCHAR(255),nullable=False,unique=True)

@@ -6022,6 +6022,7 @@ button.close {
 .modal-body {
   position: relative;
   padding: 20px;
+  padding-bottom: 0px;
 }
 
 .modal-footer {
