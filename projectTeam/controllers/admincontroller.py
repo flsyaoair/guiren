@@ -114,7 +114,7 @@ def create_RepositoryCategory():
     repositoryid = request.json['RepositoryId']
 #    repository = repositoryservice.get(repository_id)
 #    repositoryid=repository.RepositoryId
-    exist = repositoryservice.exist_repositoryprofile(repositorycategoryname)
+    exist = repositoryservice.exist_repositoryprofile(repositoryid,repositorycategoryname)
     if not exist:
         repositoryservice.create_repositoryprofile(repositoryid,repositorycategoryname)
     return jsonify(status=exist,RepositoryId=repositoryid)  

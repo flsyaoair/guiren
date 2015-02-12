@@ -49,10 +49,10 @@ def create_repositoryprofile(repository_id,repositorycategory_name):
     session.close()
 
     
-def exist_repositoryprofile(repositorycategory_name):
+def exist_repositoryprofile(repository_id,repositorycategory_name):
     session = database.get_session()
 
-    c = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryName == repositorycategory_name).count()
+    c = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryName == repositorycategory_name,RepositoryProfile.RepositoryId == repository_id).count()
 
     session.close()
 
