@@ -40,9 +40,14 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <a href="/Repository/Detail/{{repository.RepositoryId}}"  class="lead">{{repository.RepositoryName}}
+                                    
                                 </div>
-                               
+                                 <div class="col-sm-6">
+                   
+                                <button  type="button"  class="btn btn-danger" ng-click="RemoveRepository(repository.RepositoryId)"><i class="fa fa-trash-o fa-fw"></i>移除</button>
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

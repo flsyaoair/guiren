@@ -101,6 +101,13 @@ def detail_Repository(repository_id):
     repository = repositoryservice.get(repository_id)
 #    tt=repository.RepositoryName
     return render_template('Repository/Detail.html',RepositoryId=repository_id,Repository=repository) 
+@admin.route('/RemoveRepository',methods=['POST'])
+def remove_Repository():
+    repository_id = request.json['RepositoryId']
+#    repositoryCategory_id = request.json['RepositoryCategoryId']
+    repositoryservice.remove_Repository(repository_id)
+    return jsonify(removed=True)   
+
 @admin.route('/CreateRepositoryCategory',methods=['POST'])
 def create_RepositoryCategory():
     repositorycategoryname = request.json['RepositoryCategoryName']
@@ -119,4 +126,10 @@ def query_RepositoryCategory():
     repositoryCategory_list = []
     for i in data:
         repositoryCategory_list.append({'RepositoryCategoryId':i.RepositoryCategoryId,'RepositoryCategoryName':i.RepositoryCategoryName})
-    return jsonify(data=repositoryCategory_list)    
+    return jsonify(data=repositoryCategory_list) 
+@admin.route('/RemoveRepositoryCategory',methods=['POST'])
+def remove_RepositoryCategory():
+    repository_id = request.json['RepositoryId']
+    repositoryCategory_id = request.json['RepositoryCategoryId']
+    repositoryservice.remove_RepositoryCategory(repository_id,repositoryCategory_id)
+    return jsonify(removed=True)   

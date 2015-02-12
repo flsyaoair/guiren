@@ -33,9 +33,12 @@
                         <div ng-repeat="RepositoryCategory in RepositoryCategoryList">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    {{RepositoryCategory.RepositoryCategoryName}}
+                                   <strong>{{RepositoryCategory.RepositoryCategoryName}}</strong>    
                                 </div>
-                               
+                                <div class="col-sm-6">
+                                        <a href="/Admin/RepositorySetting" class="btn btn-default btn-xs">返回</a>
+                                        <button  type="button"  class="btn btn-danger" ng-click="RemoveRepositoryCategory(RepositoryCategory.RepositoryCategoryId)"><i class="fa fa-trash-o fa-fw"></i>移除</button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -459,6 +459,18 @@ function RepositoryCtrl($scope, $http) {
             $scope.query();
         });
     }
+    $scope.RemoveRepository = function (RepositoryId) {
+        $scope.AddSuccess = false;
+        $scope.RemoveSuccess = false;
+        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
+            if (result.removed) {
+                $scope.RemoveSuccess = true;
+                $scope.query();
+                window.location.href = "/Admin/RepositorySetting" 
+                
+            }
+        });
+    }
 }
 
 function RepositoryCategoryCtrl($scope, $http) {
@@ -485,6 +497,17 @@ function RepositoryCategoryCtrl($scope, $http) {
             }
 //            $scope.RepositoryId=result.RepositoryId
             $scope.query();
+        });
+    }
+    $scope.RemoveRepositoryCategory = function (RepositoryCategoryId) {
+        $scope.AddSuccess = false;
+        $scope.RemoveSuccess = false;
+        $http.post('/RemoveRepositoryCategory', {'RepositoryId': $scope.RepositoryId,'RepositoryCategoryId': RepositoryCategoryId }).success(function (result) {
+            if (result.removed) {
+                $scope.RemoveSuccess = true;
+                $scope.query();
+                
+            }
         });
     }
 }

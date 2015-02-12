@@ -65,6 +65,16 @@ def get(repository_id):
     
     session.close()
     return r
+def remove_Repository(repository_id):
+    
+    session = database.get_session()
+
+    r1 = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id).delete()
+    r2 = session.query(Repository).filter(Repository.RepositoryId == repository_id).delete()
+    session.commit()
+    session.close()
+   
+   
 def query_repositoryprofile(repository_id):
     
     session = database.get_session()
@@ -72,4 +82,15 @@ def query_repositoryprofile(repository_id):
     list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id)
     session.close()
     return list
+remove_Repository
+def remove_RepositoryCategory(repository_id,repositoryCategory_id):
+    
+    session = database.get_session()
+
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id,RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).delete()
+    session.commit()
+    session.close()
+   
+    return list
+
    
