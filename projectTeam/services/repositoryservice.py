@@ -82,7 +82,7 @@ def query_repositoryprofile(repository_id):
     list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id)
     session.close()
     return list
-remove_Repository
+#remove_Repository
 def remove_RepositoryCategory(repository_id,repositoryCategory_id):
     
     session = database.get_session()
