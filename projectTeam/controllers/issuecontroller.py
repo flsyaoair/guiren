@@ -54,6 +54,7 @@ def detail(issue_id):
 
 @issue.route('/Issue/Update',methods=['POST'])
 def update():
+    ProjectId = request.json['ProjectId']
     IssueId = request.json['IssueId']
     subject = request.json['Subject']
     assign_to = request.json['AssignTo']
@@ -63,7 +64,7 @@ def update():
     category_id = request.json['CategoryId']
     status = request.json['Status']
     feedback = request.json['Feedback']
-    issueservice.update(IssueId,subject,category_id,assign_to,priority,status,feedback,g.user_id)
+    issueservice.update(ProjectId,IssueId,subject,category_id,assign_to,priority,status,feedback,g.user_id)
     return jsonify(updated=True)
 
 @issue.route('/Issue/Delete',methods=['POST'])

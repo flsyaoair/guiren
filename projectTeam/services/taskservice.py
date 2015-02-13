@@ -100,7 +100,7 @@ def get_history(task_id):
 
 #    return history_list
 
-def update(task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
+def update(project_id,task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
@@ -110,9 +110,12 @@ def update(task_id,task_name,version,assign_to,priority,progress,status,feedback
     changeAssignTo = not (task.AssignTo == assign_to)
     description = task.Description
 
-    if (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
+    if (not task.Versions == version) or (not task.TaskName == task_name) or (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
         history = TaskHistory()
+        history.ProjectId = task.ProjectId
         history.TaskId = task.TaskId
+        history.Name = task.TaskName
+        history.Versions = task.Versions
         history.RawStatus = task.Status
         history.NewStatus = status
         history.RawPriority = task.Priority

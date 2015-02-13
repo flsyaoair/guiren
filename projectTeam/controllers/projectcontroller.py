@@ -9,15 +9,20 @@ project.before_request(login_filter)
 
 @project.route('/Project')
 def index():
-    #history_list = taskservice.get_user_history(g.user_id)
     task_list = taskservice.member_task(g.user_id)
+    issue_list = issueservice.member_issue(g.user_id)
     history_list_all = []
     for task in task_list:
-        history_list = taskservice.get_history(task.TaskId)
-        for history in history_list:
+        history_list_task = taskservice.get_history(task.TaskId)
+        for history in history_list_task:
             history_list_all.append(history)
+    for issue in issue_list:
+        history_list_issue = issueservice.get_history(issue.IssueId)
+        for history in history_list_issue:
+            history_list_all.append(history)
+    history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)
 
-    return render_template('Project/List.html', TaskList=task_list, HistoryList=history_list_all)
+    return render_template('Project/List.html', HistoryList=history_list_all)
 
 @project.route('/Project/Query',methods=['POST'])
 def query():

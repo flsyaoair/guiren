@@ -65,7 +65,7 @@ def update():
     status = request.json['Status']
 #    effort = request.json['Effort']
 #    description = request.json['Description']
-    taskservice.update(task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
+    taskservice.update(project_id, task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
     return jsonify(updated=True)
 
 @task.route('/Task/Delete',methods=['POST'])

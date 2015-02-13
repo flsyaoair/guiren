@@ -20,7 +20,11 @@ class TaskHistory(BaseModel):
 
     __tablename__ = 'TaskHistory'
     HistoryId = Column('HistoryId', Integer,primary_key=True,nullable=False,autoincrement=True)
+    ProjectId = Column('ProjectId', Integer,ForeignKey('Project.ProjectId'),nullable = False)
+    ProjectProfile = relationship('Project', lazy='subquery', foreign_keys=ProjectId,primaryjoin=ProjectId == Project.ProjectId)
     TaskId = Column('TaskId', Integer,ForeignKey('Task.TaskId'),nullable = False)
+    Name = Column('Name', NVARCHAR(30),ForeignKey('Task.TaskName'),nullable = False)
+    Versions = Column('Versions', NVARCHAR(30),ForeignKey('Task.Versions'),nullable = False)
     RawStatus = Column('RawStatus', SMALLINT,nullable = False)
     NewStatus = Column('NewStatus', SMALLINT,nullable = False)
     RawPriority = Column('RawPriority', SMALLINT,nullable = False)

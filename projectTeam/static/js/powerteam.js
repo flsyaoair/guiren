@@ -157,23 +157,6 @@ function TaskCreateCtrl($scope, $http) {
     }
 }
 
-//    function TaskCreateCtrl($scope, $http) {
-//        $scope.AddSuccess = false;
-//        editor = UE.getEditor('editor');
-//    
-//        $scope.create = function () {
-//            var btn = $("#btnCreate");
-//            btn.button('loading');
-//    
-//            $http.post('/Task/CreateNew', {TaskName:$scope.TaskName, Versions:$scope.Versions, Priority:$scope.Priority, AssignTo:$scope.AssignTo, Description:$scope.Description}).success(function (result) {
-//                if (result.created) {
-//                    $scope.AddSuccess = true;
-//                    btn.button('reset');
-//                    window.location.href = "/Project/Task/" + result.ProjectId;
-//                }
-//           });
-//        }
-//    }
 
 function TaskUpdateCtrl($scope, $http) {
     $scope.UpdateSuccess = false;
@@ -516,3 +499,4 @@ function onChange( obj )
             */
         }
 }
+

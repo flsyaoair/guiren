@@ -41,7 +41,7 @@
                             <s ng-show="Project.Status==2||Task.Status==3">
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead">{{Project.ProjectName}}</a>
                             </s>
-                            <a href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}+{{Project.ProjectId}}</a>
+                            <a data-toggle="tooltip" title="Key: " href="/Project/Dashboard/{{Project.ProjectId}}" class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
                             <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
                         </div>
                         <div class="col-sm-2">创建人：{{Project.Creator}}</div>
@@ -119,69 +119,64 @@
         </div>
     </div>
 </div>
-<div class="panel panel-primary" ng-controller="ProjectCtrl" ng-init="query()">
+
+<div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
     <div class="panel-body">
-        <form class="form-inline" role="form">
-            
-        </form>
         <div class="panel panel-default">
             <div class="panel-body">
                 {% for history in HistoryList %}
-                <div class="notice notice-info">
-                    <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
-                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
-                        状态 从 <span ng-switch on="((history.RawStatus))">
-                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
-                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
-                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
-                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
-                        </span>
-                        变为
-                        <span ng-switch on="((history.NewStatus))">
-                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
-                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
-                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
-                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
-                        </span>
-                    </p>
-                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
-                        优先级 从 <span ng-switch on="((history.RawPriority))">
-                            <strong class="label label-danger" ng-switch-when="1">高</strong>
-                            <strong class="label label-warning" ng-switch-when="2">中</strong>
-                            <strong class="label label-default" ng-switch-when="3">低</strong>
-                        </span>
-                        变为
-                        <span ng-switch on="((history.NewPriority))">
-                            <strong class="label label-danger" ng-switch-when="1">高</strong>
-                            <strong class="label label-warning" ng-switch-when="2">中</strong>
-                            <strong class="label label-default" ng-switch-when="3">低</strong>
-                        </span>
-                    </p>
-                  
-                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
-                        指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
-                    </p>
-                    <hr />
-                </div>
-                <div ng-show="'((history.Feedback))'!=''">
-                    ((history.Feedback|safe))
-                    <hr />
-                </div>
-                <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
-
-                </div>
-                {% endfor %}
-                <div ng-show="ProjectList.length<=0">
-                    <div class="alert alert-success text-center">
-                        <h1>没有变更记录<i class="fa fa-smile-o"></i></h1>
+                <div class="row notice notice-info" style="padding-top: 10px; padding-bottom: 5px;">
+                    <div class="col-sm-9">
+                    <strong><i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick))</strong> 更新 
+                    <c ng-show="'((history.TaskId))'!=''">
+                        <a href="/Task/Detail/((history.TaskId))" data-toggle="tooltip" title="项目：((history.ProjectProfile.ProjectName))"><i class="fa fa-tasks fa-fw"></i>((history.Name))</a>:
+                    </c>
+                    <c ng-show="'((history.IssueId))'!=''">
+                        <a href="/Issue/Detail/((history.IssueId))" data-toggle="tooltip" title="项目：((history.ProjectProfile.ProjectName))"><i class="fa fa-bug fa-fw"></i>((history.Name))</a>:
+                    </c>
+					<c ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+						<c ng-show="((history.RawStatus))!=((history.NewStatus))">
+							状态 从<span ng-switch on="((history.RawStatus))">
+								<strong class="label label-primary" ng-switch-when="1">打开</strong>
+								<strong class="label label-success" ng-switch-when="2">已解决</strong>
+								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+							</span>
+							变为
+							<span ng-switch on="((history.NewStatus))">
+								<strong class="label label-primary" ng-switch-when="1">打开</strong>
+								<strong class="label label-success" ng-switch-when="2">已解决</strong>
+								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+							</span>
+						</c>
+						<c ng-show="((history.RawPriority))!=((history.NewPriority))">
+							优先级 从<span ng-switch on="((history.RawPriority))">
+								<strong class="label label-danger" ng-switch-when="1">高</strong>
+								<strong class="label label-warning" ng-switch-when="2">中</strong>
+								<strong class="label label-default" ng-switch-when="3">低</strong>
+							</span>
+							变为
+							<span ng-switch on="((history.NewPriority))">
+								<strong class="label label-danger" ng-switch-when="1">高</strong>
+								<strong class="label label-warning" ng-switch-when="2">中</strong>
+								<strong class="label label-default" ng-switch-when="3">低</strong>
+							</span>
+						</c>
+						<c ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
+							指派人 从((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
+						</c>
+					</c>
+					<div ng-show="'((history.Feedback))'!=''" style="padding-left: 5px; padding-top: 5px;">
+						((history.Feedback|safe))
+					</div>
+                    </div>
+                    <div class="col-sm-3 text-right" style="">
+                        <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
                     </div>
                 </div>
-                <div ng-repeat="Project in ProjectList">
-                    <p>
-                    [{{ Project.CreateDate | date:'yyyy-MM-dd HH:MM' }}]  {{Project.Creator}} 新建项目 <a href="/Project/Dashboard/{{Project.ProjectId}}">{{Project.ProjectName}}</a>
-                    </p>
-                </div>
+                {% endfor %}
 
             </div>
         </div>
