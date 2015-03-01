@@ -1,0 +1,35 @@
+{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+
+{% endblock %}
+{% block subcontent %}
+<div class="panel panel-primary" ng-controller="RequirementCtrl" ng-init="">
+    
+    <div class="panel-body">
+        <form role="form" name="createTaskForm">
+            <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>创建新需求成功!</strong>
+            </div>
+            <div class="form-group">
+                <label>需求名称<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="RequirementName" name="RequirementName" ng-model="RequirementName" placeholder="需求名称" required />
+                <div ng-show="createTaskForm.TaskName.$dirty&&createTaskForm.TaskName.$error.required" class="text-danger">请输入任务名称</div>
+            </div>
+            <div class="form-group">
+                <label>版本<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="Versions" ng-model="Versions" placeholder="版本" required />
+                <div ng-show="createTaskForm.Versions.$dirty&&createTaskForm.Versions.$error.required" class="text-danger">请输入版本</div>
+            </div>
+
+
+            <div class="form-group">
+                <label>详细描述</label>
+                <script id="editor" type="text/plain">
+                </script>
+            </div>
+            <button type="button" id="btnCreate" class="btn btn-primary" ng-disabled="createTaskForm.$invalid" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>创建</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

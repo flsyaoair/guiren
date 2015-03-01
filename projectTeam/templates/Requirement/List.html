@@ -1,0 +1,47 @@
+{% extends 'PowerTeamLayout.html'%}
+
+{% block subcontent %}
+
+    <div class="col-sm-10">
+        <div class="panel panel-primary" ng-controller="RequirementCtrl" ng-init="query();">
+            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>需求列表</div>
+            <div class="panel-body">
+                
+                <form class="form-inline" role="form" name="categoryForm">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="sr-only">问题分类</label>
+                            <input type="text" class="form-control" placeholder="名称" name="RepositoryCategoryName" ng-model="RepositoryCategoryName" required />
+                                                                                                                                     
+                        </div>
+                        <div class="form-group">
+                            
+                         <a href="/Requirement/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
+                        </div>
+                    </div>
+                </form> 
+                <div class="panel panel-default" >
+                    <div class="panel-body">
+                        <div ng-show="RequirementList.length<=0">
+                            <div class="alert alert-success text-center">
+                                <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
+                            </div>
+                        </div>
+                        <div ng-repeat="Requirement in RequirementList">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                   <strong>{{Requirement.RequirementName}}</strong>    
+                                </div>
+                                <div class="col-sm-6">
+                                        <a href="/Admin/RepositorySetting" class="btn btn-default btn-xs">编辑</a>
+                                        <button  type="button"  class="btn btn-danger" ng-click="RemoveRepositoryCategory(RepositoryCategory.RepositoryCategoryId)"><i class="fa fa-trash-o fa-fw"></i>删除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

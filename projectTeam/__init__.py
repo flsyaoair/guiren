@@ -15,4 +15,5 @@ def create_projectTeam_app():
     app.register_module(user)
     app.register_module(admin)
     app.register_module(views)
+    app.register_module(requirement)
     return app

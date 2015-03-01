@@ -512,6 +512,48 @@ function RepositoryCategoryCtrl($scope, $http) {
     }
 }
 
+function RequirementCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+    editor = UE.getEditor('editor');
+    $scope.RequirementList = [];
+//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.query = function () {
+        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId}).success(function (result) {
+            $scope.RequirementList = result.data;
+//            window.location.href = '/Requirement';
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $scope.Description = editor.getContent();
+        $http.post('/CreateRequirement',{RequirementName: $scope.RequirementName,Versions: $scope.Versions,Description:$scope.Description }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+//            window.location.href = '/Requirement';
+            $scope.query();
+        });
+    }
+}
+//    $scope.RemoveRepository = function (RepositoryId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = "/Admin/RepositorySetting" 
+//                
+//            }
+//        });
+//    }
+//}
 
 
 
