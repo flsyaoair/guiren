@@ -21,6 +21,8 @@ app.directive('integer', function () {
 $(function () {
     $('input, textarea').placeholder();
     $('.default-focus').focus();
+    $("[data-toggle='tooltip']").tooltip();
+    $(".tooltips").tooltip();
     $('*').tooltip({
         selector: "[data-toggle=tooltip]",
         container: "body"

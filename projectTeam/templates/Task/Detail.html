@@ -6,7 +6,7 @@
 <li><a href="/Project/Team/((Task.ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
 {% endblock %}
 {% block subcontent %}
-<div class="panel panel-primary" ng-controller="TaskUpdateCtrl" ng-init="Task.TaskId=((Task.TaskId));Task.TaskName='((Task.TaskName))';Task.AssignTo=((Task.AssignTo));Task.Priority=((Task.Priority));Task.Progress=((Task.Progress));Task.Status=((Task.Status));Task.Effort=0;Task.ProjectId=((Task.ProjectId));">
+<div class="panel panel-primary" ng-controller="TaskUpdateCtrl" ng-init="Task.TaskId=((Task.TaskId));Task.TaskName='((Task.TaskName))';Task.Versions='((Task.Versions))';Task.AssignTo=((Task.AssignTo));Task.Priority=((Task.Priority));Task.Progress=((Task.Progress));Task.Status=((Task.Status));Task.Effort=0;Task.ProjectId=((Task.ProjectId));">
     <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Task.TaskName}}</strong><strong class="pull-right">((Creator)) 创建于 ((Task.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
             <div class="row">

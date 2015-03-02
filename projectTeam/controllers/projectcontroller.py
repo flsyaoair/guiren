@@ -21,8 +21,9 @@ def index():
         for history in history_list_issue:
             history_list_all.append(history)
     history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)
+    length = len(history_list_all)
 
-    return render_template('Project/List.html', HistoryList=history_list_all)
+    return render_template('Project/List.html', HistoryList=history_list_all, Length=length)
 
 @project.route('/Project/Query',methods=['POST'])
 def query():
@@ -38,7 +39,11 @@ def query():
 
 @project.route('/Project/Create',methods=['POST'])
 def create():
-    projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],request.json['Introduction'],g.user_id)
+    try:
+        Introduction = request.json['Introduction']
+    except KeyError,e:
+        Introduction = ''
+    projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
     return jsonify(created=True)
 
 @project.route('/Project/Delete',methods=['POST'])
