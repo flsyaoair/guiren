@@ -27,11 +27,14 @@
                                 <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
                             </div>
                         </div>
+               
                         <div ng-repeat="Requirement in RequirementList">
                             <div class="row">
                                 <div class="col-sm-6">
-                                   <strong>{{Requirement.RequirementName}}</strong>    
+                                    <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}
+                                    
                                 </div>
+           
                                 <div class="col-sm-6">
                                         <a href="/Admin/RepositorySetting" class="btn btn-default btn-xs">编辑</a>
                                         <button  type="button"  class="btn btn-danger" ng-click="RemoveRepositoryCategory(RepositoryCategory.RepositoryCategoryId)"><i class="fa fa-trash-o fa-fw"></i>删除</button>

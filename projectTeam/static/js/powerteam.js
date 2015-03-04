@@ -519,7 +519,7 @@ function RequirementCtrl($scope, $http) {
     $scope.RequirementList = [];
 //    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
-        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId}).success(function (result) {
+        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId }).success(function (result) {
             $scope.RequirementList = result.data;
 //            window.location.href = '/Requirement';
         });
@@ -536,7 +536,7 @@ function RequirementCtrl($scope, $http) {
                 $scope.Success = true;
                 $scope.Exist = false;
             }
-//            window.location.href = '/Requirement';
+            window.location.href = '/Requirement';
             $scope.query();
         });
     }

@@ -9,7 +9,7 @@ from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 
-def create(requirement_name,version,description):
+def create(requirement_name,version,description,creator):
     session = database.get_session()
     requirement_name = requirement_name.strip()
     version =version.strip()
@@ -19,6 +19,7 @@ def create(requirement_name,version,description):
     r.Versions = version
     r.Status = RequirementStatus.New
     r.Description = description
+    r.Creator = creator
 
     r.CreateDate = datetime.now()
     r.LastUpdateDate = datetime.now()
@@ -41,13 +42,14 @@ def query():
     session.close()
     return  requirementlist
 
-#def get(task_id):
-#    session = database.get_session()
-#
-#    task = session.query(Task).options(joinedload(Task.AssignToProfile),joinedload(Task.ProjectProfile),joinedload(Task.CreatorProfile)).filter(Task.TaskId == task_id).one()
-#
-#    session.close()
-#    return task
+def get(requirement_id):
+    
+    session = database.get_session()
+
+    requirementdetail = session.query(Requirement).options(joinedload(Requirement.CreatorProfile)).filter(Requirement.RequirementId==requirement_id).one()
+    
+    session.close()
+    return  requirementdetail
 
 
 

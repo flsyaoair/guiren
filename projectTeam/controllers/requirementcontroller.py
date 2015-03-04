@@ -9,17 +9,15 @@ requirement.before_request(login_filter)
 
 @requirement.route('/Requirement')
 def index():
-#    requirementservice.create(request.json['RequirementName'],request.json['Versions'],request.json['Status'],request.json['Description'],g.user_id)
     return render_template('Requirement/List.html')
 
 @requirement.route('/Requirement/Create')
-
 def create_requirement():
 #    requirementservice.create(request.json['RequirementName'],request.json['Versions'],request.json['Description'],g.user_id)
     return render_template('Requirement/Create.html')
 @requirement.route('/CreateRequirement',methods=['POST'])
 def createNew_requirement():
-    requirementservice.create(request.json['RequirementName'],request.json['Versions'],request.json['Description'])
+    requirementservice.create(request.json['RequirementName'],request.json['Versions'],request.json['Description'],g.user_id)
     return jsonify(created=True)
 #def list(project_id):
 #
@@ -31,11 +29,15 @@ def query():
     data = requirementservice.query()
     Requirement_list=[]
     for i in data:
-        Requirement_list.append({'RequirementId':i.RequirementId,'RequirementName':i.RequirementName})
-#  
+#        d=i.Description.lstrip("<p>").rstrip("</p>")
+        Requirement_list.append({'RequirementId':i.RequirementId,'RequirementName':i.RequirementName,'Description':i.Description})
+       
     return jsonify(data=Requirement_list)
 
-                                              
+@requirement.route('/Requirement/Detail/<int:requirement_id>')
+def detail_requirement(requirement_id):
+    requirementdetail = requirementservice.get(requirement_id)
+    return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)                                             
 #@task.route('/Task/Update',methods=['POST'])
 #def update():
 #    task_id = request.json['TaskId']

@@ -23,4 +23,6 @@ class Requirement(BaseModel):
     Description = Column('Description', UnicodeText)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
+    Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
+    CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
 
