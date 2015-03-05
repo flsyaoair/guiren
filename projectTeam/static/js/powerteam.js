@@ -464,7 +464,24 @@ function RepositoryCtrl($scope, $http) {
     }
 }
 
-
+function NoticeCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $http.post('/CreateRepository', { RepositoryName: $scope.RepositoryName }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+            $scope.query();
+        });
+    }
+}
 
 function onChange( obj )
 {

@@ -114,7 +114,7 @@ def update(project_id,task_id,task_name,version,assign_to,priority,progress,stat
         history = TaskHistory()
         history.ProjectId = task.ProjectId
         history.TaskId = task.TaskId
-        history.Name = task.TaskName
+        history.Name = task_name
         history.Versions = task.Versions
         history.RawStatus = task.Status
         history.NewStatus = status

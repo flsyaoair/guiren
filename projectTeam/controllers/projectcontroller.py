@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 
 from flask import Module,render_template,jsonify,redirect,request,g,session
-from projectTeam.services import projectservice, taskservice, issueservice, teamservice,userservice
+from projectTeam.services import projectservice, taskservice, issueservice, teamservice,userservice, noticeservice
 from projectTeam.controllers.filters import login_filter
 
 project = Module(__name__)
@@ -22,8 +22,11 @@ def index():
             history_list_all.append(history)
     history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)
     length = len(history_list_all)
+    notice_content = noticeservice.get()
+#    Notice = request.json['Notice']
+#    noticeservice.create(Notice)
 
-    return render_template('Project/List.html', HistoryList=history_list_all, Length=length)
+    return render_template('Project/List.html', HistoryList=history_list_all, Length=length, Content=notice_content)
 
 @project.route('/Project/Query',methods=['POST'])
 def query():
