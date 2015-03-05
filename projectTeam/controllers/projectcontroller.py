@@ -25,7 +25,6 @@ def index():
     notice_content = noticeservice.get()
 #    Notice = request.json['Notice']
 #    noticeservice.create(Notice)
-
     return render_template('Project/List.html', HistoryList=history_list_all, Length=length, Content=notice_content)
 
 @project.route('/Project/Query',methods=['POST'])
@@ -48,6 +47,19 @@ def create():
         Introduction = ''
     projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
     return jsonify(created=True)
+    
+@project.route('/Notice/Create',methods=['POST'])
+def create_notice():
+    print "-------------------/project/create_notice---------------------------------"
+    noticeservice.create(request.json['Content'])
+    return jsonify(created=True)
+
+@project.route('/Notice/Query',methods=['POST'])
+def query_notice():
+#    notice_content = request.json['Content']
+    data = noticeservice.get()
+    content = {'Content':data}
+    return jsonify(data=content)
 
 @project.route('/Project/Delete',methods=['POST'])
 def delete():

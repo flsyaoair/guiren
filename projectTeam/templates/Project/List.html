@@ -120,25 +120,31 @@
             </div>
         </div>
     </div> 
-    <div class="col-sm-3" >
+    <div class="col-sm-3" ng-controller="NoticeCtrl" ng-init="query()">
         <div class="panel panel-primary ">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-sm-6">
                         <i class="fa fa-calendar-o fa-fw"></i> 公告
                     </div>
+                    {% if session['isadmin'] %}
                     <div class="col-sm-6 text-right">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#edit_notice"><i class="fa fa-edit fa-fw"></i>编辑</button>
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#notice_add"><i class="fa fa-edit fa-fw"></i>编辑</button>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="panel-body">
-                <h4>((Content))</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>{{InsertNoticeList.Content}}</h4>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="modal fade" id="edit_notice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="notice_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -146,15 +152,16 @@
                         <h4 class="modal-title" id="myModalLabel"><i class="fa fa-calendar-o fa-fw"></i>编辑公告</h4>
                     </div>
                     <div class="modal-body">
-                        <form role="form" name="createProjectForm">
+                        <form role="form" name="createNoticeForm">
                             <div class="form-group">
-                                <textarea rows="5" type="text" class="form-control" id="Notice" name="Notice" ng-model="Notice.Content" placeholder="公告内容" /></textarea>
+                                <textarea rows="5" type="text" class="form-control"  ng-model="Notice.Content" placeholder="公告内容" required /></textarea>
+                                <div ng-show="createNoticeForm.Content.$dirty&&createNoticeForm.Content.$error.required" class="text-danger"></div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
-                        <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                        <button type="button" id="btnCreateNotice" ng-disabled="createNoticeForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
                     </div>
                 </div>
             </div>

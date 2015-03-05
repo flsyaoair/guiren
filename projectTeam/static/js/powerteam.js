@@ -465,20 +465,25 @@ function RepositoryCtrl($scope, $http) {
 }
 
 function NoticeCtrl($scope, $http) {
-    $scope.Success = false;
-    $scope.Exist = false;
+    $scope.Query = { Content: '' };
+    $scope.NoticeList = [];
     $scope.create = function () {
-        $scope.Success = false;
-        $scope.Exist = false;
-        $http.post('/CreateRepository', { RepositoryName: $scope.RepositoryName }).success(function (result) {
-            if (result.status) {
-                $scope.Success = false;
-                $scope.Exist = true;
-            } else {
-                $scope.Success = true;
-                $scope.Exist = false;
+        var btn = $("#btnCreateNotice");
+        btn.button('loading');
+        $http.post('/Notice/Create', $scope.Notice).success(function (result) {
+            btn.button('reset');
+            if (result.created) {
+                $('#notice_add').modal('hide');
+                $scope.query();
             }
-            $scope.query();
+        });
+    }
+    $scope.query = function () {
+        var btn = $("#btnQueryNotice");
+        btn.button('loading');
+        $http.post('/Notice/Query', $scope.Query).success(function (result) {
+            btn.button('reset');
+            $scope.InsertNoticeList = result.data;
         });
     }
 }
