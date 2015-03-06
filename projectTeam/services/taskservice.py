@@ -51,7 +51,7 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
     task_name = task_name.strip()
     if len(task_name) > 0:
         filters.append(Task.TaskName.like('%' + task_name + '%'))
-    if not project_id == -1:
+    if not project_id == 'all':
         filters.append(Task.ProjectId == project_id)    
     if not assign_to == 0:
         filters.append(Task.AssignTo == assign_to)

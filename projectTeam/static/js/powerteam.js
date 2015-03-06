@@ -72,6 +72,7 @@ function RegisterCtrl($scope, $http) {
 
 function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
+    $scope.ProjectList2 = [];
     $scope.p = [];
     $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
@@ -91,6 +92,7 @@ function ProjectCtrl($scope, $http) {
         $http.post('/Project/Query', $scope.Query).success(function (result) {
             btn.button('reset');
             $scope.ProjectList = result.data;
+            $scope.ProjectList2 = result.data2;
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
@@ -127,7 +129,7 @@ function ProjectUpdateCtrl($scope, $http) {
 
 function TaskCtrl($scope, $http) {
     $scope.TaskList = [];
-    $scope.Query = { PageNo: 1, TaskName: '',ProjectId:-1,AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, TaskName: '',ProjectId:'all',AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
         var btn = $("#btnQuery");
         btn.button('loading');

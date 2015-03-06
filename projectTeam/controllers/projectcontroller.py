@@ -36,8 +36,8 @@ def query():
     (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'CreateDate desc',g.user_id)
     projects = []
     for p in data.all():
-        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
-    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects)
+        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'LastUpdateDate':p.LastUpdateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
+    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects,data2=projects[:10])
 
 @project.route('/Project/Create',methods=['POST'])
 def create():
@@ -58,8 +58,8 @@ def create_notice():
 def query_notice():
 #    notice_content = request.json['Content']
     data = noticeservice.get()
-    content = {'Content':data}
-    return jsonify(data=content)
+    data_dic = {'Content':data.Content, 'Date':data.CreateDate.isoformat()}
+    return jsonify(data=data_dic)
 
 @project.route('/Project/Delete',methods=['POST'])
 def delete():

@@ -18,14 +18,14 @@
                     </div>
                     <div class="form-group">
                         <select class="form-control" ng-model="Query.Status">
-                            <option value="-1">全部</option>
+                            <option value="all">全部</option>
                             <option value="1" selected="selected">进行中</option>
                             <option value="2">已完成</option>
                             <option value="3">已取消</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找项目</button>
+                        <button id="btnQuery" type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找项目</button>
                     </div>
                 </div>
             </form>
@@ -39,7 +39,7 @@
                     <div ng-repeat="Project in ProjectList">
                         <div class="row">
                             <div class="col-sm-4">
-                                <s ng-show="Project.Status==2||Task.Status==3">
+                                <s ng-show="Project.Status==2||Project.Status==3">
                                     <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead">{{Project.ProjectName}}</a>
                                 </s>
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
@@ -120,7 +120,7 @@
             </div>
         </div>
     </div> 
-    <div class="col-sm-3" ng-controller="NoticeCtrl" ng-init="query()">
+    <div class="col-sm-3" >
         <div class="panel panel-primary ">
             <div class="panel-heading">
                 <div class="row">
@@ -137,32 +137,41 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="panel panel-default">
+                <div class="panel panel-default" ng-controller="NoticeCtrl" ng-init="query()">
                     <div class="panel-body">
-                        <h4>{{InsertNoticeList.Content}}</h4>
+                        <h4 class="">{{InsertNoticeList.Content}}</h4>
+                        <div class="text-right">
+                            <i class="fa fa-clock-o fa-fw"></i>{{InsertNoticeList.Date | date:'yyyy-MM-dd HH:mm'}}
+                        </div>
+                    </div>
+                    <div class="modal fade" id="notice_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-calendar-o fa-fw"></i>编辑公告</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" name="createNoticeForm">
+                                        <div class="form-group">
+                                            <textarea rows="5" type="text" class="form-control"  ng-model="Notice.Content" placeholder="公告内容" required /></textarea>
+                                            <div ng-show="createNoticeForm.Content.$dirty&&createNoticeForm.Content.$error.required" class="text-danger"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
+                                    <button type="button" id="btnCreateNotice" ng-disabled="createNoticeForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal fade" id="notice_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-calendar-o fa-fw"></i>编辑公告</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form" name="createNoticeForm">
-                            <div class="form-group">
-                                <textarea rows="5" type="text" class="form-control"  ng-model="Notice.Content" placeholder="公告内容" required /></textarea>
-                                <div ng-show="createNoticeForm.Content.$dirty&&createNoticeForm.Content.$error.required" class="text-danger"></div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
-                        <button type="button" id="btnCreateNotice" ng-disabled="createNoticeForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
-                    </div>
+                <div ng-controller="ProjectCtrl" ng-init="Query.Status='2';query()">
+                    <div class="notice notice-info" ng-repeat="Project in ProjectList2" style="margin-top: 5px; margin-bottom: 5px;padding-top: 5px;padding-bottom: 5px;">
+                        <i class="fa fa-clock-o fa-fw"></i>{{ Project.LastUpdateDate | date:'yyyy-MM-dd' }}
+                        项目<a class="label label-success" href="/Project/Dashboard/{{Project.ProjectId}}">{{Project.ProjectName}}</a>完成
+                    </div>    
                 </div>
             </div>
         </div>
@@ -174,7 +183,7 @@
     <div class="panel-body">
         <div class="panel panel-default">
             <div class="panel-body">
-                {% for history in HistoryList %}
+                {% for history in HistoryList[:50] %}
                 <div class="row notice notice-info" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick))</strong> 更新 

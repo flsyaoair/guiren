@@ -39,7 +39,7 @@ def query(project_name,project_introduction,status,page_no,order_by,current_user
     project_name = project_name.strip()
     if len(project_name) > 0:
         filters.append(Project.ProjectName.like('%' + project_name + '%'))
-    if not status == '-1':
+    if not status == 'all':
         filters.append(Project.Status == status)
 
     session = database.get_session()
