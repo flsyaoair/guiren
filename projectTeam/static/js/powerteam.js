@@ -146,7 +146,7 @@ function TaskCtrl($scope, $http) {
 function TaskCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Task = { TaskName: null, Versions: null,Priority: 2, AssignTo: -1, Description: null };
+    $scope.Task = { TaskName: null, Versions: null, Priority: 2, AssignTo: -1, Description: null };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');

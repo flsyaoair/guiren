@@ -27,7 +27,7 @@ def query():
     status_completed = request.json['Completed']
     status_canceled = request.json['Canceled']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no)
+    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no,g.user_id)
     tasks = []
     for t in data.all():
         tasks.append({'TaskId':t.TaskId,'ProjectId':project_id,'ProjectKey':t.ProjectProfile.ProjectKey,'TaskName':t.TaskName,'Priority':t.Priority,'Progress':t.Progress,'Status':t.Status,'Effort':t.Effort,'AssignTo':t.AssignToProfile.Nick,'Creator':t.CreatorProfile.Nick,'LastUpdateDate':t.LastUpdateDate.isoformat()})
