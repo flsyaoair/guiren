@@ -3,6 +3,7 @@
 from flask import Module,render_template,jsonify,redirect,request,g,session
 from projectTeam.services import projectservice, taskservice, issueservice, teamservice,userservice, noticeservice
 from projectTeam.controllers.filters import login_filter
+from operator import attrgetter
 
 project = Module(__name__)
 project.before_request(login_filter)
@@ -20,7 +21,8 @@ def index():
         history_list_issue = issueservice.get_history(issue.IssueId)
         for history in history_list_issue:
             history_list_all.append(history)
-    history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)
+#    history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)  #第二种写法
+    history_list_all = sorted(history_list_all, key=attrgetter('CreateDate'), reverse=True)
     length = len(history_list_all)
     notice_content = noticeservice.get()
 #    Notice = request.json['Notice']
@@ -33,11 +35,11 @@ def query():
     project_introduction = request.json['Introduction']
     status = request.json['Status']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'CreateDate desc',g.user_id)
+    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'LastUpdateDate desc',g.user_id)
     projects = []
     for p in data.all():
         projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'LastUpdateDate':p.LastUpdateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
-    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects,data2=projects[:10])
+    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects,data2=projects[:5])
 
 @project.route('/Project/Create',methods=['POST'])
 def create():
@@ -45,8 +47,12 @@ def create():
         Introduction = request.json['Introduction']
     except KeyError,e:
         Introduction = ''
-    projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
-    return jsonify(created=True)
+    exist = projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
+    exist_json = {'exist': exist}
+    print '--------------------------test if exist-------------------------'
+    print exist_json
+    return jsonify(exist_json)
+
     
 @project.route('/Notice/Create',methods=['POST'])
 def create_notice():

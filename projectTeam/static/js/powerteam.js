@@ -80,10 +80,18 @@ function ProjectCtrl($scope, $http) {
         btn.button('loading');
         $http.post('/Project/Create', $scope.Project).success(function (result) {
             btn.button('reset');
-            if (result.created) {
+            if (result.exist) {
+                $scope.keyExist = true;
+//                alert($scope.keyExist)
+            }
+            else {
                 $('#project_add').modal('hide');
                 $scope.query();
             }
+            //if (result.created) {
+            //    $('#project_add').modal('hide');
+            //    $scope.query();
+            //}
         });
     }
     $scope.query = function () {
