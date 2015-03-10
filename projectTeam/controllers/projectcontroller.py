@@ -25,6 +25,7 @@ def query():
 
 @project.route('/Project/Create',methods=['POST'])
 def create():
+
     projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],request.json['Introduction'],g.user_id)
     return jsonify(created=True)
 

@@ -30,31 +30,23 @@ def query():
     Requirement_list=[]
     for i in data:
 #        d=i.Description.lstrip("<p>").rstrip("</p>")
-        Requirement_list.append({'RequirementId':i.RequirementId,'RequirementName':i.RequirementName,'Description':i.Description})
+        Requirement_list.append({'RequirementId':i.RequirementId,'RequirementName':i.RequirementName,'Description':i.Description,'Versions':i.Versions,'Status':i.Status,'LastUpdateDate':i.LastUpdateDate.isoformat()})
        
     return jsonify(data=Requirement_list)
 
 @requirement.route('/Requirement/Detail/<int:requirement_id>')
 def detail_requirement(requirement_id):
     requirementdetail = requirementservice.get(requirement_id)
-    return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)                                             
-#@task.route('/Task/Update',methods=['POST'])
-#def update():
-#    task_id = request.json['TaskId']
-#    project_id = request.json['ProjectId']
-#    task_name = request.json['TaskName']
-#    version =  request.json['Versions']
-#    feedback = request.json['Feedback']
-#    assign_to = request.json['AssignTo']
-#    if assign_to == -1:
-#        assign_to = g.user_id
-#    priority = request.json['Priority']
-#    progress = request.json['Progress']
-#    status = request.json['Status']
-##    effort = request.json['Effort']
-##    description = request.json['Description']
-#    taskservice.update(task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
-#    return jsonify(updated=True)
+    return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)                                             
+@requirement.route('/Requirement/Update',methods=['POST'])
+def update():
+    requirement_id = request.json['RequirementId']
+    requirement_name = request.json['RequirementName']
+    version =  request.json['Versions']
+    Description = request.json['Description']
+    status = request.json['Status']
+    requirementservice.update(requirement_id, requirement_name, version, status, Description, g.user_id)                
+    return jsonify(updated=True)
 
 #@requirement.route('/Requirement/Delete',methods=['POST'])
 #def delete():

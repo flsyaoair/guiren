@@ -53,18 +53,20 @@ def get(requirement_id):
 
 
 
-#def update(task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
-#    session = database.get_session()
-#
-#    task_name = task_name.strip()
-#    version =version.strip()
-#    task = session.query(Task).filter(Task.TaskId == task_id).one()
-#    
-#    changeAssignTo = not (task.AssignTo == assign_to)
-#    description = task.Description
-#
-#    if (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
-#        history = TaskHistory()
+def update(requirement_id, requirement_name, version, status, description,current_user):
+    session = database.get_session()
+
+    requirement_name = requirement_name.strip()
+    version =version.strip()
+    requirement = session.query(Requirement).filter(Requirement.RequirementId == requirement_id).one()
+
+        
+        
+        
+        
+
+#    if (not requirement.Status == status) or (not requirement.RequirementName == requirement_name) or (len(feedback) > 0):
+#        history = RequirementHistory()
 #        history.TaskId = task.TaskId
 #        history.RawStatus = task.Status
 #        history.NewStatus = status
@@ -77,30 +79,22 @@ def get(requirement_id):
 #        history.Feedback = feedback
 #        history.Creator = current_user
 #        history.CreateDate = datetime.now()
-#
-#        session.add(history)
-#    task.TaskName = task_name
-#    task.Versions = version
-#    task.AssignTo = assign_to
-#    task.Priority = priority
-#    task.Progress = progress
-#    task.Status = status
-##    task.Description = description
-##    task.Effort = task.Effort + float(effort)
-#    task.LastUpdateDate = datetime.now()
-#    project_id = task.ProjectId
-#    session.commit()
-#    session.close()
-#
-#    calcprogress(project_id)
-#
-#    if ENABLE_MAIL_NOTICE and changeAssignTo:
-#        u = userservice.get_user_by_id(assign_to)
-#        body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
-#        mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
-#
-#    return True
 
+#        session.add(history)
+    requirement.RequirementName = requirement_name
+    requirement.Versions = version
+
+    requirement.Status = status
+    requirement.Description = description
+#    task.Effort = task.Effort + float(effort)
+    requirement.LastUpdateDate = datetime.now()
+ 
+    session.commit()
+    session.close()
+
+    return True
+   
+        
 
 #def delete(task_id):
 #    session = database.get_session()

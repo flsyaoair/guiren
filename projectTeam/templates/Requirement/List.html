@@ -31,20 +31,27 @@
                         <div ng-repeat="Requirement in RequirementList">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}
-                                    
+                                    <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}</a>
+                                    版本：
+                                    {{Requirement.Versions}}
+                                   <span ng-switch on="Requirement.Status" class="text-right">
+                                   状态：
+                                <strong class="label label-info" ng-switch-when="1">进行中</strong>
+                                <strong class="label label-primary" ng-switch-when="2">已完成</strong>
+                                <strong class="label label-success" ng-switch-when="3">已取消</strong>
+
+                            </span>   
                                 </div>
-           
+          
                                 <div class="col-sm-6">
-                                        <a href="/Admin/RepositorySetting" class="btn btn-default btn-xs">编辑</a>
-                                        <button  type="button"  class="btn btn-danger" ng-click="RemoveRepositoryCategory(RepositoryCategory.RepositoryCategoryId)"><i class="fa fa-trash-o fa-fw"></i>删除</button>
+                                        
+                                       变更时间：{{ Requirement.LastUpdateDate | date:'yyyy-MM-dd' }}
                                 </div>
+	
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </div>
 {% endblock %}
