@@ -80,7 +80,7 @@ function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
     $scope.ProjectList2 = [];
     $scope.p = [];
-    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: -1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
         var btn = $("#btnCreateProject");
         btn.button('loading');
@@ -212,7 +212,7 @@ function TaskUpdateCtrl($scope, $http) {
         var btn = $("#btnDelete");
         btn.button('loading');
         $http.post('/Task/Delete', { 'TaskId': $scope.Task.TaskId }).success(function (result) {
-            if (result.deleted) {
+        	if (result.deleted) {
                 $scope.DeleteSuccess = true;
                 btn.button('reset');
                 window.location.href = "/Project/Task/" + $scope.Task.ProjectId;
@@ -478,7 +478,140 @@ function RepositoryCtrl($scope, $http) {
             $scope.query();
         });
     }
+    $scope.RemoveRepository = function (RepositoryId) {
+        $scope.AddSuccess = false;
+        $scope.RemoveSuccess = false;
+        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
+            if (result.removed) {
+                $scope.RemoveSuccess = true;
+                $scope.query();
+                window.location.href = "/Admin/RepositorySetting" 
+                
+            }
+        });
+    }
 }
+
+function RepositoryCategoryCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+//    $scope.RepositoryId = $scope
+//    $scope.Query = { RepositoryId: RepositoryId, RepositoryCategoryName: '', RepositoryCategoryId: '' };
+    $scope.RepositoryCategoryList = [];
+    $scope.query = function () {
+        $http.post('/QueryRepositoryCategory',{"RepositoryId": $scope.RepositoryId}).success(function (result) {
+            $scope.RepositoryCategoryList = result.data;
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $http.post('/CreateRepositoryCategory', {RepositoryId: $scope.RepositoryId,RepositoryCategoryName: $scope.RepositoryCategoryName }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+//            $scope.RepositoryId=result.RepositoryId
+            $scope.query();
+        });
+    }
+    $scope.RemoveRepositoryCategory = function (RepositoryCategoryId) {
+        $scope.AddSuccess = false;
+        $scope.RemoveSuccess = false;
+        $http.post('/RemoveRepositoryCategory', {'RepositoryId': $scope.RepositoryId,'RepositoryCategoryId': RepositoryCategoryId }).success(function (result) {
+            if (result.removed) {
+                $scope.RemoveSuccess = true;
+                $scope.query();
+                
+            }
+        });
+    }
+}
+
+function RequirementCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+    editor = UE.getEditor('editor');
+    $scope.RequirementList = [];
+    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.query = function () {
+        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId,'Status': $scope.Query.Status }).success(function (result) {
+            $scope.RequirementList = result.data;
+//            window.location.href = '/Requirement';
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $scope.Description = editor.getContent();
+        $http.post('/CreateRequirement',{RequirementName: $scope.RequirementName,Versions: $scope.Versions,Description:$scope.Description }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+            window.location.href = '/Requirement';
+            $scope.query();
+        });
+    }
+} 
+
+function RequirementUpdateCtrl($scope, $http) {
+	
+    $scope.edit = function () {
+
+        $scope.ShowUpdate = !$scope.ShowUpdate;
+        UE.getEditor('editor1');
+       
+    }
+    $scope.update = function () {
+    	  
+            var btn = $("#btnUpdate");
+            btn.button('loading');
+            UE.getEditor('editor1').hasContents()
+            $scope.Description = UE.getEditor('editor1').getContent();
+            $http.post('/Requirement/Update', {'RequirementId':$scope.RequirementId , "RequirementName": $scope.RequirementName,"Versions": $scope.Versions,"Description":$scope.Description,"Status":$scope.Status }).success(function (result) {
+                if (result.updated) {
+                    $scope.UpdateSuccess = true;
+                    btn.button('reset');
+                    window.location.href = '/Requirement';
+                }
+            });
+        
+    }
+}
+//    $scope.RemoveRequirement = function (RequirementId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRequirement', {'RequirementId': RequirementId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = '/Requirement';
+//                
+//            }
+//        });
+//    }
+//}
+
+//    $scope.RemoveRepository = function (RepositoryId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = "/Admin/RepositorySetting" 
+//                
+//            }
+//        });
+//    }
+//}
 
 function NoticeCtrl($scope, $http) {
     $scope.Query = { Content: '' };
@@ -550,4 +683,3 @@ function onChange( obj )
             */
         }
 }
-

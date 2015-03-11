@@ -5,16 +5,9 @@
 {% endif %}
 {% endblock %}
 {% block subcontent %}
-<div class="row">
-    <div class="col-sm-2">
-        <div class="list-group">
-            <a href="/Admin" class="list-group-item">用户管理</a>
-            <a href="/Admin/CategorySetting" class="list-group-item">问题分类设置</a>
-            <a href="/Admin/RepositorySetting" class="list-group-item active">库类型</a>
-        </div>
-    </div>
+
     <div class="col-sm-10">
-        <div class="panel panel-primary" ng-controller="RepositoryCtrl" ng-init="query()">
+        <div class="panel panel-primary" ng-controller="RepositoryCategoryCtrl" ng-init="RepositoryId=((RepositoryId));query();">
             <div class="panel-heading"><i class="fa fa-user fa-fw"></i>库分类设置</div>
             <div class="panel-body">
                 
@@ -22,32 +15,31 @@
                     <div class="form-group">
                         <div class="form-group">
                             <label class="sr-only">问题分类</label>
-                            <input type="text" class="form-control" placeholder="新分类名称" name="RepositoryName" ng-model="RepositoryName" required />
+                            <input type="text" class="form-control" placeholder="新分类名称" name="RepositoryCategoryName" ng-model="RepositoryCategoryName" required />
+                                                                                                                                     
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="categoryForm.$invalid" ng-click="create()"><i class="fa fa-plus fa-fw"></i>添加库</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="categoryForm.$invalid" ng-click="create()"><i class="fa fa-plus fa-fw"></i>添加库信息</button>
                         </div>
                     </div>
                 </form> 
-                <div class="panel panel-default">
+                <div class="panel panel-default" >
                     <div class="panel-body">
-                        <div ng-show="RepositoryList.length<=0">
+                        <div ng-show="RepositoryCategoryList.length<=0">
                             <div class="alert alert-success text-center">
                                 <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
                             </div>
                         </div>
-                        <div ng-repeat="repository in RepositoryList">
+                        <div ng-repeat="RepositoryCategory in RepositoryCategoryList">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a href="/Repository/Detail/{{repository.RepositoryId}}"  class="lead">{{repository.RepositoryName}}
-                                    
+                                   <strong>{{RepositoryCategory.RepositoryCategoryName}}</strong>    
                                 </div>
-                                 <div class="col-sm-6">
-                   
-                                <button  type="button"  class="btn btn-danger" ng-click="RemoveRepository(repository.RepositoryId)"><i class="fa fa-trash-o fa-fw"></i>移除</button>
+                                <div class="col-sm-6">
+                                        <a href="/Admin/RepositorySetting" class="btn btn-default btn-xs">返回</a>
+                                        <button  type="button"  class="btn btn-danger" ng-click="RemoveRepositoryCategory(RepositoryCategory.RepositoryCategoryId)"><i class="fa fa-trash-o fa-fw"></i>移除</button>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </div>

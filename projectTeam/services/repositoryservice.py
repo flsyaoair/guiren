@@ -2,6 +2,7 @@
 from projectTeam.models import database
 #from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
 from projectTeam.models.repos import Repository
+from projectTeam.models.repositoryprofile import RepositoryProfile
 from projectTeam.models.userprofile import UserProfile
 from projectTeam.powerteamconfig import *
 from datetime import datetime
@@ -36,21 +37,60 @@ def query_repository():
     list = session.query(Repository).all()
     session.close()
     return list
-#    filters=[]
-#    
-#    session = database.get_session()
-#
-#    if len(repositoryname) > 0:
-#        filters.append(Repository.RepositoryName.like('%' + repositoryname + '%'))
-##    if not status == '-1':
-##        filters.append(Repository.Status == status)
-#    R = session.query(Repository).filter(Repository.RepositoryId.in_(project_list))
-#    for f in filters:
-#        R = R.filter(f)
-#
-#    (row_count,page_count,page_no,page_size,data) = database.pager(R,order_by,page_no,PAGESIZE)
-#    session.close()
-#
-#    return (row_count,page_count,page_no,page_size,data)
+
+def create_repositoryprofile(repository_id,repositorycategory_name):
+    session = database.get_session()
+    r = RepositoryProfile()
+    repositorycategory_name = repositorycategory_name.strip()
+    r.RepositoryId=repository_id
+    r.RepositoryCategoryName=repositorycategory_name
+    session.add(r)
+    session.commit()
+    session.close()
 
     
+def exist_repositoryprofile(repository_id,repositorycategory_name):
+    session = database.get_session()
+
+    c = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryName == repositorycategory_name,RepositoryProfile.RepositoryId == repository_id).count()
+
+    session.close()
+
+    return c > 0    
+def get(repository_id):
+    
+    session = database.get_session()
+
+    r = session.query(Repository).filter(Repository.RepositoryId == repository_id).one()
+    
+    session.close()
+    return r
+def remove_Repository(repository_id):
+    
+    session = database.get_session()
+
+    r1 = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id).delete()
+    r2 = session.query(Repository).filter(Repository.RepositoryId == repository_id).delete()
+    session.commit()
+    session.close()
+   
+   
+def query_repositoryprofile(repository_id):
+    
+    session = database.get_session()
+
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id)
+    session.close()
+    return list
+#remove_Repository
+def remove_RepositoryCategory(repository_id,repositoryCategory_id):
+    
+    session = database.get_session()
+
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id,RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).delete()
+    session.commit()
+    session.close()
+   
+    return list
+
+   

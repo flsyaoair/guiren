@@ -16,7 +16,7 @@ class Repository(BaseModel):
     RepositoryName = Column('RepositoryName', NVARCHAR(30),nullable = False)
 #    Repositories = relationship("RepositoryProfile")
 #    RepositoryCategoryId = Column('RepositoryCategoryId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
-#    RepositoryCategory = relationship('RepositoryProfile', foreign_keys=RepositoryCategoryId,primaryjoin=RepositoryCategoryId == RepositoryProfile.RepositoryCategoryId)
+    RepositoryCategory = relationship('RepositoryProfile')
 #    TaskId = Column('TaskId', Integer,ForeignKey('Task.TaskId'),nullable = False)
 #    Task = relationship('Task', foreign_keys=TaskId,primaryjoin=TaskId == Task.TaskId)
 #    Status = Column('Status', SMALLINT,nullable = False)
