@@ -8,17 +8,25 @@
             <div class="panel-body">
                 
                 <form class="form-inline" role="form" name="categoryForm">
-                    <div class="form-group">
+
                         <div class="form-group">
-                            <label class="sr-only">问题分类</label>
-                            <input type="text" class="form-control" placeholder="名称" name="RepositoryCategoryName" ng-model="RepositoryCategoryName" required />
-                                                                                                                                     
-                        </div>
+                            <a href="/Requirement/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
+                             <div class="form-group">
+                                  <input type="text" class="form-control" ng-model="Word" placeholder="" />
+                             </div> 
                         <div class="form-group">
-                            
-                         <a href="/Requirement/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
+		                    <select class="form-control" ng-model="Query.Status">
+		                        <option value="all">全部</option>
+		                        <option value="1" selected="selected">进行中</option>
+		                        <option value="2">已完成</option>
+		                        <option value="3">已取消</option>
+		                    </select>
+                        </div> 
+                        <div class="form-group">
+		                    <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找</button>
+		                </div>                                                                        
                         </div>
-                    </div>
+                        
                 </form> 
                 <div class="panel panel-default" >
                     <div class="panel-body">
@@ -28,7 +36,7 @@
                             </div>
                         </div>
                
-                        <div ng-repeat="Requirement in RequirementList">
+                        <div ng-repeat="Requirement in RequirementList | filter:Word">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}</a>

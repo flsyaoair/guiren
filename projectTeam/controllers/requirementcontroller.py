@@ -26,7 +26,9 @@ def createNew_requirement():
 @requirement.route('/Requirement/Query',methods=['POST'])
 def query():
 #    requirement_id = request.json['RequirementId']
-    data = requirementservice.query()
+    status = request.json['Status']
+#    page_no = request.json['PageNo']
+    data = requirementservice.query(status)
     Requirement_list=[]
     for i in data:
 #        d=i.Description.lstrip("<p>").rstrip("</p>")
@@ -87,9 +89,9 @@ def update():
     requirementservice.update(requirement_id, requirement_name, version, status, Description, g.user_id)                
     return jsonify(updated=True)
 
-#@requirement.route('/Requirement/Delete',methods=['POST'])
+#@requirement.route('/RemoveRequirement',methods=['POST'])
 #def delete():
-#    requirementservice.remove_RepositoryCategory(request.json['RequirementId'])
+#    requirementservice.removerequirement(request.json['RequirementId'])
 #    return jsonify(deleted=True)
 if __name__ == '__main__':  
     requirement.run(host="0.0.0.0",port=8080, debug=True) 

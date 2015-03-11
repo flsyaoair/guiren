@@ -193,7 +193,7 @@ function TaskUpdateCtrl($scope, $http) {
         var btn = $("#btnDelete");
         btn.button('loading');
         $http.post('/Task/Delete', { 'TaskId': $scope.Task.TaskId }).success(function (result) {
-            if (result.deleted) {
+        	if (result.deleted) {
                 $scope.DeleteSuccess = true;
                 btn.button('reset');
                 window.location.href = "/Project/Task/" + $scope.Task.ProjectId;
@@ -517,9 +517,9 @@ function RequirementCtrl($scope, $http) {
     $scope.Exist = false;
     editor = UE.getEditor('editor');
     $scope.RequirementList = [];
-//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
-        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId }).success(function (result) {
+        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId,'Status': $scope.Query.Status }).success(function (result) {
             $scope.RequirementList = result.data;
 //            window.location.href = '/Requirement';
         });
@@ -540,7 +540,8 @@ function RequirementCtrl($scope, $http) {
             $scope.query();
         });
     }
-}
+} 
+
 function RequirementUpdateCtrl($scope, $http) {
 	
     $scope.edit = function () {
@@ -565,6 +566,19 @@ function RequirementUpdateCtrl($scope, $http) {
         
     }
 }
+//    $scope.RemoveRequirement = function (RequirementId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRequirement', {'RequirementId': RequirementId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = '/Requirement';
+//                
+//            }
+//        });
+//    }
+//}
 
 //    $scope.RemoveRepository = function (RepositoryId) {
 //        $scope.AddSuccess = false;

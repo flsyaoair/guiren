@@ -32,13 +32,18 @@ def create(requirement_name,version,description,creator):
 
 
 
-def query():
+def query(status):
+    filters = []
+    if not status == 'all':
+        filters.append(Requirement.Status == status)
     session = database.get_session()
 #    requirement_name = requirement_name.strip()
 #    if len(requirement_name) > 0:
 #        filters.append(Requirement.RequirementName.like('%' + requirement_name + '%'))
     requirementlist = session.query(Requirement).all()
-    
+    q=session.query(Requirement)
+    for f in filters:
+        requirementlist = q.filter(f)
     session.close()
     return  requirementlist
 
@@ -96,16 +101,15 @@ def update(requirement_id, requirement_name, version, status, description,curren
    
         
 
-#def delete(task_id):
+#def removerequirement(requirement_id):
 #    session = database.get_session()
-#
-#    task = session.query(Task).filter(Task.TaskId == task_id).one()
-#    project_id = task.ProjectId
-#    session.delete(task)
+#    requirement = session.query(Requirement).filter(Requirement.RequirementId == requirement_id).one()
+#    session.delete(requirement)
 #    session.commit()
 #    session.close()
+#    return True
 #
-#    calcprogress(project_id)
+
 
 #def statistics(project_id):
 #    session = database.get_session()
