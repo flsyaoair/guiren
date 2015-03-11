@@ -37,7 +37,46 @@ def query():
 @requirement.route('/Requirement/Detail/<int:requirement_id>')
 def detail_requirement(requirement_id):
     requirementdetail = requirementservice.get(requirement_id)
-    return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)                                             
+    Description=requirementdetail.Description
+    if "{Key:"  in Description:
+        k=Description[Description.find("{Key:")+5:]                       
+        if ":Key}" in k:
+            x=Description[Description.find("{Key:"):Description.find(":Key}")+5]   
+            k=k[:k.find(":Key}")]
+            k=k.split(':')
+            url=""
+            for i in k:   
+                while "R"==i[0]:
+                    c=i.split('-')[0][1:]
+                    p=i.split('-')[1]
+                    r=requirementservice.get(c)
+                    requirementname=r.RequirementName
+                    Status=r.Status
+                    Status=str(Status)
+                    u="""<a href="/Requirement/Detail/%id%" class="lead">%requirementname%</a>
+                  
+                                   <span ng-switch on="%Status%" class="text-right">
+                                <strong class="label label-info" ng-switch-when="1">进行中</strong>
+                                <strong class="label label-primary" ng-switch-when="2">已完成</strong>
+                                <strong class="label label-success" ng-switch-when="3">已取消</strong>
+
+                            </span> 
+                    """
+                    u=u.replace('%id%', c)
+                    u=u.replace('%requirementname%', requirementname)
+                    u=u.replace('%Status%', Status)
+                    url=url+"<br>"+u
+                    break
+                while "Y"==i[0]:
+                    break  
+            Description=Description.replace(x, url)
+            return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Description=Description,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)            
+        else:
+            return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Description=Description,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)
+    else:
+        return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Description=Description,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)
+
+#    return render_template('Requirement/Detail.html',Requirementdetail=requirementdetail,RequirementId=requirement_id,Creator=requirementdetail.CreatorProfile.Nick,CurrentUser=g.user_id)                                             
 @requirement.route('/Requirement/Update',methods=['POST'])
 def update():
     requirement_id = request.json['RequirementId']

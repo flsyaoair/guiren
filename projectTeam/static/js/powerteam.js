@@ -71,7 +71,7 @@ function RegisterCtrl($scope, $http) {
 function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
     $scope.p = [];
-    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: -1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
         var btn = $("#btnCreateProject");
         btn.button('loading');
@@ -541,6 +541,31 @@ function RequirementCtrl($scope, $http) {
         });
     }
 }
+function RequirementUpdateCtrl($scope, $http) {
+	
+    $scope.edit = function () {
+
+        $scope.ShowUpdate = !$scope.ShowUpdate;
+        UE.getEditor('editor1');
+       
+    }
+    $scope.update = function () {
+    	  
+            var btn = $("#btnUpdate");
+            btn.button('loading');
+            UE.getEditor('editor1').hasContents()
+            $scope.Description = UE.getEditor('editor1').getContent();
+            $http.post('/Requirement/Update', {'RequirementId':$scope.RequirementId , "RequirementName": $scope.RequirementName,"Versions": $scope.Versions,"Description":$scope.Description,"Status":$scope.Status }).success(function (result) {
+                if (result.updated) {
+                    $scope.UpdateSuccess = true;
+                    btn.button('reset');
+                    window.location.href = '/Requirement';
+                }
+            });
+        
+    }
+}
+
 //    $scope.RemoveRepository = function (RepositoryId) {
 //        $scope.AddSuccess = false;
 //        $scope.RemoveSuccess = false;
