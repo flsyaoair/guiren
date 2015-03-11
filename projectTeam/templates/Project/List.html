@@ -142,9 +142,9 @@
             <div class="panel-body">
                 <div class="panel panel-default" ng-controller="NoticeCtrl" ng-init="query()">
                     <div class="panel-body">
-                        <h4 class="">{{InsertNoticeList.Content}}</h4>
+                        <h4 class="">{{NoticeList.Content}}</h4>
                         <div class="text-right">
-                            <i class="fa fa-clock-o fa-fw"></i>{{InsertNoticeList.Date | date:'yyyy-MM-dd HH:mm'}}
+                            <i class="fa fa-clock-o fa-fw"></i>{{NoticeList.Date | date:'yyyy-MM-dd HH:mm'}}
                         </div>
                     </div>
                     <div class="modal fade" id="notice_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -186,7 +186,7 @@
     <div class="panel-body">
         <div class="panel panel-default">
             <div class="panel-body">
-                {% for history in HistoryList[:50] %}
+                {% for history in HistoryList[:] %}
                 <div class="row notice notice-info" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick))</strong> 更新 
@@ -240,6 +240,62 @@
                 </div>
                 {% endfor %}
                 <a href="">查看更多</a><br>((Length))
+            </div>
+        </div><hr><hr><hr>
+        <div class="panel panel-default" ng-controller="HistoryCtrl" ng-init="query()">
+            <div class="panel-body">
+                <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
+                    <div class="col-sm-9">
+                        <strong><i class="fa fa-user fa-fw"></i>{{history.CreatorProfile_Nick}}</strong> 更新
+                        <c ng-show="'{{history.TaskId}}'!=''">
+                            <a href="/Task/Detail/{{history.TaskId}}" data-toggle="tooltip" title="项目：{{history.ProjectName}}"><i class="fa fa-tasks fa-fw"></i>{{history.Name}}</a>:
+                        </c>
+                        <c ng-show="'{{history.IssueId}}'!=''">
+                            <a href="/Issue/Detail/{{history.IssueId}}" data-toggle="tooltip" title="项目：{{history.ProjectName}}"><i class="fa fa-bug fa-fw"></i>{{history.Name}}</a>:
+                        </c>
+                        <c ng-show="'{{history.RawAssignToProfile.Nick}}'!='{{history.NewAssignToProfile.Nick}}' || {{history.RawStatus}}!={{history.NewStatus}}||{{history.RawPriority}}!={{history.NewPriority}}">
+                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}}">
+                            状态 从<span ng-switch on="{{history.RawStatus}}">
+								<strong class="label label-primary" ng-switch-when="1">打开</strong>
+								<strong class="label label-success" ng-switch-when="2">已解决</strong>
+								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                            变为
+                            <span ng-switch on="{{history.NewStatus}}">
+								<strong class="label label-primary" ng-switch-when="1">打开</strong>
+								<strong class="label label-success" ng-switch-when="2">已解决</strong>
+								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                        </c>
+                        <c ng-show="{{history.RawPriority}}!={{history.NewPriority}}">
+                            优先级 从
+                            <span ng-switch on="{{history.RawPriority}}">
+								<strong class="label label-danger" ng-switch-when="1">高</strong>
+								<strong class="label label-warning" ng-switch-when="2">中</strong>
+								<strong class="label label-default" ng-switch-when="3">低</strong>
+                            </span>
+                            变为
+                            <span ng-switch on="{{history.NewPriority}}">
+								<strong class="label label-danger" ng-switch-when="1">高</strong>
+								<strong class="label label-warning" ng-switch-when="2">中</strong>
+								<strong class="label label-default" ng-switch-when="3">低</strong>
+							</span>
+						</c>
+						<c ng-show="'{{history.RawAssignToProfile.Nick}}'!='{{history.NewAssignToProfile.Nick}}'">
+							指派人 从{{history.RawAssignToProfile.Nick}} 变为 {{history.NewAssignToProfile.Nick}}
+						</c>
+					</c>
+					<div ng-show="'{{history.Feedback}}'!=''" ng-bind-html="history.Feedback | to_trusted" style="padding-left: 5px; padding-top: 5px;">
+						{{history.Feedback}}
+					</div>
+                    </div>
+                    <div class="col-sm-3 text-right" style="">
+                        <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate}}
+                    </div>
+                </div>
+                <a href="">查看更多</a><br>
             </div>
         </div>
     </div>

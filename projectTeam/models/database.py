@@ -23,7 +23,6 @@ def pager(query,orderby,page_no,page_size=PAGESIZE):
     if page_no == 0:
         page_no = 1
         page_count = 1
-    print '----------------------------'+orderby+'----------------------------'
     data = query.order_by(orderby).limit(page_size).offset((page_no - 1) * page_size)
     return (row_count,page_count,page_no,page_size,data)
 

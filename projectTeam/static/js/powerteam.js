@@ -29,6 +29,12 @@ $(function () {
     });
 });
 
+app.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+   return $sce.trustAsHtml(text);
+    };
+}]);
+
 function LoginCtrl($scope, $http) {
     $scope.isMatch = true;
     $scope.isDisabled = false;
@@ -476,7 +482,6 @@ function RepositoryCtrl($scope, $http) {
 
 function NoticeCtrl($scope, $http) {
     $scope.Query = { Content: '' };
-    $scope.NoticeList = [];
     $scope.create = function () {
         var btn = $("#btnCreateNotice");
         btn.button('loading');
@@ -493,7 +498,19 @@ function NoticeCtrl($scope, $http) {
         btn.button('loading');
         $http.post('/Notice/Query', $scope.Query).success(function (result) {
             btn.button('reset');
-            $scope.InsertNoticeList = result.data;
+            $scope.NoticeList = result.data;
+        });
+    }
+}
+
+function HistoryCtrl($scope, $http) {
+    $scope.HistoryList = [];
+//    $scope.test = "a<br>b<br>c";
+//    alert($scope.test);
+//    $scope.test = $sce.trustAsHtml($scope.test);
+    $scope.query = function () {
+        $http.post('/History').success(function (result) {
+            $scope.HistoryList = result.data;
         });
     }
 }
