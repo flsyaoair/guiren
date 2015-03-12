@@ -163,7 +163,6 @@ def calcprogress(project_id):
     session.query(Project).filter(Project.ProjectId == project_id).update({'Progress':(complete_project_task * 100.0 / all_project_task),'LastUpdateDate':datetime.now()})
     session.commit()
     session.close()
-
 def delete(task_id):
     session = database.get_session()
 
