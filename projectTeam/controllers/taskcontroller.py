@@ -75,7 +75,5 @@ def delete():
 
 @task.route('/Task/CreateNew',methods=['POST'])
 def create_new():
-    print '--------------------------------------------------------------------'
-    print request.data
     taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])
