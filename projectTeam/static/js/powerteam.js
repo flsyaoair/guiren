@@ -80,7 +80,7 @@ function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
     $scope.ProjectList2 = [];
     $scope.p = [];
-    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: -1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
         var btn = $("#btnCreateProject");
         btn.button('loading');
@@ -629,7 +629,7 @@ function NoticeCtrl($scope, $http) {
     $scope.query = function () {
         var btn = $("#btnQueryNotice");
         btn.button('loading');
-        $http.post('/Notice/Query', $scope.Query).success(function (result) {
+        $http.post('/Notice/Query').success(function (result) {
             btn.button('reset');
             $scope.NoticeList = result.data;
         });
