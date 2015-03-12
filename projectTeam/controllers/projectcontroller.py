@@ -10,24 +10,7 @@ project.before_request(login_filter)
 
 @project.route('/Project')
 def index():
-    task_list = taskservice.member_task(g.user_id)
-    issue_list = issueservice.member_issue(g.user_id)
-    history_list_all = []
-    for task in task_list:
-        history_list_task = taskservice.get_history(task.TaskId)
-        for history in history_list_task:
-            history_list_all.append(history)
-    for issue in issue_list:
-        history_list_issue = issueservice.get_history(issue.IssueId)
-        for history in history_list_issue:
-            history_list_all.append(history)
-#    history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)  #第二种写法
-    history_list_all = sorted(history_list_all, key=attrgetter('CreateDate'), reverse=True)
-    length = len(history_list_all)
-    notice_content = noticeservice.get()
-#    Notice = request.json['Notice']
-#    noticeservice.create(Notice)
-    return render_template('Project/List.html', HistoryList=history_list_all, Length=length, Content=notice_content)
+    return render_template('Project/List.html')
 
 @project.route('/History',methods=['POST'])
 def history():
