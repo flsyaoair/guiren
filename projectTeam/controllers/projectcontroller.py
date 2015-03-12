@@ -37,7 +37,7 @@ def history():
     for task in task_list:
         history_list_task = taskservice.get_history(task.TaskId)
         for history in history_list_task:
-            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName,  'Name':history.Name, 'TaskId':history.TaskId, 'IssueId':'', 'CreateDate':history.CreateDate.strftime('%Y-%m-%d %H:%M'),'RawAssignToProfile.Nick':history.RawAssignToProfile.Nick, 'NewAssignToProfile.Nick':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})           
+            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName,  'Name':history.Name, 'TaskId':history.TaskId, 'IssueId':'', 'CreateDate':history.CreateDate.strftime('%Y-%m-%d %H:%M'),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})           
     for issue in issue_list:
         history_list_issue = issueservice.get_history(issue.IssueId)
         for history in history_list_issue:
