@@ -27,14 +27,14 @@ def createNew_requirement():
 def query():
 #    requirement_id = request.json['RequirementId']
     status = request.json['Status']
-#    page_no = request.json['PageNo']
-    data = requirementservice.query(status)
+    page_no = request.json['PageNo']
+    (row_count,page_count,page_no,page_size,data) = requirementservice.query(status,page_no,'LastUpdateDate desc')
     Requirement_list=[]
     for i in data:
 #        d=i.Description.lstrip("<p>").rstrip("</p>")
         Requirement_list.append({'RequirementId':i.RequirementId,'RequirementName':i.RequirementName,'Description':i.Description,'Versions':i.Versions,'Status':i.Status,'LastUpdateDate':i.LastUpdateDate.isoformat()})
        
-    return jsonify(data=Requirement_list)
+    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=Requirement_list)
 
 @requirement.route('/Requirement/Detail/<int:requirement_id>')
 def detail_requirement(requirement_id):
