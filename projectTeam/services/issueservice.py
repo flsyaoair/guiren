@@ -7,6 +7,7 @@ from datetime import datetime
 from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
+from math import  ceil
 
 def create(project_id,subject,priority,assign_to,description,category_id,creator):
     session = database.get_session()
@@ -99,6 +100,25 @@ def get_history(issue_id):
     session.close()
 
     return history_list
+    
+def get_history_all(issue_id,page_no):
+    session = database.get_session()
+
+    history_list = session.query(IssueHistory).options(joinedload(IssueHistory.RawAssignToProfile),joinedload(IssueHistory.NewAssignToProfile),joinedload(IssueHistory.CreatorProfile),joinedload(IssueHistory.RawIssueCategory),joinedload(IssueHistory.NewIssueCategory)).filter(IssueHistory.IssueId == issue_id)
+    history_list = history_list.limit(1).offset((page_no - 1) * 1)
+    row_count = history_list.count()
+    page_count = int(ceil(row_count * 1.0 / 1))
+    if page_no < 1:
+        page_no = 1
+    if page_no > page_count:
+        page_no = page_count
+    if page_no == 0:
+        page_no = 1
+        page_count = 1
+    
+    session.close()
+
+    return (history_list,page_no,page_count,row_count)
 
 def update(project_id,issue_id,subject,category_id,assign_to,priority,status,feedback,current_user):
     session = database.get_session()

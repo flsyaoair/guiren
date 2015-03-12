@@ -8,6 +8,5 @@ notice.before_request(login_filter)
 
 @notice.route('/Notice/Create',methods=['POST'])
 def create_notice():
-    print "-------------------/project/create_notice---------------------------------------"
     noticeservice.create(request.json['Content'])
     return jsonify(created=True)

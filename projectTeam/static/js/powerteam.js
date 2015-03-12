@@ -638,12 +638,16 @@ function NoticeCtrl($scope, $http) {
 
 function HistoryCtrl($scope, $http) {
     $scope.HistoryList = [];
+    $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
 //    $scope.test = "a<br>b<br>c";
 //    alert($scope.test);
 //    $scope.test = $sce.trustAsHtml($scope.test);
     $scope.query = function () {
-        $http.post('/History').success(function (result) {
+        $http.post('/History', $scope.Query).success(function (result) {
             $scope.HistoryList = result.data;
+            $scope.Query.RowCount = result.row_count;
+            $scope.Query.PageCount = result.page_count;
+            $scope.Query.PageNo = result.page_no;
         });
     }
 }
@@ -661,7 +665,7 @@ function onChange( obj )
             {
                 document.getElementById("message").innerHTML="key值不能超过255个字符";
             }
-            var Regex = /^([\.a-zA-Z0-9_-])+$/;
+            var Regex = /^([a-zA-Z])+$/;
 
             if (!Regex.test(key))
             {                
@@ -674,7 +678,7 @@ function onChange( obj )
             /*
             for (i=0; i<key.length; i++)
             {
-                if (key.charAt(i) != "/^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/")
+                if (key.charAt(i) != "/^([a-zA-Z])+@([a-zA-Z])+([a-zA-Z])+/")
                     {
                         document.getElementById("message").innerHTML="key值输入格式不对";
                         return false;
