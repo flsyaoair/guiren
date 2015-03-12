@@ -247,6 +247,7 @@
                 <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>{{history.CreatorProfile_Nick}}</strong> 更新
+{{history.RawAssignTo}}-----{{history.NewAssignTo}}
                         <c ng-show="'{{history.TaskId}}'!=''">
                             <a href="/Task/Detail/{{history.TaskId}}" data-toggle="tooltip" title="项目：{{history.ProjectName}}"><i class="fa fa-tasks fa-fw"></i>{{history.Name}}</a>:
                         </c>
@@ -283,8 +284,8 @@
 								<strong class="label label-default" ng-switch-when="3">低</strong>
 							</span>
 						</c>
-						<c ng-show="'{{history.RawAssignToProfile.Nick}}'!='{{history.NewAssignToProfile.Nick}}'">
-							指派人 从{{history.RawAssignToProfile.Nick}} 变为 {{history.NewAssignToProfile.Nick}}
+						<c ng-show="'{{history.RawAssignTo}}'!='{{history.NewAssignTo}}'">
+							指派人 从{{history.RawAssignTo}} 变为 {{history.NewAssignTo}}
 						</c>
 					</c>
 					<div ng-show="'{{history.Feedback}}'!=''" ng-bind-html="history.Feedback | to_trusted" style="padding-left: 5px; padding-top: 5px;">

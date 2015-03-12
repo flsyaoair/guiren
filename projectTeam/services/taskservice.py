@@ -110,7 +110,9 @@ def update(project_id,task_id,task_name,version,assign_to,priority,progress,stat
     
     changeAssignTo = not (task.AssignTo == assign_to)
     description = task.Description
-
+    priority = int(priority)
+    assign_to = int(assign_to)
+    status = int(status)
     if (not task.Versions == version) or (not task.TaskName == task_name) or (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
         history = TaskHistory()
         history.ProjectId = task.ProjectId

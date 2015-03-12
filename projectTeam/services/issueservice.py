@@ -106,7 +106,10 @@ def update(project_id,issue_id,subject,category_id,assign_to,priority,status,fee
     issue = session.query(Issue).filter(Issue.IssueId == issue_id).one()
     changeAssignTo = not (issue.AssignTo == assign_to)
     description = issue.Description
-
+    assign_to = int(assign_to)
+    priority = int(priority)
+    status = int(status)
+    
     if (not issue.Subject == subject) or (not issue.CategoryId == category_id) or (not issue.Status == status) or (not issue.Priority == priority) or (not issue.AssignTo == assign_to) or (len(feedback) > 0):
         history = IssueHistory()
         history.ProjectId = issue.ProjectId
