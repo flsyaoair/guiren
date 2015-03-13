@@ -69,6 +69,17 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
 
     project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
     q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId).filter(Task.ProjectId.in_(project_list))
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
+    print type(q),q.count()
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
+    print q
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
+    print '-----------------------------------------------------------------------'
     for f in filters:
         q = q.filter(f)
     (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
