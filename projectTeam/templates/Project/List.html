@@ -234,7 +234,7 @@
 					</div>
                     </div>
                     <div class="col-sm-3 text-right" style="">
-                        <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate}}
+                        <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                     </div>
                 </div>
                 <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()">查看更多</a>

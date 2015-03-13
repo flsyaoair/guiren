@@ -104,24 +104,6 @@ def get_history(task_id):
 
     return history_list
     
-def get_history_all(task_id,page_no):
-    session = database.get_session()
-
-    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
-    history_list = history_list.limit(2).offset((page_no - 1) * 2)
-    row_count = history_list.count()
-    page_count = int(ceil(row_count * 1.0 / 2))
-    if page_no < 1:
-        page_no = 1
-    if page_no > page_count:
-        page_no = page_count
-    if page_no == 0:
-        page_no = 1
-        page_count = 1
-    session.close()
-
-    return (history_list,page_no,page_count,row_count)
-    
 #def get_user_history(g.user_id):
 #    session = database.get_session()
 #

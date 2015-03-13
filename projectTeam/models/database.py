@@ -37,7 +37,7 @@ def history_pager(query,page_no,page_size=PAGESIZE_history):
         page_no = 1
         page_count = 1
 #    data = query.limit(page_size).offset((page_no - 1) * page_size)
-    data = query[(page_no-1)*page_size:page_no*page_size]
+    data = query[:page_no*page_size]
     return (row_count,page_count,page_no,page_size,data)
 
 def drop_database():
