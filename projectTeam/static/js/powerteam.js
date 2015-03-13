@@ -633,9 +633,11 @@ function NoticeCtrl($scope, $http) {
     $scope.query = function () {
         var btn = $("#btnQueryNotice");
         btn.button('loading');
+        $scope.isEmpty = true;
         $http.post('/Notice/Query').success(function (result) {
             btn.button('reset');
             $scope.NoticeList = result.data;
+            $scope.isEmpty = false;
         });
     }
 }

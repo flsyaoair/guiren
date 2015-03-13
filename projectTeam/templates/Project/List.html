@@ -141,8 +141,13 @@
             </div>
             <div class="panel-body">
                 <div class="panel panel-default" ng-controller="NoticeCtrl" ng-init="query()">
-                    <div class="panel-body">
-                        <h4 class="">{{NoticeList.Content}}</h4>
+                    <div ng-show="isEmpty">
+                        <div class="alert alert-success text-center" style="margin-bottom: 0px;">
+                            <h3>还没有公告<i class="fa fa-smile-o"></i></h3>
+                        </div>
+                    </div>
+                    <div class="panel-body" ng-show="!isEmpty">
+                        <h5 class="" style="line-height:150%;">{{NoticeList.Content}}</h5>
                         <div class="text-right">
                             <i class="fa fa-clock-o fa-fw"></i>{{NoticeList.Date | date:'yyyy-MM-dd HH:mm'}}
                         </div>
@@ -237,7 +242,7 @@
                         <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                     </div>
                 </div>
-                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()">查看更多</a>
+                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()" ng-show="1<Query.PageCount&Query.PageCount>Query.PageNo">查看更多</a>
             </div>
         </div>
     </div>
