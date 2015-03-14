@@ -1,6 +1,6 @@
 ﻿# -*- coding: UTF-8 -*-
 
-from projectTeam.models import Task, TaskStatus, UserProfile, database
+from projectTeam.models import Task, TaskStatus, UserProfile, database, Member
 from projectTeam.models.task import Task, TaskStatus,  TaskHistory
 from datetime import datetime
 from sqlalchemy.orm import joinedload
@@ -42,7 +42,7 @@ def create(project_id,task_name,version,priority,assign_to,description,creator):
         body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
         mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
 
-def query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no):
+def query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no,current_user):
     session = database.get_session()
 
     filters = []
@@ -51,7 +51,7 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
     task_name = task_name.strip()
     if len(task_name) > 0:
         filters.append(Task.TaskName.like('%' + task_name + '%'))
-    if not project_id == -1:
+    if not project_id == 'all':
         filters.append(Task.ProjectId == project_id)    
     if not assign_to == 0:
         filters.append(Task.AssignTo == assign_to)
@@ -66,7 +66,8 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
     if len(status) > 0:
         filters.append(Task.Status.in_(status))
 
-    q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId)
+    project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
+    q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId).filter(Task.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
     (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
@@ -90,8 +91,17 @@ def get_history(task_id):
     session.close()
 
     return history_list
+    
+#def get_user_history(g.user_id):
+#    session = database.get_session()
+#
+#    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
+#                  
+#    session.close()
 
-def update(task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
+#    return history_list
+
+def update(project_id,task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
@@ -100,10 +110,15 @@ def update(task_id,task_name,version,assign_to,priority,progress,status,feedback
     
     changeAssignTo = not (task.AssignTo == assign_to)
     description = task.Description
-
-    if (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
+    priority = int(priority)
+    assign_to = int(assign_to)
+    status = int(status)
+    if (not task.Versions == version) or (not task.TaskName == task_name) or (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
         history = TaskHistory()
+        history.ProjectId = task.ProjectId
         history.TaskId = task.TaskId
+        history.Name = task_name
+        history.Versions = task.Versions
         history.RawStatus = task.Status
         history.NewStatus = status
         history.RawPriority = task.Priority
@@ -148,7 +163,6 @@ def calcprogress(project_id):
     session.query(Project).filter(Project.ProjectId == project_id).update({'Progress':(complete_project_task * 100.0 / all_project_task),'LastUpdateDate':datetime.now()})
     session.commit()
     session.close()
-
 def delete(task_id):
     session = database.get_session()
 
@@ -170,3 +184,11 @@ def statistics(project_id):
     session.close()
 
     return (task_status,task_priority)
+    
+def member_task(current_user):
+    session = database.get_session()
+    
+    project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
+    task_list = session.query(Task).filter(Task.ProjectId.in_(project_list)).all()
+    
+    return (task_list)

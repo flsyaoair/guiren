@@ -26,8 +26,8 @@
                 </div>
                 <div class="form-group" >
                     <select class="form-control" ng-model="Query.ProjectId">
-                        <option value="-1">项目</option>
-                       {% for project in ProjectNameList %}
+                        <option value="all">项目</option>
+                        {% for project in ProjectNameList %}
                         <option value="((project.ProjectId))">((project.ProjectName))</option>
                         {% endfor %}
                     </select>
@@ -46,7 +46,6 @@
                         <label class="btn btn-default" ng-click="Query.Canceled=!Query.Canceled">
                             <input type="checkbox"><i class="fa fa-check fa-fw" ng-show="Query.Canceled"></i>已取消
                         </label>
-                      
                     </div>
                 </div>
                 <div class="form-group">
@@ -82,7 +81,7 @@
 
                         </div>
                         <div class="col-sm-2">
-                            <span data-toggle="tooltip" title="Key ：{{Task.ProjectKey}}-T{{Task.TaskId}}"><i class="fa fa-key fa-fw"></i> T{{Task.TaskId}}-{{Task.ProjectKey}}</span>
+                            <span data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}"><i class="fa fa-key fa-fw"></i> T{{Task.TaskId}}-{{Task.ProjectKey}}</span>
                         </div>
                         <div class="col-sm-2">
                             <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>

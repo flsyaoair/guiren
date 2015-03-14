@@ -32,7 +32,10 @@ class IssueHistory(BaseModel):
 
     __tablename__ = 'IssueHistory'
     HistoryId = Column('HistoryId', Integer,primary_key=True,nullable=False,autoincrement=True)
+    ProjectId = Column('ProjectId', Integer,ForeignKey('Project.ProjectId'),nullable = False)
+    ProjectProfile = relationship('Project', lazy='subquery', foreign_keys=ProjectId,primaryjoin=ProjectId == Project.ProjectId)
     IssueId = Column('IssueId', Integer,ForeignKey('Issue.IssueId'),nullable = False)
+    Name = Column('Name', NVARCHAR(30),ForeignKey('Issue.Subject'),nullable = False)
     RawStatus = Column('RawStatus', SMALLINT,nullable = False)
     NewStatus = Column('NewStatus', SMALLINT,nullable = False)
     RawPriority = Column('RawPriority', SMALLINT,nullable = False)

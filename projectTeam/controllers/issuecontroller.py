@@ -36,7 +36,7 @@ def query():
     status_closed = request.json['Closed']
     status_canceled = request.json['Canceled']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = issueservice.query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,'CreateDate',page_no)
+    (row_count,page_count,page_no,page_size,data) = issueservice.query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,'CreateDate',page_no,g.user_id)
     issue_list = []
     for i in data.all():
         issue_list.append({'IssueId':i.IssueId,'ProjectId':i.ProjectId,'ProjectKey':i.ProjectProfile.ProjectKey,'Category':i.Category.CategoryName,'Subject':i.Subject,'Priority':i.Priority,'Status':i.Status,'AssignTo':i.AssignToProfile.Nick,'Creator':i.CreatorProfile.Nick,'LastUpdateDate':i.LastUpdateDate.isoformat()})
@@ -54,6 +54,7 @@ def detail(issue_id):
 
 @issue.route('/Issue/Update',methods=['POST'])
 def update():
+    ProjectId = request.json['ProjectId']
     IssueId = request.json['IssueId']
     subject = request.json['Subject']
     assign_to = request.json['AssignTo']
@@ -63,7 +64,7 @@ def update():
     category_id = request.json['CategoryId']
     status = request.json['Status']
     feedback = request.json['Feedback']
-    issueservice.update(IssueId,subject,category_id,assign_to,priority,status,feedback,g.user_id)
+    issueservice.update(ProjectId,IssueId,subject,category_id,assign_to,priority,status,feedback,g.user_id)
     return jsonify(updated=True)
 
 @issue.route('/Issue/Delete',methods=['POST'])

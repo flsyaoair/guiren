@@ -50,7 +50,7 @@
         <div ng-show="!ShowUpdate">
             {% for history in HistoryList %}
             <div class="notice notice-info">
-                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority)) || ((history.RawIssueCategory))!=((history.NewIssueCategory))">
                     <p ng-show="((history.RawStatus))!=((history.NewStatus))">
                         状态 从 <span ng-switch on="((history.RawStatus))">
                             <strong class="label label-primary" ng-switch-when="1">打开</strong>
@@ -85,7 +85,9 @@
                     <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
                         指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
                     </p>
-                    <hr />
+                </div>
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+                    <hr>
                 </div>
                 <div ng-show="'((history.Feedback))'!=''">
                     ((history.Feedback|safe))

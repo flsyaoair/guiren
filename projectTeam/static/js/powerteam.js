@@ -21,11 +21,19 @@ app.directive('integer', function () {
 $(function () {
     $('input, textarea').placeholder();
     $('.default-focus').focus();
+    $("[data-toggle='tooltip']").tooltip();
+    $(".tooltips").tooltip();
     $('*').tooltip({
         selector: "[data-toggle=tooltip]",
         container: "body"
     });
 });
+
+app.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+   return $sce.trustAsHtml(text);
+    };
+}]);
 
 function LoginCtrl($scope, $http) {
     $scope.isMatch = true;
@@ -70,6 +78,7 @@ function RegisterCtrl($scope, $http) {
 
 function ProjectCtrl($scope, $http) {
     $scope.ProjectList = [];
+    $scope.ProjectList2 = [];
     $scope.p = [];
     $scope.Query = { PageNo: 1, ProjectName: '', ProjectKey: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.create = function () {
@@ -77,10 +86,18 @@ function ProjectCtrl($scope, $http) {
         btn.button('loading');
         $http.post('/Project/Create', $scope.Project).success(function (result) {
             btn.button('reset');
-            if (result.created) {
+            if (result.exist) {
+                $scope.keyExist = true;
+//                alert($scope.keyExist)
+            }
+            else {
                 $('#project_add').modal('hide');
                 $scope.query();
             }
+            //if (result.created) {
+            //    $('#project_add').modal('hide');
+            //    $scope.query();
+            //}
         });
     }
     $scope.query = function () {
@@ -89,6 +106,7 @@ function ProjectCtrl($scope, $http) {
         $http.post('/Project/Query', $scope.Query).success(function (result) {
             btn.button('reset');
             $scope.ProjectList = result.data;
+            $scope.ProjectList2 = result.data2;
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
@@ -125,7 +143,7 @@ function ProjectUpdateCtrl($scope, $http) {
 
 function TaskCtrl($scope, $http) {
     $scope.TaskList = [];
-    $scope.Query = { PageNo: 1, TaskName: '',ProjectId:-1,AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, TaskName: '',ProjectId:'all',AssignTo: -1, New: true, InProgress: true, Completed: false, Canceled: false, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
         var btn = $("#btnQuery");
         btn.button('loading');
@@ -142,7 +160,7 @@ function TaskCtrl($scope, $http) {
 function TaskCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Task = { TaskName: null, Versions: null,Priority: 2, AssignTo: -1, Description: null };
+    $scope.Task = { TaskName: null, Versions: null, Priority: 2, AssignTo: -1, Description: null };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');
@@ -156,6 +174,7 @@ function TaskCreateCtrl($scope, $http) {
         });
     }
 }
+
 
 function TaskUpdateCtrl($scope, $http) {
     $scope.UpdateSuccess = false;
@@ -193,7 +212,7 @@ function TaskUpdateCtrl($scope, $http) {
         var btn = $("#btnDelete");
         btn.button('loading');
         $http.post('/Task/Delete', { 'TaskId': $scope.Task.TaskId }).success(function (result) {
-            if (result.deleted) {
+        	if (result.deleted) {
                 $scope.DeleteSuccess = true;
                 btn.button('reset');
                 window.location.href = "/Project/Task/" + $scope.Task.ProjectId;
@@ -517,10 +536,14 @@ function RequirementCtrl($scope, $http) {
     $scope.Exist = false;
     editor = UE.getEditor('editor');
     $scope.RequirementList = [];
-//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
-        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId }).success(function (result) {
+        $http.post('/Requirement/Query',{'RequirementId': $scope.RequirementId,'Status': $scope.Query.Status,'PageNo':$scope.Query.PageNo }).success(function (result) {
             $scope.RequirementList = result.data;
+            $scope.RequirementList2 = result.data2;
+            $scope.Query.RowCount = result.row_count;
+            $scope.Query.PageCount = result.page_count;
+            $scope.Query.PageNo = result.page_no;
 //            window.location.href = '/Requirement';
         });
     }
@@ -540,7 +563,46 @@ function RequirementCtrl($scope, $http) {
             $scope.query();
         });
     }
+} 
+
+function RequirementUpdateCtrl($scope, $http) {
+	
+    $scope.edit = function () {
+
+        $scope.ShowUpdate = !$scope.ShowUpdate;
+        UE.getEditor('editor1');
+       
+    }
+    $scope.update = function () {
+    	  
+            var btn = $("#btnUpdate");
+            btn.button('loading');
+            UE.getEditor('editor1').hasContents()
+            $scope.Description = UE.getEditor('editor1').getContent();
+            $http.post('/Requirement/Update', {'RequirementId':$scope.RequirementId , "RequirementName": $scope.RequirementName,"Versions": $scope.Versions,"Description":$scope.Description,"Status":$scope.Status }).success(function (result) {
+                if (result.updated) {
+                    $scope.UpdateSuccess = true;
+                    btn.button('reset');
+                    window.location.href = '/Requirement';
+                }
+            });
+        
+    }
 }
+//    $scope.RemoveRequirement = function (RequirementId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRequirement', {'RequirementId': RequirementId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = '/Requirement';
+//                
+//            }
+//        });
+//    }
+//}
+
 //    $scope.RemoveRepository = function (RepositoryId) {
 //        $scope.AddSuccess = false;
 //        $scope.RemoveSuccess = false;
@@ -555,7 +617,40 @@ function RequirementCtrl($scope, $http) {
 //    }
 //}
 
+function NoticeCtrl($scope, $http) {
+    $scope.Query = { Content: '' };
+    $scope.create = function () {
+        var btn = $("#btnCreateNotice");
+        btn.button('loading');
+        $http.post('/Notice/Create', $scope.Notice).success(function (result) {
+            btn.button('reset');
+            if (result.created) {
+                $('#notice_add').modal('hide');
+                $scope.query();
+            }
+        });
+    }
+    $scope.query = function () {
+        var btn = $("#btnQueryNotice");
+        btn.button('loading');
+        $http.post('/Notice/Query').success(function (result) {
+            btn.button('reset');
+            $scope.NoticeList = result.data;
+        });
+    }
+}
 
+function HistoryCtrl($scope, $http) {
+    $scope.HistoryList = [];
+//    $scope.test = "a<br>b<br>c";
+//    alert($scope.test);
+//    $scope.test = $sce.trustAsHtml($scope.test);
+    $scope.query = function () {
+        $http.post('/History').success(function (result) {
+            $scope.HistoryList = result.data;
+        });
+    }
+}
 
 function onChange( obj )
 {
@@ -592,4 +687,3 @@ function onChange( obj )
             */
         }
 }
-

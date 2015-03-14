@@ -7,23 +7,26 @@ from sqlalchemy.orm import joinedload
 def create(project_name,project_key,project_introduction,creator):
     session = database.get_session()
 
-    p = Project()
-    p.ProjectName = project_name.strip()
-    p.Status = ProjectStatus.InProgress
-    p.Progress = 0
-    p.Creator = creator
-    p.CreateDate = datetime.now()
-    p.LastUpdateDate = datetime.now()
-    p.Introduction = project_introduction.strip()
-    p.ProjectKey = project_key.strip()
+    exist = session.query(Project).filter(Project.ProjectKey == project_key.strip()).count() > 0
+    if not exist :
+        p = Project()
+        p.ProjectName = project_name.strip()
+        p.Status = ProjectStatus.InProgress
+        p.Progress = 0
+        p.Creator = creator
+        p.CreateDate = datetime.now()
+        p.LastUpdateDate = datetime.now()
+        p.Introduction = project_introduction.strip()
+        p.ProjectKey = project_key.strip()
+    
+        m = Member()
+        m.UserId = creator
+        p.Members.append(m)
 
-    m = Member()
-    m.UserId = creator
-    p.Members.append(m)
-
-    session.add(p)
-    session.commit()
+        session.add(p)
+        session.commit()
     session.close()
+    return (exist)
 
 def get(project_id):
     session = database.get_session()
@@ -39,7 +42,7 @@ def query(project_name,project_introduction,status,page_no,order_by,current_user
     project_name = project_name.strip()
     if len(project_name) > 0:
         filters.append(Project.ProjectName.like('%' + project_name + '%'))
-    if not status == '-1':
+    if not status == 'all':
         filters.append(Project.Status == status)
 
     session = database.get_session()

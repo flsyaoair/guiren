@@ -1,5 +1,5 @@
 ﻿# -*- coding: UTF-8 -*-
-from projectTeam.models import database
+from projectTeam.models import database, Member
 from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
 from projectTeam.models.userprofile import UserProfile
 from projectTeam.powerteamconfig import *
@@ -50,7 +50,7 @@ def all_category():
     session.close()
     return list
 
-def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no):
+def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no,current_user):
     session = database.get_session()
 
     filters = []
@@ -74,7 +74,8 @@ def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,s
     if len(status) > 0:
         filters.append(Issue.Status.in_(status))
 
-    q = session.query(Issue).join(UserProfile,UserProfile.UserId == Issue.Creator).join(UserProfile,UserProfile.UserId == Issue.AssignTo)
+    project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
+    q = session.query(Issue).join(UserProfile,UserProfile.UserId == Issue.Creator).join(UserProfile,UserProfile.UserId == Issue.AssignTo).filter(Issue.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
     (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
@@ -99,16 +100,22 @@ def get_history(issue_id):
 
     return history_list
 
-def update(issue_id,subject,category_id,assign_to,priority,status,feedback,current_user):
+def update(project_id,issue_id,subject,category_id,assign_to,priority,status,feedback,current_user):
     session = database.get_session()
     subject = subject.strip()
     issue = session.query(Issue).filter(Issue.IssueId == issue_id).one()
     changeAssignTo = not (issue.AssignTo == assign_to)
     description = issue.Description
-
-    if (not issue.CategoryId == category_id) or (not issue.Status == status) or (not issue.Priority == priority) or (not issue.AssignTo == assign_to) or (len(feedback) > 0):
+    category_id = int(category_id)
+    assign_to = int(assign_to)
+    priority = int(priority)
+    status = int(status)
+    
+    if (not issue.Subject == subject) or (not issue.CategoryId == category_id) or (not issue.Status == status) or (not issue.Priority == priority) or (not issue.AssignTo == assign_to) or (len(feedback) > 0):
         history = IssueHistory()
+        history.ProjectId = issue.ProjectId
         history.IssueId = issue.IssueId
+        history.Name = issue.Subject
         history.RawStatus = issue.Status
         history.NewStatus = status
         history.RawPriority = issue.Priority
@@ -196,3 +203,11 @@ def exist_category(categoryname):
     session.close()
 
     return c > 0
+    
+def member_issue(current_user):
+    session = database.get_session()
+    
+    project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
+    issue_list = session.query(Issue).filter(Issue.ProjectId.in_(project_list)).all()
+    
+    return (issue_list)
