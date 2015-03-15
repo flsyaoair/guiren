@@ -1,0 +1,50 @@
+{% extends 'PowerTeamLayout.html'%}
+
+{% block subcontent %}
+
+    <div class="col-sm-10">
+        <div class="panel panel-primary" ng-controller="ItemCtrl" ng-init="query();">
+            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>列表</div>
+            <div class="panel-body">
+                
+                <form class="form-inline" role="form" name="categoryForm">
+
+                  <div class="form-group">
+                      <a href="/Item/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
+                       <div class="form-group">
+                            <input type="text" class="form-control" ng-model="Word" placeholder="" />
+                       </div> 
+                  <div class="form-group">
+                 <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找</button>
+             </div>                                                                        
+                    </div>
+                    
+                </form> 
+                <div class="panel panel-default" >
+                    <div class="panel-body">
+                        <div ng-show="ItemList.length<=0">
+                            <div class="alert alert-success text-center">
+                                <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
+                            </div>
+                        </div>
+               <!--  
+                        <div ng-repeat="Requirement in RequirementList | filter:Word">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}</a>
+	
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                    <div class="text-center">
+                        <ul class="pager">
+                            <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
+                            <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
+                            <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+</div>
+{% endblock %}
