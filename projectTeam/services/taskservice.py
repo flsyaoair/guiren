@@ -69,17 +69,6 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
 
     project_list = session.query(Member.ProjectId).filter(Member.UserId == current_user)
     q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId).filter(Task.ProjectId.in_(project_list))
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
-    print type(q),q.count()
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
-    print q
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
-    print '-----------------------------------------------------------------------'
     for f in filters:
         q = q.filter(f)
     (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
@@ -104,15 +93,6 @@ def get_history(task_id):
 
     return history_list
     
-#def get_user_history(g.user_id):
-#    session = database.get_session()
-#
-#    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
-#                  
-#    session.close()
-
-#    return history_list
-
 def update(project_id,task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 

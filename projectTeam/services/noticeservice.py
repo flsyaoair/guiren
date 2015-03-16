@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from projectTeam.models import Notice, database
 from datetime import datetime
-from sqlalchemy.orm import joinedload
 
 def get():
     session = database.get_session()

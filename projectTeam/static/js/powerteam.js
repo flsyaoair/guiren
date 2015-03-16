@@ -651,9 +651,33 @@ function HistoryCtrl($scope, $http) {
     $scope.query = function () {
         $http.post('/History', $scope.Query).success(function (result) {
             $scope.HistoryList = result.data;
+            
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
+        });
+    }
+}
+
+function CommentCtrl($scope, $http) {
+    $scope.CommentList = ['1','2','3'];
+    $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
+    $scope.create = function () {
+        var btn = $("#btnCreateComment");
+        btn.button('loading');
+        $http.post('/Comment/Create', $scope.Comment).success(function (result) {
+            btn.button('reset');
+            if (result.created) {
+                $("#new_commnet").collapse("hide");
+                $scope.Comment.Content = '';            //每次成功新建后，清除内容
+                $scope.query();
+            }
+        });
+    }
+    $scope.query = function () {
+        $http.post('/Comment/Query', $scope.Query).success(function (result) {
+            $scope.CommentList = ['1','2','3','4','5']
+        
         });
     }
 }

@@ -190,6 +190,11 @@
     <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
     <div class="panel-body">
         <div class="panel panel-default" ng-controller="HistoryCtrl" ng-init="query()">
+            <div ng-show="HistoryList.length<=0">
+                <div class="alert alert-success text-center">
+                    <h2>还没有变更记录<i class="fa fa-smile-o"></i></h2>
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
@@ -242,7 +247,7 @@
                         <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                     </div>
                 </div>
-                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()" ng-show="1<Query.PageCount&Query.PageCount>Query.PageNo">查看更多</a>
+                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()" ng-show="HistoryList.length>0 && 1<Query.PageCount && Query.PageCount>Query.PageNo">查看更多</a>
             </div>
         </div>
     </div>
