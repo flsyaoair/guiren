@@ -89,18 +89,9 @@ def create_comment():
     
 @task.route('/Comment/Query',methods=['POST'])
 def query_comment():
-    print '----------------------------------------------------------------------'
-    print '----------------------------------------------------------------------'
     task_id = request.json['TaskId']
-    print '----------------------------------------------------------------------'
-    print '----------------------------------------------------------------------'
-    print task_id
     comments = commentservice.query(task_id).all()
     comments_list = []
     for comment in comments:
         comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.Creator, 'CreateDate':comment.CreateDate})
-    print '----------------------------------------------------------------------'
-    print '----------------------------------------------------------------------'
-    print type(comments_list)
-    print comments_list
     return jsonify(data=comments_list)
