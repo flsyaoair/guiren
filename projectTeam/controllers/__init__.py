@@ -12,4 +12,5 @@ from projectTeam.controllers.admincontroller import admin
 from projectTeam.controllers.views import views
 from projectTeam.controllers.noticecontroller import notice
 from projectTeam.controllers.requirementcontroller import requirement
+from projectTeam.controllers.itemcontroller import item
 
