@@ -47,7 +47,7 @@
         <hr />
         ((Task.Description|safe))
         <hr />
-        <div ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId))">
+        <div ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId));Query.TaskId=((Task.TaskId))">
             <div class="btn-group">
                 <button type="button" class="btn btn-success btn-xs" onClick="Open()">评论</button>
                 <button type="button" class="btn btn-default btn-xs" onClick="Hide()">取消</button>
@@ -67,6 +67,7 @@
             <div ng-repeat="Comment in CommentList">
                 aaa
             </div>
+((Task.TaskId))
         </div>
         <script type="text/javascript"> 
             $(function(){

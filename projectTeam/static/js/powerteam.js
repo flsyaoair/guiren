@@ -660,8 +660,8 @@ function HistoryCtrl($scope, $http) {
 }
 
 function CommentCtrl($scope, $http) {
-    $scope.CommentList = ['1','2','3'];
-    $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
+    $scope.CommentList = [];
+    $scope.Query = {}
     $scope.create = function () {
         var btn = $("#btnCreateComment");
         btn.button('loading');
@@ -676,8 +676,8 @@ function CommentCtrl($scope, $http) {
     }
     $scope.query = function () {
         $http.post('/Comment/Query', $scope.Query).success(function (result) {
-            $scope.CommentList = ['1','2','3','4','5']
-        
+            $scope.CommentList = result.data;
+            
         });
     }
 }
