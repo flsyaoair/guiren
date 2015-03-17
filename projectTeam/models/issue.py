@@ -72,3 +72,13 @@ class Issue(BaseModel):
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
 
+#class IssueComment(BaseModel):
+
+#    __tablename__ = 'IssueComment'
+#    CommentId = Column('CommentId', Integer,primary_key=True,nullable=False,autoincrement=True)
+#    Content = Column('Content', UnicodeText)
+#    IssueId = Column('IssueId', Integer,ForeignKey('Issue.IssueId'),nullable = False)
+#    IssueProfile = relationship('Issue', foreign_keys=IssueId,primaryjoin=IssueId == Issue.IssueId)
+#    Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
+#    CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
+#    CreateDate = Column('CreateDate', DateTime,nullable=False)

@@ -101,7 +101,7 @@
                                 <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                                 <br>
                                 <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文、数字、下划线或小数点)" ng-maxlength="255" required /> 
+                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文)" ng-maxlength="255" required /> 
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
@@ -141,8 +141,13 @@
             </div>
             <div class="panel-body">
                 <div class="panel panel-default" ng-controller="NoticeCtrl" ng-init="query()">
-                    <div class="panel-body">
-                        <h4 class="">{{NoticeList.Content}}</h4>
+                    <div ng-show="isEmpty">
+                        <div class="alert alert-success text-center" style="margin-bottom: 0px;">
+                            <h3>还没有公告<i class="fa fa-smile-o"></i></h3>
+                        </div>
+                    </div>
+                    <div class="panel-body" ng-show="!isEmpty">
+                        <h5 class="" style="line-height:150%;">{{NoticeList.Content}}</h5>
                         <div class="text-right">
                             <i class="fa fa-clock-o fa-fw"></i>{{NoticeList.Date | date:'yyyy-MM-dd HH:mm'}}
                         </div>
@@ -185,6 +190,11 @@
     <div class="panel-heading"><i class="fa fa-th-list fa-fw"></i>项目变更动态</div>
     <div class="panel-body">
         <div class="panel panel-default" ng-controller="HistoryCtrl" ng-init="query()">
+            <div ng-show="HistoryList.length<=0">
+                <div class="alert alert-success text-center">
+                    <h2>还没有变更记录<i class="fa fa-smile-o"></i></h2>
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
@@ -234,10 +244,10 @@
 					</div>
                     </div>
                     <div class="col-sm-3 text-right" style="">
-                        <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate}}
+                        <i class="fa fa-clock-o fa-fw"></i>{{history.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                     </div>
                 </div>
-                <a href="">查看更多</a><br>
+                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()" ng-show="HistoryList.length>0 && 1<Query.PageCount && Query.PageCount>Query.PageNo">查看更多</a>
             </div>
         </div>
     </div>

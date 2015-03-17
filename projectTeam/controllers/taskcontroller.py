@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice,taskservice,projectservice
+from projectTeam.services import teamservice,taskservice,projectservice,commentservice
 from projectTeam.models import Project
+from projectTeam.controllers.commentcontroller import *
 
 task = Module(__name__)
 task.before_request(login_filter)
@@ -46,8 +47,6 @@ def detail(task_id):
     member_list = teamservice.member_in_project(task.ProjectId)
     if task.AssignTo == g.user_id:
         task.AssignTo = -1
-    
-   
     return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id)
                                               
 @task.route('/Task/Update',methods=['POST'])
@@ -77,3 +76,22 @@ def delete():
 def create_new():
     taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])
+    
+@task.route('/Comment/Create',methods=['POST'])
+def create_comment():
+    content = request.json['Content']
+    task_id = request.json['TaskId']
+    issue_id = 0
+    requirement_id = 0
+    creator = g.user_id
+    commentservice.create(content, task_id, issue_id, requirement_id, creator)
+    return jsonify(created=True)
+    
+@task.route('/Comment/Query',methods=['POST'])
+def query_comment():
+    task_id = request.json['TaskId']
+    comments = commentservice.query(task_id).all()
+    comments_list = []
+    for comment in comments:
+        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.Creator, 'CreateDate':comment.CreateDate})
+    return jsonify(data=comments_list)

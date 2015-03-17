@@ -14,6 +14,7 @@ PORT = 8081
 SECRET_KEY = 'PowerTeamSecret'
 
 PAGESIZE = 10
+PAGESIZE_history = 10
 
 import os
 UPLOADDIR = 'static/upload/'

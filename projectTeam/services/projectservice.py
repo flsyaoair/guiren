@@ -36,9 +36,8 @@ def get(project_id):
     session.close()
     return p
 
-def query(project_name,project_introduction,status,page_no,order_by,current_user):
+def query(project_name,status,page_no,order_by,current_user):
     filters = []
-    project_introduction = project_introduction.strip()
     project_name = project_name.strip()
     if len(project_name) > 0:
         filters.append(Project.ProjectName.like('%' + project_name + '%'))

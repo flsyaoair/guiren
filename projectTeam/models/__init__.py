@@ -8,3 +8,5 @@ from projectTeam.models.issue import Issue, IssueCategory, IssueHistory, IssueSt
 from projectTeam.models.notice import Notice
 from projectTeam.models.requirement import Requirement, RequirementStatus
 from projectTeam.models.item import ThemeItem,SunItem
+from projectTeam.models.comment import Comment
+

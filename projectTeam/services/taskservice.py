@@ -8,6 +8,7 @@ from projectTeam.powerteamconfig import *
 from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
+from math import  ceil
 
 def create(project_id,task_name,version,priority,assign_to,description,creator):
     session = database.get_session()
@@ -92,15 +93,6 @@ def get_history(task_id):
 
     return history_list
     
-#def get_user_history(g.user_id):
-#    session = database.get_session()
-#
-#    history_list = session.query(TaskHistory).options(joinedload(TaskHistory.RawAssignToProfile),joinedload(TaskHistory.NewAssignToProfile),joinedload(TaskHistory.CreatorProfile)).filter(TaskHistory.TaskId == task_id)
-#                  
-#    session.close()
-
-#    return history_list
-
 def update(project_id,task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 

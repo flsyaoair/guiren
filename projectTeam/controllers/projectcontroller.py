@@ -4,6 +4,8 @@ from flask import Module,render_template,jsonify,redirect,request,g,session,Mark
 from projectTeam.services import projectservice, taskservice, issueservice, teamservice,userservice, noticeservice
 from projectTeam.controllers.filters import login_filter
 from operator import attrgetter, itemgetter
+from projectTeam.models import database
+from projectTeam.powerteamconfig import *
 
 project = Module(__name__)
 project.before_request(login_filter)
@@ -17,26 +19,28 @@ def history():
     task_list = taskservice.member_task(g.user_id)
     issue_list = issueservice.member_issue(g.user_id)
     history_list_all = []
+#    history_list_all_dict = []
+    page_no = request.json['PageNo']
     for task in task_list:
         history_list_task = taskservice.get_history(task.TaskId)
         for history in history_list_task:
-            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName, 'CreatorProfile_Nick':history.CreatorProfile.Nick, 'Name':history.Name, 'TaskId':history.TaskId, 'IssueId':'', 'CreateDate':history.CreateDate.strftime('%Y-%m-%d %H:%M'),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})           
+            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName, 'CreatorProfile_Nick':history.CreatorProfile.Nick, 'Name':history.Name, 'TaskId':history.TaskId, 'IssueId':'', 'CreateDate':history.CreateDate.isoformat(),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})           
     for issue in issue_list:
         history_list_issue = issueservice.get_history(issue.IssueId)
         for history in history_list_issue:
-            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName, 'CreatorProfile_Nick':history.CreatorProfile.Nick, 'Name':history.Name, 'TaskId':'', 'IssueId':history.IssueId, 'CreateDate':history.CreateDate.strftime('%Y-%m-%d %H:%M'),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})
-#    history_list_all = sorted(history_list_all, key=lambda history: history.CreateDate, reverse=True)  #第二种写法
+            history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName, 'CreatorProfile_Nick':history.CreatorProfile.Nick, 'Name':history.Name, 'TaskId':'', 'IssueId':history.IssueId, 'CreateDate':history.CreateDate.isoformat(),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})   
     history_list_all = sorted(history_list_all, key=itemgetter('CreateDate'), reverse=True)
+    (row_count,page_count,page_no,page_size,history_list_all) = database.history_pager(history_list_all,page_no)
 #    history_list_all = Markup(history_list_all)
-    return jsonify(data=history_list_all)
+    
+    return jsonify(data=history_list_all,page_count=page_count,row_count=row_count,page_no=page_no)
 
 @project.route('/Project/Query',methods=['POST'])
 def query():
     project_name = request.json['ProjectName']
-    project_introduction = request.json['Introduction']
     status = request.json['Status']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,project_introduction,status,page_no,'LastUpdateDate desc',g.user_id)
+    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,status,page_no,'LastUpdateDate desc',g.user_id)
     projects = []
     for p in data.all():
         projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'LastUpdateDate':p.LastUpdateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
