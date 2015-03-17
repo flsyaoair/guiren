@@ -22,6 +22,6 @@ class SunItem(BaseModel):
     Description = Column('Description', UnicodeText)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
-    ThemeItemId = Column('ThemeItemId', Integer,ForeignKey('ThemeItemId.ThemeItemId'),nullable = False)
+    ThemeItemId = Column('ThemeItemId', Integer,ForeignKey('ThemeItem.ThemeItemId'),nullable = False)
     
  
