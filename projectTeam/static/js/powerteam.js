@@ -662,6 +662,7 @@ function HistoryCtrl($scope, $http) {
 function CommentCtrl($scope, $http) {
     $scope.CommentList = [];
     $scope.Query = {}
+    $scope.isSuccess = false
     $scope.create = function () {
         var btn = $("#btnCreateComment");
         btn.button('loading');
@@ -670,6 +671,8 @@ function CommentCtrl($scope, $http) {
             if (result.created) {
                 $("#new_commnet").collapse("hide");
                 $scope.Comment.Content = '';            //每次成功新建后，清除内容
+                $scope.isSuccess = true;
+                $scope.thiscomment = result.comment_id;
                 $scope.query();
             }
         });

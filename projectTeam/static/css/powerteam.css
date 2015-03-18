@@ -99,7 +99,9 @@ c {
     background: #FAFAFA;
     margin-bottom:30px;
     /* border-radius:0; */
-    padding:10px 20px;opacity:.9;
+    padding:10px 20px;
+    padding-top:20px;
+    opacity:.9;
 }
 
 .post-header{
