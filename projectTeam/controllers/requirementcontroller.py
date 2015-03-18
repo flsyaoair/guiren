@@ -56,14 +56,15 @@ def detail_requirement(requirement_id):
                     Status=r.Status
                     Status=str(Status)
                     u="""<a href="/Requirement/Detail/%id%" class="lead">%requirementname%</a>
-                  
-                                   <span ng-switch on="%Status%" class="text-right">
-                                <strong class="label label-info" ng-switch-when="1">进行中</strong>
-                                <strong class="label label-primary" ng-switch-when="2">已完成</strong>
-                                <strong class="label label-success" ng-switch-when="3">已取消</strong>
-
-                            </span> 
-                    """
+                     
+                                 <span ng-switch on="%Status%" class="text-right">
+                                 <strong class="label label-info" ng-switch-when="1">进行中</strong>
+                                 <strong class="label label-primary" ng-switch-when="2">已完成</strong>
+                                 <strong class="label label-success" ng-switch-when="3">已取消</strong>
+ 
+                                </span>                                                                            
+                             """
+                    u=u.decode('utf-8')
                     u=u.replace('%id%', c)
                     u=u.replace('%requirementname%', requirementname)
                     u=u.replace('%Status%', Status)
