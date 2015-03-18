@@ -79,13 +79,17 @@
                             {{Comment.Content}}<hr style="margin-top:10px;margin-bottom:0px">
                             <div class="subcomment" ng-repeat="SubComment in SubCommentList">
                                 <strong><i class="fa fa-user fa-fw"></i>{{SubComment.CreatorNick}}</strong>
-                                <none ng-show="SubComment.ReplyToNick!=Comment.Creator">
+                                <none >
                                 回复<strong><i class="fa fa-user fa-fw"></i>{{SubComment.ReplyToNick}}</strong>
                                 </none>: 
                                 {{SubComment.Content}}
-                                <hr style="margin-top: 10px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
+                                <div class="text-right">
+                                    <small>{{SubComment.CreateDate | date:'yyyy-MM-dd HH:mm'}}</small>
+                                    <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}" ng-init="test=SubComment.Creator" style="margin-bottom: 2px;">回复</button>
+                                </div>
+                                <hr style="margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
                             </div>
-                            <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}" style="margin-top: 10px;">回复</button>
+                            <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button>
                             <div id="sub_comment{{Comment.CommentId}}" class="collapse">
                                 <form role="form" name="SubCommentForm">
                                     <p><div class="form-group row"><div class="col-xs-12">
