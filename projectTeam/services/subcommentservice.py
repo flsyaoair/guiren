@@ -15,3 +15,9 @@ def create(content, comment_id, replyto, creator):
     session.add(subc)
     session.commit()
     session.close()
+    
+def query(comment_id):
+    session = database.get_session()
+    subcomments = session.query(SubComment).filter(SubComment.CommentId == comment_id).order_by(SubComment.CreateDate)
+    session.close()
+    return subcomments

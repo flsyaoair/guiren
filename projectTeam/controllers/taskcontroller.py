@@ -101,9 +101,15 @@ def create_subcomment():
     content = request.json['Content']
     comment_id = request.json['CommentId']
     replyto = request.json['ReplyTo']
-    print '--------------------------------------------------------------------'
-    print '--------------------------------------------------------------------'
-    print replyto
     creator = g.user_id
     subcommentservice.create(content, comment_id, replyto, creator)
     return jsonify(created=True)
+    
+@task.route('/SubComment/Query',methods=['POST'])
+def query_subcomment():
+    comment_id = request.json['CommentId']
+    subcomments = subcommentservice.query(comment_id).all()
+    subcomments_list = []
+    for comment in subcomments:
+        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':comment.ReplyToProfile.Nick, 'CreateDate':comment.CreateDate.isoformat()})
+    return jsonify(data=subcomments_list)
