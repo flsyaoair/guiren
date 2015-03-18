@@ -685,6 +685,24 @@ function CommentCtrl($scope, $http) {
     }
 }
 
+function SubCommentCtrl($scope, $http) {
+    $scope.test = 1;
+    $scope.create_sub = function () {
+        var btn = $("#btnCreateSubComment");
+        btn.button('loading');
+        $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
+            btn.button('reset');
+            if (result.created) {
+                $("#sub_commnet").collapse("hide");
+                $scope.SubComment.Content = '';            //每次成功新建后，清除内容
+                //$scope.isSuccess = true;
+                //$scope.thiscomment = result.comment_id;
+                //$scope.query_sub();
+            }
+        });
+    }
+}
+
 function onChange( obj )
 {
     if(obj == "ProjectKey")

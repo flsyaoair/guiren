@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice,taskservice,projectservice,commentservice
+from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice
 from projectTeam.models import Project
 from projectTeam.controllers.commentcontroller import *
 
@@ -93,5 +93,17 @@ def query_comment():
     comments = commentservice.query(task_id).all()
     comments_list = []
     for comment in comments:
-        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.CreatorProfile.Nick, 'CreateDate':comment.CreateDate.isoformat()})
+        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.CreatorProfile.Nick, 'CreatorId':comment.Creator, 'CreateDate':comment.CreateDate.isoformat()})
     return jsonify(data=comments_list)
+    
+@task.route('/SubComment/Create',methods=['POST'])
+def create_subcomment():
+    content = request.json['Content']
+    comment_id = request.json['CommentId']
+    replyto = request.json['ReplyTo']
+    print '--------------------------------------------------------------------'
+    print '--------------------------------------------------------------------'
+    print replyto
+    creator = g.user_id
+    subcommentservice.create(content, comment_id, replyto, creator)
+    return jsonify(created=True)
