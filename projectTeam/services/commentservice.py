@@ -16,9 +16,12 @@ def create(content, task_id, issue_id, requirement_id, creator):
     session.add(c)
     session.commit()
     session.close()
+    
+    comment_id = session.query(Comment).order_by(Comment.CreateDate.desc()).first().CommentId
+    return comment_id
 
 def query(task_id):
     session = database.get_session()
-    comments = session.query(Comment).order_by(Comment.CreateDate)
+    comments = session.query(Comment).filter(Comment.TaskId == task_id).order_by(Comment.CreateDate)
     session.close()
     return comments

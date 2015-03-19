@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice,taskservice,projectservice,commentservice
+from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice
 from projectTeam.models import Project
 from projectTeam.controllers.commentcontroller import *
 
@@ -84,8 +84,8 @@ def create_comment():
     issue_id = 0
     requirement_id = 0
     creator = g.user_id
-    commentservice.create(content, task_id, issue_id, requirement_id, creator)
-    return jsonify(created=True)
+    comment_id = commentservice.create(content, task_id, issue_id, requirement_id, creator)
+    return jsonify(created=True,comment_id=comment_id)
     
 @task.route('/Comment/Query',methods=['POST'])
 def query_comment():
@@ -93,5 +93,23 @@ def query_comment():
     comments = commentservice.query(task_id).all()
     comments_list = []
     for comment in comments:
-        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.Creator, 'CreateDate':comment.CreateDate})
+        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.CreatorProfile.Nick, 'CreatorId':comment.Creator, 'CreateDate':comment.CreateDate.isoformat()})
     return jsonify(data=comments_list)
+    
+@task.route('/SubComment/Create',methods=['POST'])
+def create_subcomment():
+    content = request.json['Content']
+    comment_id = request.json['CommentId']
+    replyto = request.json['ReplyTo']
+    creator = g.user_id
+    subcommentservice.create(content, comment_id, replyto, creator)
+    return jsonify(created=True)
+    
+@task.route('/SubComment/Query',methods=['POST'])
+def query_subcomment():
+    comment_id = request.json['CommentId']
+    subcomments = subcommentservice.query(comment_id).all()
+    subcomments_list = []
+    for comment in subcomments:
+        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':comment.ReplyToProfile.Nick, 'CreateDate':comment.CreateDate.isoformat()})
+    return jsonify(data=subcomments_list)

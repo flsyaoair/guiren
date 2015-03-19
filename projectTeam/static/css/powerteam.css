@@ -99,7 +99,9 @@ c {
     background: #FAFAFA;
     margin-bottom:30px;
     /* border-radius:0; */
-    padding:10px 20px;opacity:.9;
+    padding:10px 20px;
+    padding-top:20px;
+    opacity:.9;
 }
 
 .post-header{
@@ -117,4 +119,15 @@ c {
     margin:0 0 45px;
     position:relative;
     text-align:center
+}
+
+.subcomment {
+    position:relative;
+    background: #F0F0F0;
+    /*margin-bottom:30px; */
+    /* border-radius:0; */
+    padding:10px 20px;
+    /*padding-top:20px; */
+    opacity:.9;
+    padding-bottom: 1px;
 }

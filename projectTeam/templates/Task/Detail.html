@@ -47,42 +47,82 @@
         <hr />
         ((Task.Description|safe))
         <hr />
-        <div class="row" ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId));Query.TaskId=((Task.TaskId))"><div class="col-xs-8 col-xs-push-0">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success btn-xs" onClick="Open()">评论</button>
-                <button type="button" class="btn btn-default btn-xs" onClick="Hide()">取消</button>
-            </div><br>
-            <div id="new_commnet" class="collapse in">
-                <form role="form" name="createCommentForm">
-                    <p><div class="form-group row"><div class="col-xs-12">
-                        <textarea rows="5" type="text" class="form-control"  ng-model="Comment.Content" placeholder="在此输入评论..." required /></textarea>
-                        <div ng-show="createCommentForm.Content.$dirty&&createCommentForm.Content.$error.required" class="text-danger"></div>
-                        <div class="text-right" style="padding-top: 10px;">
-                            <button type="button" id="btnCreateComment" ng-disabled="createCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="create()"><i class="fa fa-save fa-fw"></i>发表</button>
+        <div class="row" ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId));Query.TaskId=((Task.TaskId))">
+            <div class="col-xs-8 col-xs-push-0">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success btn-xs" data-toggle="collapse" data-target="#new_commnet">评论</button>
+                    <!--<button type="button" class="btn btn-default btn-xs" onClick="Hide()">取消</button>-->
+                </div><br>
+                <div id="new_commnet" class="collapse">
+                    <form role="form" name="createCommentForm">
+                        <p><div class="form-group row"><div class="col-xs-12">
+                            <textarea rows="5" type="text" class="form-control"  ng-model="Comment.Content" placeholder="在此输入评论..." required /></textarea>
+                            <div ng-show="createCommentForm.Content.$dirty&&createCommentForm.Content.$error.required" class="text-danger"></div>
+                            <div class="text-right" style="padding-top: 10px;">
+                                <button type="button" id="btnCreateComment" ng-disabled="createCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="create()"><i class="fa fa-save fa-fw"></i>发表</button>
+                            </div>
+                            </div></div>
+                        </p>                
+                    </form>
+                </div><hr>
+                <div class="alert alert-success alert-dismissable" ng-show="isSuccess">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        评论成功！评论内容在最下方。<a href="#comment{{thiscomment}}">点击可跳转。</a>
+                    </div>
+                <div ng-repeat="Comment in CommentList">
+                    <div class="row" id="comment{{Comment.CommentId}}">
+                        <div class="col-md-2 text-right" style="padding-top: 20px;">
+                            <strong><i class="fa fa-user fa-fw"></i>{{Comment.Creator}}</strong><hr  style="margin-top:10px;margin-bottom:10px">
+                            {{Comment.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
-                        </div></div>
-                    </p>                
-                </form>
-            </div><hr>
-            <div ng-repeat="Comment in CommentList">
-                <div class="row">
-                    <div class="post col-md-10 col-md-push-2" style="box-shadow: black 1px 1px 3px;">
-                        <br><br><br>{{Comment.Content}}<br><br><br>
+                        <div class="post col-md-10 col-md-push-0" ng-controller="SubCommentCtrl" ng-init="SubComment.CommentId=Comment.CommentId; SubComment.ReplyTo=Comment.CreatorId; SubQuery.CommentId=Comment.CommentId; query_sub()" style="box-shadow: black 0px 0px 1px;">
+                            {{Comment.Content}}<hr style="margin-top:10px;margin-bottom:0px">
+                            <div class="subcomment" ng-repeat="SubComment in SubCommentList">
+                                <strong><i class="fa fa-user fa-fw"></i>{{SubComment.CreatorNick}}</strong>
+                                <none >
+                                回复<strong><i class="fa fa-user fa-fw"></i>{{SubComment.ReplyToNick}}</strong>
+                                </none>: 
+                                {{SubComment.Content}}
+                                <div class="text-right">
+                                    <small>{{SubComment.CreateDate | date:'yyyy-MM-dd HH:mm'}}</small>
+                                    <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}" ng-init="test=SubComment.Creator" style="margin-bottom: 2px;">回复</button>
+                                </div>
+                                <hr style="margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
+                            </div>
+                            <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button>
+                            <div id="sub_comment{{Comment.CommentId}}" class="collapse">
+                                <form role="form" name="SubCommentForm">
+                                    <p><div class="form-group row"><div class="col-xs-12">
+                                        <textarea rows="2" type="text" class="form-control"  ng-model="SubComment.Content"  placeholder="在此输入回复..." required /></textarea>
+                                        <div ng-show="SubCommentForm.Content.$dirty&&SubCommentForm.Content.$error.required" class="text-danger"></div>
+                                        <div class="text-right" style="padding-top: 10px;">
+                                            <button type="button" id="btnCreateSubComment" ng-disabled="SubCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="create_sub()"><i class="fa fa-save fa-fw"></i>发表</button>
+                                        </div>
+                                        </div></div>
+                                    </p>                
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div></div>
+        </div>
+        <!--
         <script type="text/javascript"> 
             $(function(){
                 $("#new_commnet").collapse({toggle: true })
+                $("#sub_commnet").collapse({toggle: true })
             }) 
             function Open(){
                 $("#new_commnet").collapse("show");
+                $("#sub_commnet").collapse("show");
             }
             function Hide(){
                 $("#new_commnet").collapse("hide");
+                $("#sub_commnet").collapse("hide");
             } 
         </script>
+        -->
         <div ng-show="!ShowUpdate">
             {% for history in HistoryList %}
             <div class="notice notice-info">
