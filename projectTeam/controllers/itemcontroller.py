@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import requirementservice
+from projectTeam.services import itemservice
 from projectTeam.models import Project
 
 item = Module(__name__)
@@ -11,14 +11,16 @@ item.before_request(login_filter)
 def index():
     return render_template('Item/List.html')
 # 
-# @item.route('/Item/Create')
-# def create_requirement():
-# #    requirementservice.create(request.json['RequirementName'],request.json['Versions'],request.json['Description'],g.user_id)
-#     return render_template('Item/Create.html')
-# @item.route('/CreateItem',methods=['POST'])
-# def createNew_item():
-#     itemservice.create(request.json['ItemName'])
-#     return jsonify(created=True)
+@item.route('/Item/Create')
+def create_item():
+    return render_template('Item/Create.html')
+@item.route('/CreateItem',methods=['POST'])
+def createNew_item():
+
+    ThemeItem=itemservice.create_item(request.json['ThemeItemName'])
+    
+    itemservice.create(request.json['SunItemName'],request.json['Description'],ThemeItem.ThemeItemId,g.user_id)
+    return jsonify(created=True)
 #def list(project_id):
 #
 #    return render_template('Requirement/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)

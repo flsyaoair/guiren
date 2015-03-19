@@ -589,6 +589,39 @@ function RequirementUpdateCtrl($scope, $http) {
         
     }
 }
+function ItemCtrl($scope, $http) {
+    $scope.Success = false;
+    $scope.Exist = false;
+    editor = UE.getEditor('editor');
+    $scope.RequirementList = [];
+//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.query = function () {
+        $http.post('/Item/Query',{'ThemeItemId': $scope.ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
+//            $scope.RequirementList = result.data;
+//            $scope.RequirementList2 = result.data2;
+//            $scope.Query.RowCount = result.row_count;
+//            $scope.Query.PageCount = result.page_count;
+//            $scope.Query.PageNo = result.page_no;
+//            window.location.href = '/Requirement';
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $scope.Description = editor.getContent();
+        $http.post('/CreateItem',{ThemeItemName: $scope.ThemeItemName,SunItemName: $scope.SunItemName,Description:$scope.Description }).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+            window.location.href = '/Item';
+//            $scope.query();
+        });
+    }
+} 
 //    $scope.RemoveRequirement = function (RequirementId) {
 //        $scope.AddSuccess = false;
 //        $scope.RemoveSuccess = false;
