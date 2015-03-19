@@ -701,6 +701,21 @@ function SubCommentCtrl($scope, $http) {
             }
         });
     }
+    $scope.ReplySubComment = {};
+    $scope.reply_sub = function () {
+        var btn = $("#btnReplySubComment");
+        btn.button('loading');
+        $http.post('/SubComment/Reply', $scope.ReplySubComment).success(function (result) {
+            btn.button('reset');
+            if (result.created) {
+                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
+                $scope.ReplySubComment.ReplyContent = '';            //每次成功新建后，清除内容
+                //$scope.isSuccess = true;
+                //$scope.thiscomment = result.comment_id;
+                $scope.query_sub();
+            }
+        });
+    }
     $scope.query_sub = function () {
         $http.post('/SubComment/Query', $scope.SubQuery).success(function (result) {
             $scope.SubCommentList = result.data;
