@@ -736,7 +736,7 @@ function onChange( obj )
             {
                 document.getElementById("message").innerHTML="key值不能超过255个字符";
             }
-            var Regex = /^([a-zA-Z])+$/;
+            var Regex = /^([a-zA-Z0-9])+$/;
 
             if (!Regex.test(key))
             {                
@@ -749,7 +749,7 @@ function onChange( obj )
             /*
             for (i=0; i<key.length; i++)
             {
-                if (key.charAt(i) != "/^([a-zA-Z])+@([a-zA-Z])+([a-zA-Z])+/")
+                if (key.charAt(i) != "/^([a-zA-Z0-9])+@([a-zA-Z0-9])+([a-zA-Z0-9])+/")
                     {
                         document.getElementById("message").innerHTML="key值输入格式不对";
                         return false;

@@ -74,7 +74,7 @@
                         <div id="introduction{{Project.ProjectId}}" class="panel-collapse collapse">
                             <div class="row panel-body"> {{Project.Introduction}} </div>
                         </div>
-                        <hr />
+                        <hr-sm />
                     </div>
                     <div class="text-center">
                         <ul class="pager">
@@ -101,7 +101,7 @@
                                 <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                                 <br>
                                 <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文)" ng-maxlength="255" required /> 
+                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文或者数字)" ng-maxlength="255" required /> 
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
@@ -196,7 +196,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
+                <div class="row notice-sm notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>{{history.CreatorProfile_Nick}}</strong> 更新
                         <c ng-show="'{{history.TaskId}}'!=''">
@@ -206,7 +206,7 @@
                             <a href="/Issue/Detail/{{history.IssueId}}" data-toggle="tooltip" title="项目：{{history.ProjectName}}"><i class="fa fa-bug fa-fw"></i>{{history.Name}}</a>:
                         </c>
                         <c ng-show="'{{history.RawAssignToProfile.Nick}}'!='{{history.NewAssignToProfile.Nick}}' || {{history.RawStatus}}!={{history.NewStatus}}||{{history.RawPriority}}!={{history.NewPriority}}">
-                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}}">
+                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}} && '{{history.IssueId}}'!=''">
                             状态 从<span ng-switch on="{{history.RawStatus}}">
 								<strong class="label label-primary" ng-switch-when="1">打开</strong>
 								<strong class="label label-success" ng-switch-when="2">已解决</strong>
@@ -218,6 +218,21 @@
 								<strong class="label label-primary" ng-switch-when="1">打开</strong>
 								<strong class="label label-success" ng-switch-when="2">已解决</strong>
 								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                        </c>
+                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}} && '{{history.TaskId}}'!=''">
+                            状态 从<span ng-switch on="{{history.RawStatus}}">
+								<strong class="label label-danger" ng-switch-when="1">新创建</strong>
+								<strong class="label label-primary" ng-switch-when="2">进行中</strong>
+								<strong class="label label-success" ng-switch-when="3">已完成</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                            变为
+                            <span ng-switch on="{{history.NewStatus}}">
+								<strong class="label label-danger" ng-switch-when="1">新创建</strong>
+								<strong class="label label-primary" ng-switch-when="2">进行中</strong>
+								<strong class="label label-success" ng-switch-when="3">已完成</strong>
 								<strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
                         </c>

@@ -59,9 +59,9 @@ def update():
     assign_to = request.json['AssignTo']
     if assign_to == -1:
         assign_to = g.user_id
-    priority = request.json['Priority']
+    priority = request.json['PriorityNew']
     progress = request.json['Progress']
-    status = request.json['Status']
+    status = request.json['StatusNew']
 #    effort = request.json['Effort']
 #    description = request.json['Description']
     taskservice.update(project_id, task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
