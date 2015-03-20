@@ -3,6 +3,7 @@ from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
 from projectTeam.services import requirementservice
 from projectTeam.models import Project
+from projectTeam.powerteamconfig import *
 
 requirement = Module(__name__)
 requirement.before_request(login_filter)
@@ -28,7 +29,7 @@ def query():
 #    requirement_id = request.json['RequirementId']
     status = request.json['Status']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = requirementservice.query(status,page_no,'LastUpdateDate desc')
+    (row_count,page_count,page_no,page_size,data) = requirementservice.query(status,page_no,PAGESIZE,'LastUpdateDate desc')
     Requirement_list=[]
     for i in data:
 #        d=i.Description.lstrip("<p>").rstrip("</p>")

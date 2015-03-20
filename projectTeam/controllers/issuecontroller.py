@@ -2,7 +2,7 @@
 
 from flask import Module,render_template,request,g,jsonify
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice, issueservice
+from projectTeam.services import teamservice, issueservice,commentservice,subcommentservice
 from projectTeam.powerteamconfig import *
 
 issue = Module(__name__)

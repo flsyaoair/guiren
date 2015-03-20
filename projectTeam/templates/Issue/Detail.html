@@ -7,7 +7,7 @@
 {% endblock %}
 {% block subcontent %}
 <div class="panel panel-primary" ng-controller="IssueUpdateCtrl" ng-init="Issue.IssueId=((Issue.IssueId));Issue.ProjectId=((Issue.ProjectId));Issue.Subject='((Issue.Subject))';Issue.AssignTo=((Issue.AssignTo));Issue.CategoryId=((Issue.CategoryId));Issue.Status=((Issue.Status));Issue.Priority=((Issue.Priority))">
-        <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Issue.Subject}}</strong><strong class="pull-right">((Creator)) 创建于 ((Issue.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
+    <div class="panel-heading"><strong><i class="fa fa-info fa-fw"></i>{{Issue.Subject}}</strong><strong class="pull-right">((Creator)) 创建于 ((Issue.CreateDate.strftime('%Y-%m-%d %H:%M')))</strong></div>
     <div class="panel-body">
         <div class="row text-center">
             <div class="col-sm-2">
@@ -47,56 +47,6 @@
         <hr />
         ((Issue.Description|safe))
         <hr />
-        <div ng-show="!ShowUpdate">
-            {% for history in HistoryList %}
-            <div class="notice notice-info">
-                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority)) || ((history.RawIssueCategory))!=((history.NewIssueCategory))">
-                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
-                        状态 从 <span ng-switch on="((history.RawStatus))">
-                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
-                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
-                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
-                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
-                        </span>
-                        变为
-                        <span ng-switch on="((history.NewStatus))">
-                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
-                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
-                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
-                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
-                        </span>
-                    </p>
-                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
-                        优先级 从 <span ng-switch on="((history.RawPriority))">
-                            <strong class="label label-danger" ng-switch-when="1">高</strong>
-                            <strong class="label label-warning" ng-switch-when="2">中</strong>
-                            <strong class="label label-default" ng-switch-when="3">低</strong>
-                        </span>
-                        变为
-                        <span ng-switch on="((history.NewPriority))">
-                            <strong class="label label-danger" ng-switch-when="1">高</strong>
-                            <strong class="label label-warning" ng-switch-when="2">中</strong>
-                            <strong class="label label-default" ng-switch-when="3">低</strong>
-                        </span>
-                    </p>
-                    <p ng-show="((history.RawCategoryId))!=((history.NewCategoryId))">
-                        问题分类 从 ((history.RawIssueCategory.CategoryName)) 变为 ((history.NewIssueCategory.CategoryName))
-                    </p>
-                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
-                        指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
-                    </p>
-                </div>
-                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
-                    <hr>
-                </div>
-                <div ng-show="'((history.Feedback))'!=''">
-                    ((history.Feedback|safe))
-                    <hr />
-                </div>
-                <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
-            </div>
-            {% endfor %}
-        </div>
         <form role="form" name="updateIssueForm" ng-show="ShowUpdate">
             <div class="alert alert-success alert-dismissable" ng-show="UpdateSuccess">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -152,8 +102,148 @@
                 <script id="editor" type="text/plain">
                 </script>
             </div>
-            <button type="button" id="btnUpdate" ng-disabled="updateTaskForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
+            <button type="button" id="btnUpdate" ng-disabled="updateIssueForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
         </form>
+        <div class="row" ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=0;Comment.IssueId=((Issue.IssueId));Comment.RequirementId=0;Query.TaskId=0;Query.IssueId=((Issue.IssueId));Query.RequirementId=0">
+            <div class="col-xs-8 col-xs-push-0">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success btn-xs" data-toggle="collapse" data-target="#new_commnet">评论</button>
+                    <!--<button type="button" class="btn btn-default btn-xs" onClick="Hide()">取消</button>-->
+                </div><br>
+                <div id="new_commnet" class="collapse">
+                    <form role="form" name="createCommentForm">
+                        <p><div class="form-group row"><div class="col-xs-12">
+                            <textarea rows="5" type="text" class="form-control"  ng-model="Comment.Content" placeholder="在此输入评论..." required /></textarea>
+                            <div ng-show="createCommentForm.Content.$dirty&&createCommentForm.Content.$error.required" class="text-danger"></div>
+                            <div class="text-right" style="padding-top: 10px;">
+                                <button type="button" id="btnCreateComment" ng-disabled="createCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="create()"><i class="fa fa-save fa-fw"></i>发表</button>
+                            </div>
+                            </div></div>
+                        </p>                
+                    </form>
+                </div><hr>
+                <div class="alert alert-success alert-dismissable" ng-show="isSuccess">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        评论成功！评论内容在最下方。<a href="#comment{{thiscomment}}">点击可跳转。</a>
+                    </div>
+                <div ng-repeat="Comment in CommentList">
+                    <div class="row" id="comment{{Comment.CommentId}}">
+                        <div class="col-md-2 text-right" style="padding-top: 20px;">
+                            <strong><i class="fa fa-user fa-fw"></i>{{Comment.Creator}}</strong><hr  style="margin-top:10px;margin-bottom:10px">
+                            {{Comment.CreateDate | date:'yyyy-MM-dd HH:mm'}}
+                        </div>
+                        <div class="post col-md-10 col-md-push-0" ng-controller="SubCommentCtrl" ng-init="SubComment.CommentId=Comment.CommentId; ReplySubComment.CommentId=Comment.CommentId; SubQuery.CommentId=Comment.CommentId; query_sub()" style="box-shadow: black 0px 0px 1px;">
+                            {{Comment.Content}}<hr style="margin-top:10px;margin-bottom:0px">
+                            <div class="subcomment" ng-repeat="SubComment in SubCommentList">
+                                <strong><i class="fa fa-user fa-fw"></i>{{SubComment.CreatorNick}}</strong>
+                                <none ng-show="SubComment.ReplyToNick!=''">
+                                回复<strong><i class="fa fa-user fa-fw"></i>{{SubComment.ReplyToNick}}</strong>
+                                </none>: 
+                                {{SubComment.Content}}
+                                <div class="text-right">
+                                    <small>{{SubComment.CreateDate | date:'yyyy-MM-dd HH:mm'}}</small>
+                                    <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment_reply{{SubComment.SubCommentId}}" style="margin-bottom: 2px;">回复</button>
+                                </div>
+                                <div id="sub_comment_reply{{SubComment.SubCommentId}}" class="collapse">
+                                    <form role="form" name="ReplySubCommentForm">
+                                    <p><div class="form-group row"><div class="col-xs-12">
+                                        <textarea rows="2" type="text" class="form-control"  ng-model="ReplySubComment.ReplyContent"  placeholder="在此输入回复..." required /></textarea>
+                                        <div ng-show="ReplySubComment.ReplyContent.$dirty&&ReplySubComment.ReplyContent.$error.required" class="text-danger"></div>
+                                        <div class="text-right" style="padding-top: 10px;">
+                                            <button type="button" id="btnReplySubComment" ng-disabled="ReplySubCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="ReplySubComment.ReplyTo=SubComment.Creator;reply_sub()"><i class="fa fa-save fa-fw"></i>发表</button>
+                                        </div>
+                                        </div></div>
+                                    </p>                
+                                </form>
+                                </div>
+                                <hr style="margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
+                            </div>
+                            <a href="" ng-click="SubQuery.PageNo=SubQuery.PageNo+1;query_sub()" ng-show="SubCommentList.length>0 && 1<SubQuery.PageCount && SubQuery.PageCount>SubQuery.PageNo">查看更多</a>
+                            <div class=""><button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button></div>
+                            <div id="sub_comment{{Comment.CommentId}}" class="collapse">
+                                <form role="form" name="SubCommentForm">
+                                    <p><div class="form-group row"><div class="col-xs-12">
+                                        <textarea rows="2" type="text" class="form-control"  ng-model="SubComment.Content"  placeholder="在此输入回复..." required /></textarea>
+                                        <div ng-show="SubCommentForm.Content.$dirty&&SubCommentForm.Content.$error.required" class="text-danger"></div>
+                                        <div class="text-right" style="padding-top: 10px;">
+                                            <button type="button" id="btnCreateSubComment" ng-disabled="SubCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="SubComment.ReplyTo=-1;create_sub()"><i class="fa fa-save fa-fw"></i>发表</button>
+                                        </div>
+                                        </div></div>
+                                    </p>                
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="" ng-click="Query.PageNo=Query.PageNo+1;query()" ng-show="CommentList.length>0 && 1<Query.PageCount && Query.PageCount>Query.PageNo">查看更多</a>
+            </div>
+        </div>
+        <!--
+        <script type="text/javascript"> 
+            $(function(){
+                $("#new_commnet").collapse({toggle: true })
+                $("#sub_commnet").collapse({toggle: true })
+            }) 
+            function Open(){
+                $("#new_commnet").collapse("show");
+                $("#sub_commnet").collapse("show");
+            }
+            function Hide(){
+                $("#new_commnet").collapse("hide");
+                $("#sub_commnet").collapse("hide");
+            } 
+        </script>
+        -->
+        <div ng-show="!ShowUpdate">
+            {% for history in HistoryList %}
+            <div class="notice notice-info">
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority)) || ((history.RawIssueCategory))!=((history.NewIssueCategory))">
+                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
+                        状态 从 <span ng-switch on="((history.RawStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewStatus))">
+                            <strong class="label label-primary" ng-switch-when="1">打开</strong>
+                            <strong class="label label-success" ng-switch-when="2">已解决</strong>
+                            <strong class="label label-default" ng-switch-when="3">已关闭</strong>
+                            <strong class="label label-default" ng-switch-when="4">已取消</strong>
+                        </span>
+                    </p>
+                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
+                        优先级 从 <span ng-switch on="((history.RawPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                        变为
+                        <span ng-switch on="((history.NewPriority))">
+                            <strong class="label label-danger" ng-switch-when="1">高</strong>
+                            <strong class="label label-warning" ng-switch-when="2">中</strong>
+                            <strong class="label label-default" ng-switch-when="3">低</strong>
+                        </span>
+                    </p>
+                    <p ng-show="((history.RawCategoryId))!=((history.NewCategoryId))">
+                        问题分类 从 ((history.RawIssueCategory.CategoryName)) 变为 ((history.NewIssueCategory.CategoryName))
+                    </p>
+                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
+                        指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
+                    </p>
+                </div>
+                <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
+                    <hr>
+                </div>
+                <div ng-show="'((history.Feedback))'!=''">
+                    ((history.Feedback|safe))
+                    <hr />
+                </div>
+                <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

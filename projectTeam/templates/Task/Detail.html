@@ -122,7 +122,7 @@
             <button type="button" id="btnUpdate" ng-disabled="updateTaskForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
             <hr>
         </form>
-        <div class="row" ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId));Query.TaskId=((Task.TaskId))">
+        <div class="row" ng-controller="CommentCtrl" ng-init="query();Comment.TaskId=((Task.TaskId));Comment.IssueId=0;Comment.RequirementId=0;Query.TaskId=((Task.TaskId));Query.IssueId=0;Query.RequirementId=0">
             <div class="col-xs-8 col-xs-push-0">
                 <div class="btn-group">
                     <button type="button" class="btn btn-success btn-xs" data-toggle="collapse" data-target="#new_commnet">评论</button>

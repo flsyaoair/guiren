@@ -20,9 +20,18 @@ def create(content, task_id, issue_id, requirement_id, creator):
     comment_id = session.query(Comment).order_by(Comment.CreateDate.desc()).first().CommentId
     return comment_id
 
-def query(task_id,order_by,page_no,page_size):
+def query(task_id,issue_id,requirement_id,order_by,page_no,page_size):
     session = database.get_session()
-    comments = session.query(Comment).filter(Comment.TaskId == task_id)
+    if task_id != 0:
+        comments = session.query(Comment).filter(Comment.TaskId == task_id)
+    if issue_id != 0:
+        comments = session.query(Comment).filter(Comment.IssueId == issue_id)
+    if requirement_id != 0:
+        comments = session.query(Comment).filter(Comment.RequirementId == requirement_id)
     (row_count,page_count,page_no,page_size,comments) = database.pager_more(comments,order_by,page_no,page_size)
+    comments_list = []
+    for comment in comments.all():
+        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'IssueId':comment.IssueId, 'RequirementId':comment.RequirementId, 'Creator':comment.CreatorProfile.Nick, 'CreatorId':comment.Creator, 'CreateDate':comment.CreateDate.isoformat()})
+
     session.close()
-    return (comments,row_count,page_count,page_no)
+    return (comments_list,row_count,page_count,page_no)
