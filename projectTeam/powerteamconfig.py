@@ -18,8 +18,8 @@ PAGESIZE_project = 10
 PAGESIZE_task = 10
 PAGESIZE_issue = 10
 PAGESIZE_history = 10
-PAGESIZE_comment = 2
-PAGESIZE_subcomment = 2
+PAGESIZE_comment = 5
+PAGESIZE_subcomment = 3
 
 import os
 UPLOADDIR = 'static/upload/'

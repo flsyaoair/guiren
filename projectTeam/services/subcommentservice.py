@@ -16,8 +16,17 @@ def create(content, comment_id, replyto, creator):
     session.commit()
     session.close()
     
-def query(comment_id):
+def query(comment_id,order_by,page_no,page_size):
     session = database.get_session()
-    subcomments = session.query(SubComment).filter(SubComment.CommentId == comment_id).order_by(SubComment.CreateDate)
+    subcomments = session.query(SubComment).filter(SubComment.CommentId == comment_id)
+    (row_count,page_count,page_no,page_size,subcomments) = database.pager_more(subcomments,order_by,page_no,page_size)
+    subcomments_list = []
+    for comment in subcomments.all():
+        if comment.ReplyTo == -1:
+            ReplyToNick = ''
+        else:
+            ReplyToNick = comment.ReplyToProfile.Nick
+        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':ReplyToNick, 'CreateDate':comment.CreateDate.isoformat()})
+
     session.close()
-    return subcomments
+    return (subcomments_list,row_count,page_count,page_no)

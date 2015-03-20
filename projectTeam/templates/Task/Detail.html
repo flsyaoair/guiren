@@ -176,7 +176,8 @@
                                 </div>
                                 <hr style="margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
                             </div>
-                            <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button>
+                            <a href="" ng-click="SubQuery.PageNo=SubQuery.PageNo+1;query_sub()" ng-show="SubCommentList.length>0 && 1<SubQuery.PageCount && SubQuery.PageCount>SubQuery.PageNo">查看更多</a>
+                            <div class=""><button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button></div>
                             <div id="sub_comment{{Comment.CommentId}}" class="collapse">
                                 <form role="form" name="SubCommentForm">
                                     <p><div class="form-group row"><div class="col-xs-12">

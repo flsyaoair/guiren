@@ -119,13 +119,16 @@ def reply_subcomment():
 @task.route('/SubComment/Query',methods=['POST'])
 def query_subcomment():
     comment_id = request.json['CommentId']
-#    page_no = request.json['PageNo']
-    (subcomments) = subcommentservice.query(comment_id)
-    subcomments_list = []
-    for comment in subcomments.all():
-        if comment.ReplyTo == -1:
-            ReplyToNick = ''
-        else:
-            ReplyToNick = comment.ReplyToProfile.Nick
-        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':ReplyToNick, 'CreateDate':comment.CreateDate.isoformat()})
-    return jsonify(data=subcomments_list)
+    page_no = request.json['PageNo']
+    (subcomments,row_count,page_count,page_no) = subcommentservice.query(comment_id,'CreateDate',page_no,PAGESIZE_subcomment)
+    print '-------------------------------------------------------------------------------'
+    print '-------------------------------------------------------------------------------'
+    print subcomments,row_count,page_count,page_no
+#    subcomments_list = []
+#    for comment in subcomments.all():
+#        if comment.ReplyTo == -1:
+#            ReplyToNick = ''
+#        else:
+#            ReplyToNick = comment.ReplyToProfile.Nick
+#        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':ReplyToNick, 'CreateDate':comment.CreateDate.isoformat()})
+    return jsonify(data=subcomments,row_count=row_count,page_count=page_count,page_no=page_no)
