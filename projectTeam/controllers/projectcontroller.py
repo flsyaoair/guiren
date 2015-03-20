@@ -14,6 +14,28 @@ project.before_request(login_filter)
 def index():
     return render_template('Project/List.html')
 
+@project.route('/Project/Query',methods=['POST'])
+def query():
+    project_name = request.json['ProjectName']
+    status = request.json['Status']
+    page_no = request.json['PageNo']
+    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,status,page_no,PAGESIZE_project,'LastUpdateDate desc',g.user_id)
+    projects = []
+    for p in data.all():
+        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'LastUpdateDate':p.LastUpdateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
+    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects,data2=projects[:5])
+
+@project.route('/Project/Create',methods=['POST'])
+def create():
+    try:
+        Introduction = request.json['Introduction']
+    except KeyError,e:
+        Introduction = ''
+    exist = projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
+    exist_json = {'exist': exist}
+    print exist_json
+    return jsonify(exist_json)
+
 @project.route('/History',methods=['POST'])
 def history():
     task_list = taskservice.member_task(g.user_id)
@@ -34,29 +56,6 @@ def history():
 #    history_list_all = Markup(history_list_all)
     
     return jsonify(data=history_list_all,page_count=page_count,row_count=row_count,page_no=page_no)
-
-@project.route('/Project/Query',methods=['POST'])
-def query():
-    project_name = request.json['ProjectName']
-    status = request.json['Status']
-    page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = projectservice.query(project_name,status,page_no,'LastUpdateDate desc',g.user_id)
-    projects = []
-    for p in data.all():
-        projects.append({'ProjectId':p.ProjectId,'ProjectName':p.ProjectName,'Introduction':p.Introduction,'Status':p.Status,'Progress':p.Progress,'CreateDate':p.CreateDate.isoformat(),'LastUpdateDate':p.LastUpdateDate.isoformat(),'Creator':p.UserProfile.Nick,'ProjectKey':p.ProjectKey})
-    return jsonify(row_count=row_count,page_count=page_count,page_no=page_no,page_size=page_size,data=projects,data2=projects[:5])
-
-@project.route('/Project/Create',methods=['POST'])
-def create():
-    try:
-        Introduction = request.json['Introduction']
-    except KeyError,e:
-        Introduction = ''
-    exist = projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
-    exist_json = {'exist': exist}
-    print exist_json
-    return jsonify(exist_json)
-
     
 @project.route('/Notice/Create',methods=['POST'])
 def create_notice():

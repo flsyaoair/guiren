@@ -651,7 +651,6 @@ function HistoryCtrl($scope, $http) {
     $scope.query = function () {
         $http.post('/History', $scope.Query).success(function (result) {
             $scope.HistoryList = result.data;
-            
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
@@ -661,7 +660,7 @@ function HistoryCtrl($scope, $http) {
 
 function CommentCtrl($scope, $http) {
     $scope.CommentList = [];
-    $scope.Query = {};
+    $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
     $scope.isSuccess = false
     $scope.create = function () {
         var btn = $("#btnCreateComment");
@@ -680,13 +679,15 @@ function CommentCtrl($scope, $http) {
     $scope.query = function () {
         $http.post('/Comment/Query', $scope.Query).success(function (result) {
             $scope.CommentList = result.data;
-            
+            $scope.Query.RowCount = result.row_count;
+            $scope.Query.PageCount = result.page_count;
+            $scope.Query.PageNo = result.page_no;
         });
     }
 }
 
 function SubCommentCtrl($scope, $http) {
-    $scope.Query = {};
+    $scope.SubQuery = { PageNo: 1, PageCount: 0, RowCount: 0 };
     $scope.create_sub = function () {
         var btn = $("#btnCreateSubComment");
         btn.button('loading');
@@ -719,6 +720,9 @@ function SubCommentCtrl($scope, $http) {
     $scope.query_sub = function () {
         $http.post('/SubComment/Query', $scope.SubQuery).success(function (result) {
             $scope.SubCommentList = result.data;
+            $scope.SubQuery.RowCount = result.row_count;
+            $scope.SubQuery.PageCount = result.page_count;
+            $scope.SubQuery.PageNo = result.page_no;
         });
     }
 }

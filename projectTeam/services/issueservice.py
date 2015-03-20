@@ -51,7 +51,7 @@ def all_category():
     session.close()
     return list
 
-def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no,current_user):
+def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no,page_size,current_user):
     session = database.get_session()
 
     filters = []
@@ -79,7 +79,7 @@ def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,s
     q = session.query(Issue).join(UserProfile,UserProfile.UserId == Issue.Creator).join(UserProfile,UserProfile.UserId == Issue.AssignTo).filter(Issue.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
-    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
+    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,page_size)
 
     session.close()
     return (row_count,page_count,page_no,page_size,data) 

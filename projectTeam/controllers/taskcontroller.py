@@ -4,6 +4,7 @@ from projectTeam.controllers.filters import login_filter
 from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice
 from projectTeam.models import Project
 from projectTeam.controllers.commentcontroller import *
+from projectTeam.powerteamconfig import *
 
 task = Module(__name__)
 task.before_request(login_filter)
@@ -28,7 +29,7 @@ def query():
     status_completed = request.json['Completed']
     status_canceled = request.json['Canceled']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no,g.user_id)
+    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no,PAGESIZE_task,g.user_id)
     tasks = []
     for t in data.all():
         tasks.append({'TaskId':t.TaskId,'ProjectId':project_id,'ProjectKey':t.ProjectProfile.ProjectKey,'TaskName':t.TaskName,'Priority':t.Priority,'Progress':t.Progress,'Status':t.Status,'Effort':t.Effort,'AssignTo':t.AssignToProfile.Nick,'Creator':t.CreatorProfile.Nick,'LastUpdateDate':t.LastUpdateDate.isoformat()})
@@ -90,11 +91,12 @@ def create_comment():
 @task.route('/Comment/Query',methods=['POST'])
 def query_comment():
     task_id = request.json['TaskId']
-    comments = commentservice.query(task_id).all()
+    page_no = request.json['PageNo']
+    (comments,row_count,page_count,page_no) = commentservice.query(task_id,'CreateDate',page_no,PAGESIZE_comment)
     comments_list = []
-    for comment in comments:
+    for comment in comments.all():
         comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.CreatorProfile.Nick, 'CreatorId':comment.Creator, 'CreateDate':comment.CreateDate.isoformat()})
-    return jsonify(data=comments_list)
+    return jsonify(data=comments_list,row_count=row_count,page_count=page_count,page_no=page_no)
     
 @task.route('/SubComment/Create',methods=['POST'])
 def create_subcomment():
@@ -117,9 +119,10 @@ def reply_subcomment():
 @task.route('/SubComment/Query',methods=['POST'])
 def query_subcomment():
     comment_id = request.json['CommentId']
-    subcomments = subcommentservice.query(comment_id).all()
+#    page_no = request.json['PageNo']
+    (subcomments) = subcommentservice.query(comment_id)
     subcomments_list = []
-    for comment in subcomments:
+    for comment in subcomments.all():
         if comment.ReplyTo == -1:
             ReplyToNick = ''
         else:
