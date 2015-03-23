@@ -9,6 +9,7 @@ from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 from math import  ceil
+from projectTeam.models.comment import Comment, SubComment
 
 def create(project_id,task_name,version,priority,assign_to,description,creator):
     session = database.get_session()
@@ -150,6 +151,8 @@ def calcprogress(project_id):
     session = database.get_session()
 
     all_project_task = session.query(Task).filter(Task.ProjectId == project_id).count()
+    if all_project_task == 0:
+        all_project_task = 1
     complete_project_task = session.query(Task).filter(Task.ProjectId == project_id).filter(Task.Status.in_([TaskStatus.Completed,TaskStatus.Canceled])).count()
 
     session.query(Project).filter(Project.ProjectId == project_id).update({'Progress':(complete_project_task * 100.0 / all_project_task),'LastUpdateDate':datetime.now()})
@@ -160,6 +163,14 @@ def delete(task_id):
 
     task = session.query(Task).filter(Task.TaskId == task_id).one()
     project_id = task.ProjectId
+    
+    session.query(TaskHistory).filter(TaskHistory.TaskId == task_id).delete()
+    
+    comment = session.query(Comment).filter(Comment.TaskId == task_id)
+    for commentid in comment:
+        session.query(SubComment).filter(SubComment.CommentId == commentid.CommentId).delete()
+    
+    session.query(Comment).filter(Comment.TaskId == task_id).delete()
     session.delete(task)
     session.commit()
     session.close()

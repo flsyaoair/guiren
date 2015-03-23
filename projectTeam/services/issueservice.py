@@ -8,6 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 from math import  ceil
+from projectTeam.models.comment import Comment, SubComment
 
 def create(project_id,subject,priority,assign_to,description,category_id,creator):
     session = database.get_session()
@@ -151,9 +152,14 @@ def update(project_id,issue_id,subject,category_id,assign_to,priority,status,fee
 def delete(issue_id):
     session = database.get_session()
 
-    session.query(Issue).filter(Issue.IssueId == issue_id).delete()
+    comments = session.query(Comment).filter(Comment.IssueId == issue_id)
+    for comment in comments:
+        session.query(SubComment).filter(SubComment.CommentId == comment.CommentId).delete()
+    
+    session.query(Comment).filter(Comment.IssueId == issue_id).delete()
     session.query(IssueHistory).filter(IssueHistory.IssueId == issue_id).delete()
-
+    session.query(Issue).filter(Issue.IssueId == issue_id).delete()
+    
     session.commit()
     session.close()
 
