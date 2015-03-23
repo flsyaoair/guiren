@@ -30,7 +30,7 @@
                 </div>
             </form>
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="panel-body" style="height:auto; min-height:380px; _height:380px;">
                     <div ng-show="ProjectList.length<=0">
                         <div class="alert alert-success text-center">
                             <h1>未找到任何项目<i class="fa fa-smile-o"></i></h1>
@@ -191,11 +191,11 @@
     <div class="panel-body">
         <div class="panel panel-default" ng-controller="HistoryCtrl" ng-init="query()">
             <div ng-show="HistoryList.length<=0">
-                <div class="alert alert-success text-center">
+                <div class="alert alert-success text-center" style="margin-bottom: 0px;">
                     <h2>还没有变更记录<i class="fa fa-smile-o"></i></h2>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="padding-bottom: 0px;padding-top: 0px;">
                 <div class="row notice-sm notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>{{history.CreatorProfile_Nick}}</strong> 更新

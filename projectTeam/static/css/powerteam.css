@@ -137,9 +137,18 @@ c {
     opacity:.9;
     padding-bottom: 1px;
 }
+
 hr {
     margin-top:5px;
     margin-bottom:5px;
     border:0;
     border-top:1px solid #eee
+}
+
+.panel-heading {
+	padding: 5px 15px;
+}
+
+.list-group-item {
+	padding: 5px 15px;
 }
