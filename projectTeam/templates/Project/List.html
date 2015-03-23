@@ -45,14 +45,20 @@
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
                                 <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <i class="fa fa-chevron-down  fa-lg fa-fw"></i><!--span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span--></a>
                             </div>
-                            <div class="col-sm-2"><i class="fa fa-user fa-fw"></i>{{Project.Creator}}</div>
+                            <div class="col-sm-2">
+                            	<span data-toggle="tooltip" title="创建人：{{Project.Creator}}">
+                            	<i class="fa fa-user fa-fw"></i>{{Project.Creator}}</span>
+                            </div>
                             <div class="col-sm-3">
-                                <i class="fa fa-clock-o fa-fw"></i>{{ Project.CreateDate | date:'yyyy-MM-dd' }}
+                            	<span data-toggle="tooltip" title="创建时间：{{ Project.CreateDate | date:'yyyy-MM-dd' }}">
+                                <i class="fa fa-clock-o fa-fw"></i>{{ Project.CreateDate | date:'yyyy-MM-dd' }}</span>
                             </div>
                             <div class="col-sm-2" ng-switch on="Project.Status">
-                                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
-                                <strong class="label label-success" ng-switch-when="2">已完成</strong>
-                                <strong class="label label-default" ng-switch-when="3">已取消</strong>
+                            	<span data-toggle="tooltip" title="状态">
+	                                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
+	                                <strong class="label label-success" ng-switch-when="2">已完成</strong>
+	                                <strong class="label label-default" ng-switch-when="3">已取消</strong>
+                                </spna>
                             </div>
                             <div class="col-sm-1">
                                 <div class="btn-group">
