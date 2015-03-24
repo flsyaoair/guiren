@@ -566,7 +566,7 @@ function RequirementCtrl($scope, $http) {
 } 
 
 function RequirementUpdateCtrl($scope, $http) {
-	
+	$scope.ShowUpdate = true;
     $scope.edit = function () {
 
         $scope.ShowUpdate = !$scope.ShowUpdate;

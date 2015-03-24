@@ -1,14 +1,10 @@
 {% extends 'PowerTeamLayout.html'%}
-
 {% block subcontent %}
-
-    <div class="col-sm-10">
+	<div class="container">
         <div class="panel panel-primary" ng-controller="RequirementCtrl" ng-init="query();">
-            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>需求列表</div>
+            <div class="panel-heading"><i class="fa fa-file-text-o fa-fw"></i>需求列表</div>
             <div class="panel-body">
-                
                 <form class="form-inline" role="form" name="categoryForm">
-
                         <div class="form-group">
                             <a href="/Requirement/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
                              <div class="form-group">
@@ -26,7 +22,6 @@
 		                    <button type="button" ng-click="Query.PageNo=1;query()" data-loading-text="正在查询" id="btnQuery" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>查找</button>
 		                </div>                                                                        
                         </div>
-                        
                 </form> 
                 <div class="panel panel-default" >
                     <div class="panel-body">
@@ -35,27 +30,22 @@
                                 <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
                             </div>
                         </div>
-               
                         <div ng-repeat="Requirement in RequirementList | filter:Word">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <a href="/Requirement/Detail/{{Requirement.RequirementId}}"  class="lead">{{Requirement.RequirementName}}</a>
-                                    版本：
-                                    {{Requirement.Versions}}
-                                   <span ng-switch on="Requirement.Status" class="text-right">
-                                   状态：
-                                <strong class="label label-info" ng-switch-when="1">进行中</strong>
-                                <strong class="label label-primary" ng-switch-when="2">已完成</strong>
-                                <strong class="label label-success" ng-switch-when="3">已取消</strong>
-
-                            </span>   
                                 </div>
-          
-                                <div class="col-sm-6">
-                                        
+                                <div class="col-sm-2">版本：{{Requirement.Versions}}</div>
+                                <div class="col-sm-3">
+                                   <span ng-switch on="Requirement.Status" class="text-right">状态：
+		                                <strong class="label label-info" ng-switch-when="1">进行中</strong>
+		                                <strong class="label label-primary" ng-switch-when="2">已完成</strong>
+		                                <strong class="label label-success" ng-switch-when="3">已取消</strong>
+		                            </span>   
+                                </div>
+                                <div class="col-sm-3">
                                        变更时间：{{ Requirement.LastUpdateDate | date:'yyyy-MM-dd' }}
                                 </div>
-	
                             </div>
                         </div>
                     </div>
@@ -64,9 +54,10 @@
                             <li><a href="#" ng-class="Query.PageNo<=1?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo-1;query()">上一页</a></li>
                             <li><a href="#" ng-class="Query.PageNo>=Query.PageCount?'btn disabled':''" ng-click="Query.PageNo=Query.PageNo+1;query()">下一页</a></li>
                             <li><span>第<strong>{{Query.PageNo}}</strong>页 共<strong>{{Query.PageCount}}</strong>页 共<strong>{{Query.RowCount}}</strong>条</span></li>
-                    </ul>
+                    	</ul>
                     </div>
                 </div>
             </div>
-</div>
+        </div>
+	</div>
 {% endblock %}
