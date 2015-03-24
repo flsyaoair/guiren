@@ -77,9 +77,13 @@ def update(project_id,project_name,project_introduction,status):
     return True
 
 
-def projectlist():
+def projectlist(current_user):
     session = database.get_session()
 
-    projectlist = session.query(Project)
+    projectlist = session.query(Member).filter(Member.UserId == current_user)
+    projectnamelist = []
+    for p in projectlist:
+        projectnamelist.append(p.Project.ProjectName)
+
     session.close()
-    return projectlist
+    return projectnamelist

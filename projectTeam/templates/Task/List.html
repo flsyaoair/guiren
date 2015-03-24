@@ -28,7 +28,7 @@
                     <select class="form-control" ng-model="Query.ProjectId">
                         <option value="all">项目</option>
                         {% for project in ProjectNameList %}
-                        <option value="((project.ProjectId))">((project.ProjectName))</option>
+                        <option value="((project.ProjectId))">((project))</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -62,7 +62,7 @@
                 </div>
                 <div ng-repeat="Task in TaskList">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <s ng-show="Task.Status==3||Task.Status==4">
                                 <a href="/Task/Detail/{{Task.TaskId}}" class="lead">{{Task.TaskName}}</a>
                             </s>
@@ -78,30 +78,26 @@
                                 <strong class="label label-success" ng-switch-when="3">已完成</strong>
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
-
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}"><i class="fa fa-key fa-fw"></i> T{{Task.TaskId}}-{{Task.ProjectKey}}</span>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="工时：{{Task.Effort}} 小时"><i class="fa fa-clock-o fa-fw"></i>{{Task.Effort}} 小时</span>
                         </div>
                         <div class="col-sm-2">
-                            更新于 {{Task.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
+                            更新于{{Task.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{Task.Progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ Task .Progress; }}%">
-                                    <strong>{{Task.Progress}}%</strong>
-                                </div>
+                        <div class="col-sm-2 progress" style="margin-bottom: 5px;margin-top: 5px;">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{Task.Progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ Task .Progress; }}%">
+                                <strong>{{Task.Progress}}%</strong>
                             </div>
                         </div>
                     </div>
+                    <hr style="margin-top: 10px; margin-bottom: 10px;">
                 </div>
                 <div class="text-center">
                     <ul class="pager">

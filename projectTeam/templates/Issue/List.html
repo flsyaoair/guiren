@@ -62,7 +62,7 @@
                 </div>
                 <div ng-repeat="Issue in IssueList">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <s ng-show="Issue.Status==3||Issue.Status==4">
                                 <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead">
                                     {{Issue.Subject}}
@@ -83,10 +83,10 @@
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}"><i class="fa fa-key fa-fw"></i>I{{Issue.IssueId}}-{{Issue.ProjectKey}}</span>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="问题分类: {{Issue.Category}}"><i class="fa fa-bug fa-fw"></i>{{Issue.Category}}</span>
                         </div>
                         <div class="col-sm-2">
@@ -96,7 +96,7 @@
                             更新于 {{Issue.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
                     </div>
-                    <hr />
+                    <hr style="margin-top: 10px;">
                 </div>
                 <div class="text-center">
                     <ul class="pager">
