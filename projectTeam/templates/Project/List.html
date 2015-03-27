@@ -30,15 +30,15 @@
                 </div>
             </form>
             <div class="panel panel-default">
-                <div class="panel-body" style="height:auto; min-height:330px; _height:330px;">
+                <div class="panel-body" style="height:auto; min-height:0px; _height:0px;">
                     <div ng-show="ProjectList.length<=0">
-                        <div class="alert alert-success text-center">
+                        <div class="alert alert-success">
                             <h1>未找到任何项目<i class="fa fa-smile-o"></i></h1>
                         </div>
                     </div>
                     <div ng-repeat="Project in ProjectList">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <s ng-show="Project.Status==2||Project.Status==3">
                                     <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead">{{Project.ProjectName}}</a>
                                 </s>
@@ -49,7 +49,7 @@
                             	<span data-toggle="tooltip" title="创建人：{{Project.Creator}}">
                             	<i class="fa fa-user fa-fw"></i>{{Project.Creator}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                             	<span data-toggle="tooltip" title="创建时间：{{ Project.CreateDate | date:'yyyy-MM-dd' }}">
                                 <i class="fa fa-clock-o fa-fw"></i>{{ Project.CreateDate | date:'yyyy-MM-dd' }}</span>
                             </div>
@@ -106,10 +106,10 @@
                                 <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                                 <br>
                                 <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文或者数字)" ng-maxlength="255" required /> 
+                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" ng-pattern="/^([a-zA-Z0-9])+$/" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文或者数字)" ng-maxlength="255" required /> 
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
-                                <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
+                                <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$invalid" class="text-danger">Key值格式不合法</div>
                                 <div id="message" class="text-danger"></div>
                                 <div class="notic notic-info" ng-show="keyExist">
                                     <span class="text-danger">key已存在,请尝试其他key值</span>
@@ -122,7 +122,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
-                        <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                        <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create();"><i class="fa fa-save fa-fw"></i>保存</button>
                     </div>
                 </div>
             </div>

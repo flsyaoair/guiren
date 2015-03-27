@@ -31,9 +31,13 @@ def create():
         Introduction = request.json['Introduction']
     except KeyError,e:
         Introduction = ''
-    exist = projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
-    exist_json = {'exist': exist}
-    print exist_json
+    if (request.json['ProjectName'] != '') & (request.json['ProjectKey'] != ''):
+        exist = projectservice.create(request.json['ProjectName'],request.json['ProjectKey'],Introduction,g.user_id)
+        empty = False
+    else :
+        exist = True
+        empty = True
+    exist_json = {'exist': exist, 'empty': empty}
     return jsonify(exist_json)
 
 @project.route('/History',methods=['POST'])
