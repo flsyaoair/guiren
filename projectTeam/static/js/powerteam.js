@@ -656,9 +656,6 @@ function NoticeCtrl($scope, $http) {
 function HistoryCtrl($scope, $http) {
     $scope.HistoryList = [];
     $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
-//    $scope.test = "a<br>b<br>c";
-//    alert($scope.test);
-//    $scope.test = $sce.trustAsHtml($scope.test);
     $scope.query = function () {
         $http.post('/History', $scope.Query).success(function (result) {
             $scope.HistoryList = result.data;
@@ -705,7 +702,7 @@ function SubCommentCtrl($scope, $http) {
         $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
             btn.button('reset');
             if (result.created) {
-                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
+                $("#sub_comment"+$scope.collapse).collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
                 $scope.SubComment.Content = '';            //每次成功新建后，清除内容
                 //$scope.isSuccess = true;
                 //$scope.thiscomment = result.comment_id;
