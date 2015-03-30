@@ -64,13 +64,15 @@
                     <div class="row">
                         <div class="col-sm-5">
                             <s ng-show="Issue.Status==3||Issue.Status==4">
-                                <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead">
+                                <a href="/Issue/Detail/{{Issue.IssueId}}" data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}" class="lead">
                                     {{Issue.Subject}}
                                 </a>
                             </s>
-                            <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead" ng-show="Issue.Status==1||Issue.Status==2">
+                            <a href="/Issue/Detail/{{Issue.IssueId}}" data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}" class="lead" ng-show="Issue.Status==1||Issue.Status==2">
                                 {{Issue.Subject}}
                             </a>
+                        </div>
+                        <div class="col-sm-1">
                             <span ng-switch on="Issue.Priority">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
                                 <strong class="label label-success" ng-switch-when="2">中</strong>
@@ -82,9 +84,6 @@
                                 <strong class="label label-default" ng-switch-when="3">已关闭</strong>
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
-                        </div>
-                        <div class="col-sm-1">
-                            <span data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}"><i class="fa fa-key fa-fw"></i>I{{Issue.IssueId}}-{{Issue.ProjectKey}}</span>
                         </div>
                         <div class="col-sm-1">
                             <span data-toggle="tooltip" title="问题分类: {{Issue.Category}}"><i class="fa fa-bug fa-fw"></i>{{Issue.Category}}</span>

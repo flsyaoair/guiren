@@ -64,9 +64,11 @@
                     <div class="row">
                         <div class="col-sm-5">
                             <s ng-show="Task.Status==3||Task.Status==4">
-                                <a href="/Task/Detail/{{Task.TaskId}}" class="lead">{{Task.TaskName}}</a>
+                                <a href="/Task/Detail/{{Task.TaskId}}" data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}" class="lead">{{Task.TaskName}}</a>
                             </s>
-                            <a href="/Task/Detail/{{Task.TaskId}}" class="lead" ng-show="Task.Status==1||Task.Status==2">{{Task.TaskName}}</a>
+                            <a href="/Task/Detail/{{Task.TaskId}}" data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}" class="lead" ng-show="Task.Status==1||Task.Status==2">{{Task.TaskName}}</a>
+                        </div>
+                        <div class="col-sm-1">
                             <span ng-switch on="Task.Priority" class="text-right">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
                                 <strong class="label label-success" ng-switch-when="2">中</strong>
@@ -78,9 +80,6 @@
                                 <strong class="label label-success" ng-switch-when="3">已完成</strong>
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
-                        </div>
-                        <div class="col-sm-1">
-                            <span data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}"><i class="fa fa-key fa-fw"></i> T{{Task.TaskId}}-{{Task.ProjectKey}}</span>
                         </div>
                         <div class="col-sm-1">
                             <span data-toggle="tooltip" title="指派给 {{Task.AssignTo}}"><i class="fa fa-hand-o-right fa-fw"></i> {{Task.AssignTo}}</span>

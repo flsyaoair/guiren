@@ -163,7 +163,6 @@ def delete(task_id):
 
     task = session.query(Task).filter(Task.TaskId == task_id).one()
     project_id = task.ProjectId
-    
     session.query(TaskHistory).filter(TaskHistory.TaskId == task_id).delete()
     
     comment = session.query(Comment).filter(Comment.TaskId == task_id)

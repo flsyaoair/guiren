@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*- 
 
-from projectTeam.models import Project, ProjectStatus,database, Member, Task
+from projectTeam.models import Project, ProjectStatus,database, Member, Task, Issue
+from projectTeam.services import taskservice, issueservice
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 
@@ -59,8 +60,13 @@ def query(project_name,status,page_no,page_size,order_by,current_user):
 def delete(project_id):
     session = database.get_session()
 
+    tasks = session.query(Task).filter(Task.ProjectId == project_id)
+    for task in tasks :
+        taskservice.delete(task.TaskId)
+    issues = session.query(Issue).filter(Issue.ProjectId == project_id)
+    for issue in issues:
+        issueservice.delete(issue.IssueId)
     session.query(Member).filter(Member.ProjectId == project_id).delete()
-    session.query(Task).filter(Task.ProjectId == project_id).delete()
     session.query(Project).filter(Project.ProjectId == project_id).delete()
 
     session.commit()
