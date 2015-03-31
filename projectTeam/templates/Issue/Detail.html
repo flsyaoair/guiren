@@ -198,7 +198,7 @@
             {% for history in HistoryList %}
             <div class="notice notice-info">
                 <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority)) || ((history.RawIssueCategory))!=((history.NewIssueCategory))">
-                    <p ng-show="((history.RawStatus))!=((history.NewStatus))">
+                    <c ng-show="((history.RawStatus))!=((history.NewStatus))">
                         状态 从 <span ng-switch on="((history.RawStatus))">
                             <strong class="label label-primary" ng-switch-when="1">打开</strong>
                             <strong class="label label-success" ng-switch-when="2">已解决</strong>
@@ -212,8 +212,8 @@
                             <strong class="label label-default" ng-switch-when="3">已关闭</strong>
                             <strong class="label label-default" ng-switch-when="4">已取消</strong>
                         </span>
-                    </p>
-                    <p ng-show="((history.RawPriority))!=((history.NewPriority))">
+                    </c>
+                    <c ng-show="((history.RawPriority))!=((history.NewPriority))">
                         优先级 从 <span ng-switch on="((history.RawPriority))">
                             <strong class="label label-danger" ng-switch-when="1">高</strong>
                             <strong class="label label-warning" ng-switch-when="2">中</strong>
@@ -225,20 +225,20 @@
                             <strong class="label label-warning" ng-switch-when="2">中</strong>
                             <strong class="label label-default" ng-switch-when="3">低</strong>
                         </span>
-                    </p>
-                    <p ng-show="((history.RawCategoryId))!=((history.NewCategoryId))">
+                    </c>
+                    <c ng-show="((history.RawCategoryId))!=((history.NewCategoryId))">
                         问题分类 从 ((history.RawIssueCategory.CategoryName)) 变为 ((history.NewIssueCategory.CategoryName))
-                    </p>
-                    <p ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
+                    </c>
+                    <c ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))'">
                         指派人 从 ((history.RawAssignToProfile.Nick)) 变为 ((history.NewAssignToProfile.Nick))
-                    </p>
+                    </c>
                 </div>
                 <div ng-show="'((history.RawAssignToProfile.Nick))'!='((history.NewAssignToProfile.Nick))' || ((history.RawStatus))!=((history.NewStatus))||((history.RawPriority))!=((history.NewPriority))">
-                    <hr>
+                    <hr style="margin-top: 5px; margin-bottom: 5px;">
                 </div>
                 <div ng-show="'((history.Feedback))'!=''">
                     ((history.Feedback|safe))
-                    <hr />
+                    <hr style="margin-top: 5px; margin-bottom: 5px;">
                 </div>
                 <i class="fa fa-user fa-fw"></i>((history.CreatorProfile.Nick)) 更新于 <i class="fa fa-clock-o fa-fw"></i>((history.CreateDate.strftime('%Y-%m-%d %H:%M')))
             </div>

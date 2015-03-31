@@ -138,13 +138,6 @@ c {
     padding-bottom: 1px;
 }
 
-hr {
-    margin-top:5px;
-    margin-bottom:5px;
-    border:0;
-    border-top:1px solid #eee
-}
-
 .panel-heading {
 	padding: 5px 15px;
 }
@@ -153,9 +146,9 @@ hr {
 	padding: 5px 15px;
 }
 
-hr2 {
+hr-sm {
 margin-top: 5px;
 margin-bottom: 5px;
 border: 0;
-border-top: 1px solid #eee;
+border-top: 1px solid #eeeeee;
 }

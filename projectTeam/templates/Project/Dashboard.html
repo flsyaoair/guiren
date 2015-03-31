@@ -25,7 +25,7 @@
                                 </div>
                                 {% else%}
                                 {% for p in TaskStatus %}
-                                <li class="list-group-item">
+                                <li class="list-group-item" style="padding: 10px 15px;">
                                     <span class="badge">((p[1]))</span>
                                     <span ng-switch on="((p[0]))">
                                         <strong class="label label-danger" ng-switch-when="1">新创建</strong>
@@ -49,7 +49,7 @@
                                 </div>
                                 {% else%}
                                 {% for p in TaskPriority %}
-                                <li class="list-group-item">
+                                <li class="list-group-item" style="padding: 10px 15px;">
                                     <span class="badge">((p[1]))</span>
                                     <span ng-switch on="((p[0]))">
                                         <strong class="label label-danger" ng-switch-when="1">高</strong>
@@ -74,7 +74,7 @@
                                 </div>
                                 {% else%}
                                 {% for p in IssueStatus %}
-                                <li class="list-group-item">
+                                <li class="list-group-item" style="padding: 10px 15px;">
                                     <span class="badge">((p[1]))</span>
                                     <span ng-switch on="((p[0]))">
                                         <strong class="label label-info" ng-switch-when="1">打开</strong>
@@ -98,7 +98,7 @@
                                 </div>
                                 {% else%}
                                 {% for p in IssuePriority %}
-                                <li class="list-group-item">
+                                <li class="list-group-item" style="padding: 10px 15px;">
                                     <span class="badge">((p[1]))</span>
                                     <span ng-switch on="((p[0]))">
                                         <strong class="label label-danger" ng-switch-when="1">高</strong>

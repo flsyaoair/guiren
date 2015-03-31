@@ -7,14 +7,15 @@
 	padding: 5px 15px;
 }
 
+.main {
+	border-color: #FFFFFF;
+	min-height:100%;
+	/*box-shadow: 1px 2px 5px;*/
+}
+
 hr2 {
 margin-top: 5px;
 margin-bottom: 5px;
 border: 0;
-border-top: 1px solid #eee;
-}
-
-.main {
-	border-color: #FFFFFF;
-	min-height:100%;
+border-top: 1px solid #eeeeee;
 }
