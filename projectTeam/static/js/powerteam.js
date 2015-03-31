@@ -673,16 +673,22 @@ function CommentCtrl($scope, $http) {
     $scope.create = function () {
         var btn = $("#btnCreateComment");
         btn.button('loading');
-        $http.post('/Comment/Create', $scope.Comment).success(function (result) {
-            btn.button('reset');
-            if (result.created) {
-                $("#new_commnet").collapse("hide");
-                $scope.Comment.Content = '';            //每次成功新建后，清除内容
-                $scope.isSuccess = true;
-                $scope.thiscomment = result.comment_id;
-                $scope.query();
-            }
-        });
+        if ($scope.Comment.Content != '') {
+	        $http.post('/Comment/Create', $scope.Comment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                $("#new_commnet").collapse("hide");
+	                $scope.Comment.Content = '';            //每次成功新建后，清除内容
+	                $scope.isSuccess = true;
+	                $scope.thiscomment = result.comment_id;
+	                $scope.query();
+	            }
+	        });
+		}
+		else {
+			alert("请输入评论内容！");
+			btn.button('reset');
+		}
     }
     $scope.query = function () {
         $http.post('/Comment/Query', $scope.Query).success(function (result) {
@@ -699,31 +705,43 @@ function SubCommentCtrl($scope, $http) {
     $scope.create_sub = function () {
         var btn = $("#btnCreateSubComment");
         btn.button('loading');
-        $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
-            btn.button('reset');
-            if (result.created) {
-                $("#sub_comment"+$scope.collapse).collapse("hide");     //新建后，收回评论输入框
-                $scope.SubComment.Content = '';            //每次成功新建后，清除内容
-                //$scope.isSuccess = true;
-                //$scope.thiscomment = result.comment_id;
-                $scope.query_sub();
-            }
-        });
+        if ($scope.SubComment.Content != '') {
+	        $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                $("#sub_comment"+$scope.collapse).collapse("hide");     //新建后，收回评论输入框
+	                $scope.SubComment.Content = '';            //每次成功新建后，清除内容
+	                //$scope.isSuccess = true;
+	                //$scope.thiscomment = result.comment_id;
+	                $scope.query_sub();
+	            }
+	        });
+	    }
+	    else {
+	    	alert("请输入评论内容！");
+			btn.button('reset');
+	    }
     }
     $scope.ReplySubComment = {};
     $scope.reply_sub = function () {
         var btn = $("#btnReplySubComment");
         btn.button('loading');
-        $http.post('/SubComment/Reply', $scope.ReplySubComment).success(function (result) {
-            btn.button('reset');
-            if (result.created) {
-                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
-                $scope.ReplySubComment.ReplyContent = '';            //每次成功新建后，清除内容
-                //$scope.isSuccess = true;
-                //$scope.thiscomment = result.comment_id;
-                $scope.query_sub();
-            }
-        });
+        if ($scope.ReplySubComment.ReplyContent != '') {
+	        $http.post('/SubComment/Reply', $scope.ReplySubComment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
+	                $scope.ReplySubComment.ReplyContent = '';            //每次成功新建后，清除内容
+	                //$scope.isSuccess = true;
+	                //$scope.thiscomment = result.comment_id;
+	                $scope.query_sub();
+	            }
+	        });
+	    }
+	    else {
+	    	alert("请输入评论内容！");
+			btn.button('reset');
+	    }
     }
     $scope.query_sub = function () {
         $http.post('/SubComment/Query', $scope.SubQuery).success(function (result) {

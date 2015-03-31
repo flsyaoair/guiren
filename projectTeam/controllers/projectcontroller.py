@@ -50,13 +50,6 @@ def history():
     for task in task_list:
         history_list_task = taskservice.get_history(task.TaskId)
         for history in history_list_task:
-            print '----------------------------------------------------------------------'
-            print '----------------------------------------------------------------------'
-            print '----------------------------------------------------------------------'
-            print history, type(history),history.ProjectId,history.ProjectProfile.ProjectName
-            print '----------------------------------------------------------------------'
-            print '----------------------------------------------------------------------'
-            print '----------------------------------------------------------------------'
             history_list_all.append({'ProjectId':history.ProjectId, 'ProjectName':history.ProjectProfile.ProjectName, 'CreatorProfile_Nick':history.CreatorProfile.Nick, 'Name':history.Name, 'TaskId':history.TaskId, 'IssueId':'', 'CreateDate':history.CreateDate.isoformat(),'RawAssignTo':history.RawAssignToProfile.Nick, 'NewAssignTo':history.NewAssignToProfile.Nick, 'RawStatus':history.RawStatus, 'NewStatus':history.NewStatus, 'RawPriority':history.RawPriority, 'NewPriority':history.NewPriority, 'Feedback':history.Feedback})           
     for issue in issue_list:
         history_list_issue = issueservice.get_history(issue.IssueId)
@@ -65,11 +58,6 @@ def history():
     history_list_all = sorted(history_list_all, key=itemgetter('CreateDate'), reverse=True)
     (row_count,page_count,page_no,page_size,history_list_all) = database.history_pager(history_list_all,page_no)
 #    history_list_all = Markup(history_list_all)
-    print '----------------------------------------------------------------------'
-    print '----------------------------------------------------------------------'
-    print type(history_list_all),history_list_all
-    print '----------------------------------------------------------------------'
-    print '----------------------------------------------------------------------'
     return jsonify(data=history_list_all,page_count=page_count,row_count=row_count,page_no=page_no)
     
 @project.route('/Notice/Create',methods=['POST'])
