@@ -150,7 +150,7 @@
                             <strong><i class="fa fa-user fa-fw"></i>{{Comment.Creator}}</strong><hr  style="margin-top:10px;margin-bottom:10px">
                             {{Comment.CreateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
-                        <div class="post col-xs-10 col-xs-push-0" ng-controller="SubCommentCtrl" ng-init="SubComment.CommentId=Comment.CommentId; ReplySubComment.CommentId=Comment.CommentId; SubQuery.CommentId=Comment.CommentId; query_sub()" style="box-shadow: black 0px 0px 1px;">
+                        <div class="post col-xs-10 col-xs-push-0" ng-controller="SubCommentCtrl" ng-init="SubComment.CommentId=Comment.CommentId; ReplySubComment.CommentId=Comment.CommentId; SubQuery.CommentId=Comment.CommentId; query_sub();collapse=Comment.CommentId;" style="box-shadow: black 0px 0px 1px;">
                             {{Comment.Content}}<hr style="margin-top:10px;margin-bottom:0px">
                             <div class="subcomment" ng-repeat="SubComment in SubCommentList">
                                 <strong><i class="fa fa-user fa-fw"></i>{{SubComment.CreatorNick}}</strong>
@@ -177,14 +177,14 @@
                                 <hr style="margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #DADADA;">
                             </div>
                             <a href="" ng-click="SubQuery.PageNo=SubQuery.PageNo+1;query_sub()" ng-show="SubCommentList.length>0 && 1<SubQuery.PageCount && SubQuery.PageCount>SubQuery.PageNo">查看更多</a>
-                            <div class=""><button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复{{Comment.CommentId}}</button></div>
+                            <div class=""><button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#sub_comment{{Comment.CommentId}}"  style="margin-top: 10px;">回复</button></div>
                             <div id="sub_comment{{Comment.CommentId}}" class="collapse">
                                 <form role="form" name="SubCommentForm">
                                     <p><div class="form-group row"><div class="col-xs-12">
                                         <textarea rows="2" type="text" class="form-control"  ng-model="SubComment.Content"  placeholder="在此输入回复..." required /></textarea>
                                         <div ng-show="SubCommentForm.Content.$dirty&&SubCommentForm.Content.$error.required" class="text-danger"></div>
                                         <div class="text-right" style="padding-top: 10px;">
-                                            <button type="button" id="btnCreateSubComment" ng-disabled="SubCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="SubComment.ReplyTo=-1;collapse=Comment.CommentId;create_sub()"><i class="fa fa-save fa-fw"></i>发表</button>
+                                            <button type="button" id="btnCreateSubComment" ng-disabled="SubCommentForm.$invalid" class="btn btn-primary btn-xs" data-loading-text="正在发表" ng-click="SubComment.ReplyTo=-1;create_sub()"><i class="fa fa-save fa-fw"></i>发表</button>
                                         </div>
                                         </div></div>
                                     </p>                

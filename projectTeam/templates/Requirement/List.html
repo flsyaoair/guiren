@@ -1,9 +1,9 @@
-{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout2.html'%}
 {% block subcontent %}
 	<div class="container">
-        <div class="panel panel-primary" ng-controller="RequirementCtrl" ng-init="query();">
+        <div class="panel panel-primary main" ng-controller="RequirementCtrl" ng-init="query();">
             <div class="panel-heading"><i class="fa fa-file-text-o fa-fw"></i>需求列表</div>
-            <div class="panel-body">
+            <div class="panel-body" style="margin-left: 20px;margin-right: 20px;">
                 <form class="form-inline" role="form" name="categoryForm">
                         <div class="form-group">
                             <a href="/Requirement/Create" class="btn btn-info"><i class="fa fa-plus fa-fw"></i>新需求</a>
@@ -47,6 +47,7 @@
                                        变更时间：{{ Requirement.LastUpdateDate | date:'yyyy-MM-dd' }}
                                 </div>
                             </div>
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
                         </div>
                     </div>
                     <div class="text-center">

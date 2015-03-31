@@ -13,3 +13,8 @@ margin-bottom: 5px;
 border: 0;
 border-top: 1px solid #eee;
 }
+
+.main {
+	border-color: #FFFFFF;
+	min-height:100%;
+}

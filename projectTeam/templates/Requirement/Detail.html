@@ -1,55 +1,75 @@
-{% extends 'PowerTeamLayout.html'%}
-
+{% extends 'PowerTeamLayout2.html'%}
 {% block subcontent %}
-
     <div class="container">
-        <div class="panel panel-primary" ng-controller="RequirementUpdateCtrl" ng-init="RequirementId=((RequirementId));RequirementName='((Requirementdetail.RequirementName))';Versions='((Requirementdetail.Versions))';Status=((Requirementdetail.Status))">
+        <div class="panel panel-primary main" ng-controller="RequirementUpdateCtrl" ng-init="RequirementId=((RequirementId));RequirementName='((Requirementdetail.RequirementName))';Versions='((Requirementdetail.Versions))';Status=((Requirementdetail.Status));StatusOld=((Requirementdetail.Status));">
             <div class="panel-heading">
             	<strong><i class="fa fa-file-text-o fa-fw"></i>((Requirementdetail.RequirementName))</strong>
             	<strong class="pull-right">((Creator)) 创建于 ((Requirementdetail.LastUpdateDate.strftime('%Y-%m-%d %H:%M')))</strong>
             </div>
-            <div class="panel-body">
-                <button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
-                <a href="/Requirement" class="btn btn-default btn-xs">返回</a>
-                <div class="panel panel-default" ng-show="ShowUpdate">
-                    <div class="panel-body">
-                        <div ng-show="RequirementList.length<=0">
-                            <div class="alert alert-success text-center">
-                                <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-							((Description|safe))
-                    	</div>
-                	</div>
-                </div>
-                <div  ng-show="!ShowUpdate">
-		            <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
-		                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-		                <strong>创建新需求成功!</strong>
+            <div class="panel-body row" style="margin-left: 20px;">
+	            <!-- <div class="row">
+	            	<div class="col-sm-2">
+	            		版本：<strong class="label label-success">((Requirementdetail.Versions))</strong>
+	            	</div>
+	            	<div class="col-sm-2" ng-switch on="StatusOld">
+		                状态:
+		                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
+		                <strong class="label label-success" ng-switch-when="2">已完成</strong>
+		                <strong class="label label-default" ng-switch-when="3">已取消</strong>
 		            </div>
-		            <div class="form-group">
-		                <label>需求名称<span class="text-danger">*</span></label>
-		                <input type="text" class="form-control" id="RequirementName" name="RequirementName" ng-model="RequirementName" placeholder="((Requirementdetail.RequirementName))" required />
+	            	<div class="col-sm-2 col-sm-push-6">
+			            <button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
+			            <a href="/Requirement" class="btn btn-default btn-xs">返回</a>
+			        </div>
+			    </div> -->
+			    <div class="col-md-9" style="border-color: #FFFFFF; border-right: 1px solid #E5E5E5;">
+				((Description|safe))
+				</div>
+				<div class="col-md-3" style="border-color: #FFFFFF; border-left: 1px solid #E5E5E5;">
+					<button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
+			        <a href="/Requirement" class="btn btn-default btn-xs">返回</a>
+			        <hr>
+			        <p>版本：<strong class="label label-success">((Requirementdetail.Versions))</strong></p>
+			        <p>
+			        	<div ng-switch on="StatusOld">
+		                状态:
+		                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
+		                <strong class="label label-success" ng-switch-when="2">已完成</strong>
+		                <strong class="label label-default" ng-switch-when="3">已取消</strong>
 		            </div>
-		            <div class="form-group">
-		                <label>版本<span class="text-danger">*</span></label>
-		                <input type="text" class="form-control" name="Versions" ng-model="Versions" placeholder="((Requirementdetail.Versions))" required />
-		            </div>
-		            <div class="form-group">
-		                <label>状态</label>
-		                <select class="form-control" ng-model="Status">
-		                    <option value="1">进行中</option>
-		                    <option value="2">已完成</option>
-		                    <option value="3">已取消</option>
-		                </select>
-		            </div>
-					<div class="form-group">
-					    <label>备注</label>
-						<script id="editor1" type="text/plain">((Requirementdetail.Description|safe))</script>
-					</div>
-		            <button type="button" id="btnUpdate"  class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
-           		</div>
+			        </p>
+				</div>
+                <div class="panel panel-info" ng-show="!ShowUpdate" style="border-color: #BBBBBB;">
+                	<div class="panel-body">
+		                <form role="form" name="UpdateRequirmentForm">
+				            <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
+				                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				                <strong>创建新需求成功!</strong>
+				            </div>
+				            <div class="form-group">
+				                <label>需求名称<span class="text-danger">*</span></label>
+				                <input type="text" class="form-control" id="RequirementName" name="RequirementName" ng-model="RequirementName" placeholder="需求名称" required />
+				            </div>
+				            <div class="form-group">
+				                <label>版本<span class="text-danger">*</span></label>
+				                <input type="text" class="form-control" name="Versions" ng-model="Versions" placeholder="版本" required />
+				            </div>
+				            <div class="form-group">
+				                <label>状态</label>
+				                <select class="form-control" ng-model="Status">
+				                    <option value="1">进行中</option>
+				                    <option value="2">已完成</option>
+				                    <option value="3">已取消</option>
+				                </select>
+				            </div>
+							<div class="form-group">
+							    <label>内容</label>
+								<script id="editor1" type="text/plain">((Requirementdetail.Description|safe))</script>
+							</div>
+				            <button type="button" id="btnUpdate" ng-disabled="UpdateRequirmentForm.$invalid" class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
+		           		</form>
+		           	</div>
+		        </div>
       		</div>
 		</div>
 	</div>
