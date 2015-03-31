@@ -1,4 +1,7 @@
 {% extends 'PowerTeamLayout2.html'%}
+{% block navs %}
+<li class="active"><a href="/Requirement"><i class="fa fa-file-text-o fa-fw"></i>需求</a></li>
+{% endblock %}
 {% block subcontent %}
     <div class="container">
         <div class="panel panel-primary main" ng-controller="RequirementUpdateCtrl" ng-init="RequirementId=((RequirementId));RequirementName='((Requirementdetail.RequirementName))';Versions='((Requirementdetail.Versions))';Status=((Requirementdetail.Status));StatusOld=((Requirementdetail.Status));">
