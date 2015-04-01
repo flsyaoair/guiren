@@ -70,12 +70,12 @@
                             <a href="/Task/Detail/{{Task.TaskId}}" data-toggle="tooltip" title="Key ：T{{Task.TaskId}}-{{Task.ProjectKey}}" class="lead" ng-show="Task.Status==1||Task.Status==2">{{Task.TaskName}}</a>
                         </div>
                         <div class="col-sm-1">
-                            <span ng-switch on="Task.Priority" class="text-right">
+                            <span ng-switch on="Task.Priority" data-toggle="tooltip" title="优先级">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
                                 <strong class="label label-success" ng-switch-when="2">中</strong>
                                 <strong class="label label-default" ng-switch-when="3">低</strong>
                             </span>
-                            <span ng-switch on="Task.Status" class="text-right">
+                            <span ng-switch on="Task.Status" data-toggle="tooltip" title="状态">
                                 <strong class="label label-danger" ng-switch-when="1">新创建</strong>
                                 <strong class="label label-primary" ng-switch-when="2">进行中</strong>
                                 <strong class="label label-success" ng-switch-when="3">已完成</strong>
