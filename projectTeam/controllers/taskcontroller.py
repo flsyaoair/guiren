@@ -14,9 +14,6 @@ def list(project_id):
     member_list = teamservice.member_in_project(project_id)
 #    project_name= Project.ProjectName
     project_name = projectservice.projectlist(g.user_id)
-    print '------------------------------------------------------------------------'
-    print type(project_name), project_name
-    print '------------------------------------------------------------------------'
 
     return render_template('Task/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)
 
