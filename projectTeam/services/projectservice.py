@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*- 
 
-from projectTeam.models import Project, ProjectStatus,database, Member, Task
+from projectTeam.models import Project, ProjectStatus,database, Member, Task, Issue
+from projectTeam.services import issueservice
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 

@@ -1,76 +1,73 @@
 {% extends 'PowerTeamLayout.html'%}
+{% block navs %}
 
+{% endblock %}
 {% block subcontent %}
-
-    <div class="col-sm-10">
-        <div class="panel panel-primary" ng-controller="RequirementUpdateCtrl" ng-init="RequirementId=((RequirementId));RequirementName='((Requirementdetail.RequirementName))';Versions='((Requirementdetail.Versions))';Status=((Requirementdetail.Status))">
-            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>需求列表</div>
-            <div class="panel-body">
-                <button type="button" class="btn btn-success btn-xs" ng-click="edit()">更新</button>
-                <a href="/Requirement" class="btn btn-default btn-xs">返回</a>
-                <div class="panel panel-default" ng-show="!ShowUpdate">
-                    <div class="panel-body">
-                        <div ng-show="RequirementList.length<=0">
-                            <div class="alert alert-success text-center">
-                                <h1>未找到任何分类<i class="fa fa-smile-o"></i></h1>
-                            </div>
-                        </div>
-                        ((Creator))
-                     ((Requirementdetail.RequirementName))
-                     <hr/>
-                     ((Requirementdetail.LastUpdateDate.strftime('%Y-%m-%d %H:%M')))
-                     <hr/>
-                       
-                      ((Description|safe))
-             
-            </div>
-                    </div>
-                </div>
-          
-         
-                <div class="panel panel-default" ng-show="ShowUpdate">
-                	
-  
+<div class="panel panel-primary" ng-controller="ItemCtrl" ng-init="Item.ThemeItemId=((ThemeItemId))">
+    
+    <div class="panel-body">
+        <form role="form" name="createTaskForm">
             <div class="alert alert-success alert-dismissable" ng-show="AddSuccess">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <strong>创建新需求成功!</strong>
             </div>
-            <div class="form-group">
-                <label>需求名称<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="RequirementName" name="RequirementName" ng-model="RequirementName" placeholder="((Requirementdetail.RequirementName))" required />
-                
-            </div>
-            <div class="form-group">
-                <label>版本<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="Versions" ng-model="Versions" placeholder="((Requirementdetail.Versions))" required />
 
+            <div class="form-group"> 
+	            <label>事项<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="Item.SunItemName" placeholder="版本" required />
             </div>
 
+          
+           <div ng-repeat='thing in things' >
+             <myitem></myitem>
 
+                    
+        </div>
+        
+             <div ng-repeat="SunItem in SunItemList">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                   <strong>((SunItem.SunItemName))</strong>    
+                                </div>
+                                  </div>
+             </div>
+        <!-- 
+			<table>  
+			 <tbody id="tbody1">  
+			   <tr>  
+			     <td>  
+                    <div class="form-group">
+		                <label>事项<span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" name="sunitemname" ng-model="Item.SunItemName" placeholder="版本" required />         
+		            </div>
+
+			     </td>  
+			     <td>  
+			        <input style="display:none" mce_style="display:none" type="button" value="Delete" onClick="removeRow(this)"/>  
+			    </td>  
+			  </tr>  
+			</tbody>  
+			   <tr>  
+			    <td>  
+			       <input type="button" value="Add Row" onClick="addRow('tbody1')"/>  
+			     </td>  
+			     <td>  
+			          
+			     </td>  
+			   </tr>  
+			</table> 
+			 -->
             <div class="form-group">
-                <label>状态</label>
-                <select class="form-control" ng-model="Status">
-     
-                    <option value="1">进行中</option>
-
-                    <option value="2">已完成</option>
-
-                    <option value="3">已取消</option>
-
-                </select>
-            </div>
-
-			<div class="form-group">
-			    <label>备注</label>
-				<script id="editor1" type="text/plain">((Requirementdetail.Description|safe))  
-
-</script>
-			</div>
-            <button type="button" id="btnUpdate"  class="btn btn-primary" data-loading-text="正在更新" ng-click="update()"><i class="fa fa-save fa-fw"></i>更新</button>
-           </div>
-          </div>
-</div>
-
-
+	                <label>事项详细内容</label>
+	                <script id="editor" type="text/plain">
+                        	</script>
+                        
+           	</div>  
+           	<button type="button" id="btnCreate" class="btn btn-primary" ng-disabled="createTaskForm.$invalid" data-loading-text="正在创建" ng-click="addItem()"><i class="fa fa-save fa-fw"></i>add</button>
+            <button type="button" id="btnCreate" class="btn btn-primary" ng-disabled="createTaskForm.$invalid" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+        </form>
+    </div>
+    
+</div> 
 
 {% endblock %}

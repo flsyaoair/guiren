@@ -1,5 +1,6 @@
 ﻿var app = angular.module('PowerTeam', []);
-
+var x=[];
+counter=1;
 var INTEGER_REGEXP = /^\-?\d*$/;
 app.directive('integer', function () {
     return {
@@ -17,6 +18,25 @@ app.directive('integer', function () {
         }
     };
 });
+
+
+app.directive('myitem', function() {
+	return {
+		
+	    restrict: 'E',
+	    template: '<div class="form-group"> <label>事项<span class="text-danger">*</span></label> <input type="text" class="form-control" name="sunitemname" ng-model="Item.SunItemName" placeholder="版本" required /></div>',
+	    transclude: true,
+
+
+        link : function(scope, element, attrs) {
+
+            scope.toggle = function toggle() {
+
+            }
+        }
+	}
+});
+
 
 $(function () {
     $('input, textarea').placeholder();
@@ -589,27 +609,19 @@ function RequirementUpdateCtrl($scope, $http) {
         
     }
 }
-function ItemCtrl($scope, $http) {
-    $scope.Success = false;
+function ThemeItemCtrl($scope, $http) {
+	$scope.Success = false;
     $scope.Exist = false;
-    editor = UE.getEditor('editor');
-    $scope.RequirementList = [];
-//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
     $scope.query = function () {
-        $http.post('/Item/Query',{'ThemeItemId': $scope.ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
-//            $scope.RequirementList = result.data;
-//            $scope.RequirementList2 = result.data2;
-//            $scope.Query.RowCount = result.row_count;
-//            $scope.Query.PageCount = result.page_count;
-//            $scope.Query.PageNo = result.page_no;
-//            window.location.href = '/Requirement';
+        $http.post('/QueryThemeItem').success(function (result) { 
+        	alert("dfsdf ")
+        	$scope.ThemeItemList = result.data;
         });
     }
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
-        $scope.Description = editor.getContent();
-        $http.post('/CreateItem',{ThemeItemName: $scope.ThemeItemName,SunItemName: $scope.SunItemName,Description:$scope.Description }).success(function (result) {
+        $http.post('/CreateThemeItem',{'ThemeItemName': $scope.ThemeItemName}).success(function (result) {
             if (result.status) {
                 $scope.Success = false;
                 $scope.Exist = true;
@@ -618,10 +630,61 @@ function ItemCtrl($scope, $http) {
                 $scope.Exist = false;
             }
             window.location.href = '/Item';
-//            $scope.query();
+            $scope.query();
         });
     }
+}   
+function ItemCtrl($scope, $http) {
+
+	$scope.Success = false;
+    $scope.Exist = false;
+
+    editor = UE.getEditor('editor');
+
+//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
+    $scope.query = function () {
+        $http.post('/Item/Query',{'ThemeItemId':ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
+//            $scope.RequirementList = result.data;
+//            $scope.RequirementList2 = result.data2;
+//            $scope.Query.RowCount = result.row_count;
+//            $scope.Query.PageCount = result.page_count;
+//            $scope.Query.PageNo = result.page_no;
+//            window.location.href = '/Requirement';
+        	 
+        });
+    }
+    $scope.create = function () {
+        $scope.Success = false;
+        $scope.Exist = false;
+        $scope.Item.Description = editor.getContent();
+        $http.post('/CreateItem',$scope.Item).success(function (result) {
+            if (result.status) {
+                $scope.Success = false;
+                $scope.Exist = true;
+            } else {
+                $scope.Success = true;
+                $scope.Exist = false;
+            }
+            $scope.detail($scope.Item.ThemeItemId);
+        });
+    }
+    $scope.addItem = function () {
+     	counter++;
+        x.push(counter);
+        $scope.things=x
+
+    	
+    }
+    $scope.detail = function (ThemeItemid) {
+    	alert("aaaaaa")
+    	$http.post('/DetailItem',{ThemeItemName:ThemeItemid}).success(function (result) {
+        
+    	     alert("qqqqqqqqqqq")
+    	});
+    }
+
 } 
+
 //    $scope.RemoveRequirement = function (RequirementId) {
 //        $scope.AddSuccess = false;
 //        $scope.RemoveSuccess = false;
@@ -694,8 +757,8 @@ function HistoryCtrl($scope, $http) {
 
 function CommentCtrl($scope, $http) {
     $scope.CommentList = [];
-    $scope.Query = {};
-    $scope.isSuccess = false
+    $scope.Query = {}
+   
     $scope.create = function () {
         var btn = $("#btnCreateComment");
         btn.button('loading');
@@ -704,8 +767,6 @@ function CommentCtrl($scope, $http) {
             if (result.created) {
                 $("#new_commnet").collapse("hide");
                 $scope.Comment.Content = '';            //每次成功新建后，清除内容
-                $scope.isSuccess = true;
-                $scope.thiscomment = result.comment_id;
                 $scope.query();
             }
         });
@@ -714,29 +775,6 @@ function CommentCtrl($scope, $http) {
         $http.post('/Comment/Query', $scope.Query).success(function (result) {
             $scope.CommentList = result.data;
             
-        });
-    }
-}
-
-function SubCommentCtrl($scope, $http) {
-    $scope.Query = {};
-    $scope.create_sub = function () {
-        var btn = $("#btnCreateSubComment");
-        btn.button('loading');
-        $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
-            btn.button('reset');
-            if (result.created) {
-                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
-                $scope.SubComment.Content = '';            //每次成功新建后，清除内容
-                //$scope.isSuccess = true;
-                //$scope.thiscomment = result.comment_id;
-                $scope.query_sub();
-            }
-        });
-    }
-    $scope.query_sub = function () {
-        $http.post('/SubComment/Query', $scope.SubQuery).success(function (result) {
-            $scope.SubCommentList = result.data;
         });
     }
 }
@@ -776,3 +814,49 @@ function onChange( obj )
             */
         }
 }
+//function addRow(tbodyID)  
+//{  
+//
+//	var bodyObj=document.getElementById(tbodyID);  
+//    if(bodyObj==null)   
+//    {  
+//        alert("Body of Table not Exist!");  
+//        return;  
+//    }  
+//    var rowCount = bodyObj.rows.length;  
+//    var cellCount = bodyObj.rows[0].cells.length;  
+//    var newRow = bodyObj.insertRow(rowCount++);    
+//    for(var i=0;i<cellCount;i++)  
+//    {    
+//
+//    	 var cellHTML = bodyObj.rows[0].cells[i].innerHTML;  
+//         if(cellHTML.indexOf("none")>=0)  
+//         {  
+//        	
+//        	 cellHTML = cellHTML.replace("none","");  
+//         } 
+//         if(cellHTML.indexOf("SunItemName")>=0)  
+//         {  
+//        	
+//        	 SunItemName="SunItemName"+rowCount
+//        	 y=x.push(SunItemName)
+//        	 
+//        	 cellHTML = cellHTML.replace("SunItemName","SunItemName"+rowCount);  
+//
+//         }
+//         newRow.insertCell(i).innerHTML=cellHTML;  
+//    } 
+//    alert(x)
+//    return x
+    
+//}  
+//function removeRow(inputobj)  
+//{  
+//    if(inputobj==null) return;  
+//    var parentTD = inputobj.parentNode;  
+//    var parentTR = parentTD.parentNode;  
+//    var parentTBODY = parentTR.parentNode;  
+//    parentTBODY.removeChild(parentTR);  
+//}
+
+

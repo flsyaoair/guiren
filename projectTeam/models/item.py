@@ -17,8 +17,9 @@ class ThemeItem(BaseModel):
 class SunItem(BaseModel):
 
     __tablename__ = 'SunItem'
-    RequirementId = Column('SunItemId', Integer,primary_key=True,nullable=False,autoincrement=True)
-    RequirementName = Column('SunItemName', NVARCHAR(30),nullable = False)
+    SunItemId = Column('SunItemId', Integer,primary_key=True,nullable=False,autoincrement=True)
+    SunItemName = Column('SunItemName', NVARCHAR(30),nullable = False)
+#    ThemeItemName = Column('ThemeItemName', NVARCHAR(10),nullable = False)
     Description = Column('Description', UnicodeText)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
