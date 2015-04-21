@@ -64,14 +64,4 @@ class Task(BaseModel):
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
 
-#class TaskComment(BaseModel):
-#
-#    __tablename__ = 'TaskComment'
-#    CommentId = Column('CommentId', Integer,primary_key=True,nullable=False,autoincrement=True)
-#    Content = Column('Content', UnicodeText)
-#    TaskId = Column('TaskId', Integer,ForeignKey('Task.TaskId'),nullable = False)
-#    TaskProfile = relationship('Task', foreign_keys=TaskId,primaryjoin=TaskId == Task.TaskId)
-#    Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
-#    CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
-#    CreateDate = Column('CreateDate', DateTime,nullable=False)
     

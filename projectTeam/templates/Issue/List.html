@@ -3,6 +3,7 @@
 <li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
 <li class="active"><a href="/Project/Issue/((ProjectId))"><i class="fa fa-bug fa-fw"></i>问题</a></li>
+<li><a href="/Requirement"><i class="fa fa-file-text-o fa-fw"></i>需求</a></li>
 <li><a href="/Project/Team/((ProjectId))"><i class="fa fa-users fa-fw"></i>团队</a></li>
 {% endblock %}
 {% block subcontent %}
@@ -62,15 +63,17 @@
                 </div>
                 <div ng-repeat="Issue in IssueList">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <s ng-show="Issue.Status==3||Issue.Status==4">
-                                <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead">
+                                <a href="/Issue/Detail/{{Issue.IssueId}}" data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}" class="lead">
                                     {{Issue.Subject}}
                                 </a>
                             </s>
-                            <a href="/Issue/Detail/{{Issue.IssueId}}" class="lead" ng-show="Issue.Status==1||Issue.Status==2">
+                            <a href="/Issue/Detail/{{Issue.IssueId}}" data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}" class="lead" ng-show="Issue.Status==1||Issue.Status==2">
                                 {{Issue.Subject}}
                             </a>
+                        </div>
+                        <div class="col-sm-1">
                             <span ng-switch on="Issue.Priority">
                                 <strong class="label label-danger" ng-switch-when="1">高</strong>
                                 <strong class="label label-success" ng-switch-when="2">中</strong>
@@ -83,10 +86,7 @@
                                 <strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
                         </div>
-                        <div class="col-sm-2">
-                            <span data-toggle="tooltip" title="Key: I{{Issue.IssueId}}-{{Issue.ProjectKey}}"><i class="fa fa-key fa-fw"></i>I{{Issue.IssueId}}-{{Issue.ProjectKey}}</span>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <span data-toggle="tooltip" title="问题分类: {{Issue.Category}}"><i class="fa fa-bug fa-fw"></i>{{Issue.Category}}</span>
                         </div>
                         <div class="col-sm-2">
@@ -96,7 +96,7 @@
                             更新于 {{Issue.LastUpdateDate | date:'yyyy-MM-dd HH:mm'}}
                         </div>
                     </div>
-                    <hr />
+                    <hr style="margin-top: 10px;">
                 </div>
                 <div class="text-center">
                     <ul class="pager">

@@ -4,6 +4,12 @@
     border-left: 3px solid #eee;
 }
 
+.notice-sm {
+    margin: 5px 0;
+    padding: 5px;
+    border-left: 3px solid #eee;
+}
+
     .notice h4 {
         margin-top: 0;
         margin-bottom: 5px;
@@ -130,4 +136,19 @@ c {
     /*padding-top:20px; */
     opacity:.9;
     padding-bottom: 1px;
+}
+
+.panel-heading {
+	padding: 5px 15px;
+}
+
+.list-group-item {
+	padding: 5px 15px;
+}
+
+hr-sm {
+margin-top: 5px;
+margin-bottom: 5px;
+border: 0;
+border-top: 1px solid #eeeeee;
 }

@@ -4,6 +4,7 @@ from projectTeam.controllers.filters import login_filter
 from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice
 from projectTeam.models import Project
 from projectTeam.controllers.commentcontroller import *
+from projectTeam.powerteamconfig import *
 
 task = Module(__name__)
 task.before_request(login_filter)
@@ -12,7 +13,8 @@ task.before_request(login_filter)
 def list(project_id):
     member_list = teamservice.member_in_project(project_id)
 #    project_name= Project.ProjectName
-    project_name = projectservice.projectlist()
+    project_name = projectservice.projectlist(g.user_id)
+
     return render_template('Task/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)
 
 @task.route('/Task/Query',methods=['POST'])
@@ -28,7 +30,7 @@ def query():
     status_completed = request.json['Completed']
     status_canceled = request.json['Canceled']
     page_no = request.json['PageNo']
-    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no,g.user_id)
+    (row_count,page_count,page_no,page_size,data) = taskservice.query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,'Priority',page_no,PAGESIZE_task,g.user_id)
     tasks = []
     for t in data.all():
         tasks.append({'TaskId':t.TaskId,'ProjectId':project_id,'ProjectKey':t.ProjectProfile.ProjectKey,'TaskName':t.TaskName,'Priority':t.Priority,'Progress':t.Progress,'Status':t.Status,'Effort':t.Effort,'AssignTo':t.AssignToProfile.Nick,'Creator':t.CreatorProfile.Nick,'LastUpdateDate':t.LastUpdateDate.isoformat()})
@@ -59,9 +61,9 @@ def update():
     assign_to = request.json['AssignTo']
     if assign_to == -1:
         assign_to = g.user_id
-    priority = request.json['Priority']
+    priority = request.json['PriorityNew']
     progress = request.json['Progress']
-    status = request.json['Status']
+    status = request.json['StatusNew']
 #    effort = request.json['Effort']
 #    description = request.json['Description']
     taskservice.update(project_id, task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
@@ -76,40 +78,3 @@ def delete():
 def create_new():
     taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])
-    
-@task.route('/Comment/Create',methods=['POST'])
-def create_comment():
-    content = request.json['Content']
-    task_id = request.json['TaskId']
-    issue_id = 0
-    requirement_id = 0
-    creator = g.user_id
-    comment_id = commentservice.create(content, task_id, issue_id, requirement_id, creator)
-    return jsonify(created=True,comment_id=comment_id)
-    
-@task.route('/Comment/Query',methods=['POST'])
-def query_comment():
-    task_id = request.json['TaskId']
-    comments = commentservice.query(task_id).all()
-    comments_list = []
-    for comment in comments:
-        comments_list.append({'CommentId':comment.CommentId, 'Content':comment.Content, 'TaskId':comment.TaskId, 'Creator':comment.CreatorProfile.Nick, 'CreatorId':comment.Creator, 'CreateDate':comment.CreateDate.isoformat()})
-    return jsonify(data=comments_list)
-    
-@task.route('/SubComment/Create',methods=['POST'])
-def create_subcomment():
-    content = request.json['Content']
-    comment_id = request.json['CommentId']
-    replyto = request.json['ReplyTo']
-    creator = g.user_id
-    subcommentservice.create(content, comment_id, replyto, creator)
-    return jsonify(created=True)
-    
-@task.route('/SubComment/Query',methods=['POST'])
-def query_subcomment():
-    comment_id = request.json['CommentId']
-    subcomments = subcommentservice.query(comment_id).all()
-    subcomments_list = []
-    for comment in subcomments:
-        subcomments_list.append({'SubCommentId':comment.SubCommentId, 'Content':comment.Content, 'CommentId':comment.CommentId, 'Creator':comment.Creator, 'CreatorNick':comment.CreatorProfile.Nick, 'ReplyTo':comment.ReplyTo, 'ReplyToNick':comment.ReplyToProfile.Nick, 'CreateDate':comment.CreateDate.isoformat()})
-    return jsonify(data=subcomments_list)

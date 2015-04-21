@@ -8,6 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 from math import  ceil
+from projectTeam.models.comment import Comment, SubComment
 
 def create(project_id,subject,priority,assign_to,description,category_id,creator):
     session = database.get_session()
@@ -51,7 +52,7 @@ def all_category():
     session.close()
     return list
 
-def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no,current_user):
+def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,status_canceled,order_by,page_no,page_size,current_user):
     session = database.get_session()
 
     filters = []
@@ -79,7 +80,7 @@ def query(subject,assign_to,category_id,status_open,status_fixed,status_closed,s
     q = session.query(Issue).join(UserProfile,UserProfile.UserId == Issue.Creator).join(UserProfile,UserProfile.UserId == Issue.AssignTo).filter(Issue.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
-    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
+    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,page_size)
 
     session.close()
     return (row_count,page_count,page_no,page_size,data) 
@@ -151,9 +152,14 @@ def update(project_id,issue_id,subject,category_id,assign_to,priority,status,fee
 def delete(issue_id):
     session = database.get_session()
 
-    session.query(Issue).filter(Issue.IssueId == issue_id).delete()
+    comments = session.query(Comment).filter(Comment.IssueId == issue_id)
+    for comment in comments:
+        session.query(SubComment).filter(SubComment.CommentId == comment.CommentId).delete()
+    
+    session.query(Comment).filter(Comment.IssueId == issue_id).delete()
     session.query(IssueHistory).filter(IssueHistory.IssueId == issue_id).delete()
-
+    session.query(Issue).filter(Issue.IssueId == issue_id).delete()
+    
     session.commit()
     session.close()
 

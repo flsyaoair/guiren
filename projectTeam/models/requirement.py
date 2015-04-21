@@ -26,14 +26,4 @@ class Requirement(BaseModel):
     Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
     CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
 
-#class RequirementComment(BaseModel):
-
-#    __tablename__ = 'RequirementComment'
-#    CommentId = Column('CommentId', Integer,primary_key=True,nullable=False,autoincrement=True)
-#    Content = Column('Content', UnicodeText)
-#    RequirementId = Column('RequirementId', Integer,ForeignKey('Requirement.RequirementId'),nullable = False)
-#    RequirementProfile = relationship('Requirement', foreign_keys=RequirementId,primaryjoin=RequirementId == Requirement.RequirementId)
-#    Creator = Column('Creator', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
-#    CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
-#    CreateDate = Column('CreateDate', DateTime,nullable=False)
     

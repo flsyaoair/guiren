@@ -106,14 +106,24 @@ function ProjectCtrl($scope, $http) {
         btn.button('loading');
         $http.post('/Project/Create', $scope.Project).success(function (result) {
             btn.button('reset');
-            if (result.exist) {
-                $scope.keyExist = true;
-//                alert($scope.keyExist)
+            if (result.empty) {
+            	$scope.isEmpty = true;
+            	alert("项目名称或key值不能为空");
             }
             else {
-                $('#project_add').modal('hide');
-                $scope.query();
-            }
+	            if (result.exist) {
+	                $scope.keyExist = true;
+	//                alert($scope.keyExist)
+	            }
+	            else {
+	            	//$scope.Project.ProjectName = '';
+	            	//$scope.Project.ProjectKey = '';
+	            	//$scope.Project.Introduction = '';
+	                $('#project_add').modal('hide');
+	                $scope.query();
+	                //window.location.href = "/Project";
+	            }
+	        }
             //if (result.created) {
             //    $('#project_add').modal('hide');
             //    $scope.query();
@@ -130,6 +140,7 @@ function ProjectCtrl($scope, $http) {
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
+            $scope.height = GetHeight()
         });
     }
 }
@@ -586,7 +597,7 @@ function RequirementCtrl($scope, $http) {
 } 
 
 function RequirementUpdateCtrl($scope, $http) {
-	
+	$scope.ShowUpdate = true;
     $scope.edit = function () {
 
         $scope.ShowUpdate = !$scope.ShowUpdate;
@@ -741,13 +752,9 @@ function NoticeCtrl($scope, $http) {
 function HistoryCtrl($scope, $http) {
     $scope.HistoryList = [];
     $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
-//    $scope.test = "a<br>b<br>c";
-//    alert($scope.test);
-//    $scope.test = $sce.trustAsHtml($scope.test);
     $scope.query = function () {
         $http.post('/History', $scope.Query).success(function (result) {
             $scope.HistoryList = result.data;
-            
             $scope.Query.RowCount = result.row_count;
             $scope.Query.PageCount = result.page_count;
             $scope.Query.PageNo = result.page_no;
@@ -757,27 +764,93 @@ function HistoryCtrl($scope, $http) {
 
 function CommentCtrl($scope, $http) {
     $scope.CommentList = [];
-    $scope.Query = {}
-   
+    $scope.Query = { PageNo: 1, PageCount: 0, RowCount: 0 };
+    $scope.isSuccess = false
     $scope.create = function () {
         var btn = $("#btnCreateComment");
         btn.button('loading');
-        $http.post('/Comment/Create', $scope.Comment).success(function (result) {
-            btn.button('reset');
-            if (result.created) {
-                $("#new_commnet").collapse("hide");
-                $scope.Comment.Content = '';            //每次成功新建后，清除内容
-                $scope.query();
-            }
-        });
+        if ($scope.Comment.Content != '') {
+	        $http.post('/Comment/Create', $scope.Comment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                $("#new_commnet").collapse("hide");
+	                $scope.Comment.Content = '';            //每次成功新建后，清除内容
+	                $scope.isSuccess = true;
+	                $scope.thiscomment = result.comment_id;
+	                $scope.query();
+	            }
+	        });
+		}
+		else {
+			alert("请输入评论内容！");
+			btn.button('reset');
+		}
+
     }
     $scope.query = function () {
         $http.post('/Comment/Query', $scope.Query).success(function (result) {
             $scope.CommentList = result.data;
-            
+            $scope.Query.RowCount = result.row_count;
+            $scope.Query.PageCount = result.page_count;
+            $scope.Query.PageNo = result.page_no;
         });
     }
 }
+
+
+function SubCommentCtrl($scope, $http) {
+    $scope.SubQuery = { PageNo: 1, PageCount: 0, RowCount: 0 };
+    $scope.create_sub = function () {
+        var btn = $("#btnCreateSubComment");
+        btn.button('loading');
+        if ($scope.SubComment.Content != '') {
+	        $http.post('/SubComment/Create', $scope.SubComment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                $("#sub_comment"+$scope.collapse).collapse("hide");     //新建后，收回评论输入框
+	                $scope.SubComment.Content = '';            //每次成功新建后，清除内容
+	                //$scope.isSuccess = true;
+	                //$scope.thiscomment = result.comment_id;
+	                $scope.query_sub();
+	            }
+	        });
+	    }
+	    else {
+	    	alert("请输入评论内容！");
+			btn.button('reset');
+	    }
+    }
+    $scope.ReplySubComment = {};
+    $scope.reply_sub = function () {
+        var btn = $("#btnReplySubComment");
+        btn.button('loading');
+        if ($scope.ReplySubComment.ReplyContent != '') {
+	        $http.post('/SubComment/Reply', $scope.ReplySubComment).success(function (result) {
+	            btn.button('reset');
+	            if (result.created) {
+	                //$("#sub_commnet*").collapse("hide");     //新建后，收回评论输入框，由于涉及变量，暂时未能实现
+	                $scope.ReplySubComment.ReplyContent = '';            //每次成功新建后，清除内容
+	                //$scope.isSuccess = true;
+	                //$scope.thiscomment = result.comment_id;
+	                $scope.query_sub();
+	            }
+	        });
+	    }
+	    else {
+	    	alert("请输入评论内容！");
+			btn.button('reset');
+	    }
+    }
+    $scope.query_sub = function () {
+        $http.post('/SubComment/Query', $scope.SubQuery).success(function (result) {
+            $scope.SubCommentList = result.data;
+            $scope.SubQuery.RowCount = result.row_count;
+            $scope.SubQuery.PageCount = result.page_count;
+            $scope.SubQuery.PageNo = result.page_no;
+        });
+    }
+}
+
 
 function onChange( obj )
 {
@@ -792,7 +865,7 @@ function onChange( obj )
             {
                 document.getElementById("message").innerHTML="key值不能超过255个字符";
             }
-            var Regex = /^([a-zA-Z])+$/;
+            var Regex = /^([a-zA-Z0-9])+$/;
 
             if (!Regex.test(key))
             {                
@@ -805,7 +878,7 @@ function onChange( obj )
             /*
             for (i=0; i<key.length; i++)
             {
-                if (key.charAt(i) != "/^([a-zA-Z])+@([a-zA-Z])+([a-zA-Z])+/")
+                if (key.charAt(i) != "/^([a-zA-Z0-9])+@([a-zA-Z0-9])+([a-zA-Z0-9])+/")
                     {
                         document.getElementById("message").innerHTML="key值输入格式不对";
                         return false;
@@ -814,6 +887,7 @@ function onChange( obj )
             */
         }
 }
+
 //function addRow(tbodyID)  
 //{  
 //
@@ -858,5 +932,37 @@ function onChange( obj )
 //    var parentTBODY = parentTR.parentNode;  
 //    parentTBODY.removeChild(parentTR);  
 //}
+
+
+
+function  getInfo() 
+{ 
+var s = ""; 
+s += " 网页可见区域宽："+ document.body.clientWidth + "\n";
+s += " 网页可见区域高："+ document.body.clientHeight + "\n"; 
+s += " 网页可见区域宽："+  document.body.offsetWidth + " (包括边线和滚动条的宽)" + "\n"; 
+s += " 网页可见区域高："+  document.body.offsetHeight + " (包括边线的宽)" + "\n"; 
+s += " 网页正文全文宽："+  document.body.scrollWidth + "\n"; 
+s += " 网页正文全文高："+ document.body.scrollHeight + "\n";  
+s += " 网页被卷去的高(ff)："+ document.body.scrollTop + "\n"; 
+s += " 网页被卷去的高(ie)："+  document.documentElement.scrollTop + "\n"; 
+s += " 网页被卷去的左："+  document.body.scrollLeft + "\n"; 
+s += " 网页正文部分上："+ window.screenTop + "\n"; 
+s += " 网页正文部分左："+ window.screenLeft + "\n"; 
+s += " 屏幕分辨率的高："+ window.screen.height + "\n"; 
+s += " 屏幕分辨率的宽："+ window.screen.width + "\n"; 
+s += " 屏幕可用工作区高度："+  window.screen.availHeight + "\n"; 
+s += " 屏幕可用工作区宽度："+ window.screen.availWidth + "\n";  
+s += " 你的屏幕设置是 "+ window.screen.colorDepth +" 位彩色" + "\n"; 
+s += " 你的屏幕设置 "+  window.screen.deviceXDPI +" 像素/英寸" + "\n"; 
+alert (s); 
+} 
+
+function GetHeight()
+{
+	s = document.body.clientHeight;
+	
+	return s;
+}
 
 

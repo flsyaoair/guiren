@@ -7,6 +7,7 @@ from projectTeam.models.repos import Repository
 from projectTeam.models.issue import Issue, IssueCategory, IssueHistory, IssueStatus, IssueCategoryStatus
 from projectTeam.models.notice import Notice
 from projectTeam.models.requirement import Requirement, RequirementStatus
-from projectTeam.models.item import SunItem
 from projectTeam.models.comment import Comment
+from projectTeam.models.comment import Comment ,SubComment
+from projectTeam.models.item import SunItem
 

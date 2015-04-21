@@ -9,6 +9,7 @@ from projectTeam.models.project import Project
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
 from math import  ceil
+from projectTeam.models.comment import Comment, SubComment
 
 def create(project_id,task_name,version,priority,assign_to,description,creator):
     session = database.get_session()
@@ -43,7 +44,7 @@ def create(project_id,task_name,version,priority,assign_to,description,creator):
         body = mailservice.render_mail_template('Task/NoticeAssignTo.html',TaskName=task_name,Description=description,SystemUrl=HOST)
         mailservice.send_mail(u.Email, u'指派给您的新任务 ' + task_name,body)
 
-def query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no,current_user):
+def query(task_name,project_id,assign_to,status_new,status_in_progress,status_completed,status_canceled,order_by,page_no,page_size,current_user):
     session = database.get_session()
 
     filters = []
@@ -71,7 +72,7 @@ def query(task_name,project_id,assign_to,status_new,status_in_progress,status_co
     q = session.query(Task).join(UserProfile,UserProfile.UserId == Task.Creator).join(UserProfile,UserProfile.UserId == Task.AssignTo).join(Project,Project.ProjectId == Task.ProjectId).filter(Task.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
-    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,PAGESIZE)
+    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,page_size)
 
     session.close()
     return (row_count,page_count,page_no,page_size,data) 
@@ -105,7 +106,7 @@ def update(project_id,task_id,task_name,version,assign_to,priority,progress,stat
     priority = int(priority)
     assign_to = int(assign_to)
     status = int(status)
-    if (not task.Versions == version) or (not task.TaskName == task_name) or (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
+    if (not task.Status == status) or (not task.Priority == priority) or (not task.AssignTo == assign_to) or (len(feedback) > 0):
         history = TaskHistory()
         history.ProjectId = task.ProjectId
         history.TaskId = task.TaskId
@@ -150,6 +151,8 @@ def calcprogress(project_id):
     session = database.get_session()
 
     all_project_task = session.query(Task).filter(Task.ProjectId == project_id).count()
+    if all_project_task == 0:
+        all_project_task = 1
     complete_project_task = session.query(Task).filter(Task.ProjectId == project_id).filter(Task.Status.in_([TaskStatus.Completed,TaskStatus.Canceled])).count()
 
     session.query(Project).filter(Project.ProjectId == project_id).update({'Progress':(complete_project_task * 100.0 / all_project_task),'LastUpdateDate':datetime.now()})
@@ -160,6 +163,13 @@ def delete(task_id):
 
     task = session.query(Task).filter(Task.TaskId == task_id).one()
     project_id = task.ProjectId
+    session.query(TaskHistory).filter(TaskHistory.TaskId == task_id).delete()
+    
+    comment = session.query(Comment).filter(Comment.TaskId == task_id)
+    for commentid in comment:
+        session.query(SubComment).filter(SubComment.CommentId == commentid.CommentId).delete()
+    
+    session.query(Comment).filter(Comment.TaskId == task_id).delete()
     session.delete(task)
     session.commit()
     session.close()

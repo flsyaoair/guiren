@@ -1,6 +1,7 @@
 ﻿{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 {% if session['isadmin'] %}
+<li><a href="/Requirement"><i class="fa fa-file-text-o fa-fw"></i>需求</a></li>
 <li><a href="/Admin"><i class="fa fa-gear fa-fw"></i>系统设置</a></li>
 {% endif %}
 {% endblock %}
@@ -30,7 +31,7 @@
                 </div>
             </form>
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="panel-body" style="height:auto; min-height:45%; _height:45%;">
                     <div ng-show="ProjectList.length<=0">
                         <div class="alert alert-success text-center">
                             <h1>未找到任何项目<i class="fa fa-smile-o"></i></h1>
@@ -38,22 +39,27 @@
                     </div>
                     <div ng-repeat="Project in ProjectList">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <s ng-show="Project.Status==2||Project.Status==3">
                                     <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead">{{Project.ProjectName}}</a>
                                 </s>
                                 <a href="/Project/Dashboard/{{Project.ProjectId}}"  class="lead" ng-show="Project.Status==1">{{Project.ProjectName}}</a>
-                                <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span> </a>
+                                <a data-toggle="collapse" href="#introduction{{Project.ProjectId}}"> <i class="fa fa-chevron-down  fa-lg fa-fw"></i><!--span class="caret" style="border-top-width: 10px; margin-bottom: 5px;"></span--></a>
                             </div>
-                            <div class="col-sm-2">创建人：{{Project.Creator}}</div>
-                            <div class="col-sm-3">
-                                创建时间：{{ Project.CreateDate | date:'yyyy-MM-dd' }}
+                            <div class="col-sm-2">
+                            	<span data-toggle="tooltip" title="创建人：{{Project.Creator}}">
+                            	<i class="fa fa-user fa-fw"></i>{{Project.Creator}}</span>
+                            </div>
+                            <div class="col-sm-2">
+                            	<span data-toggle="tooltip" title="创建时间：{{ Project.CreateDate | date:'yyyy-MM-dd' }}">
+                                <i class="fa fa-clock-o fa-fw"></i>{{ Project.CreateDate | date:'yyyy-MM-dd' }}</span>
                             </div>
                             <div class="col-sm-2" ng-switch on="Project.Status">
-                                状态：
-                                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
-                                <strong class="label label-success" ng-switch-when="2">已完成</strong>
-                                <strong class="label label-default" ng-switch-when="3">已取消</strong>
+                            	<span data-toggle="tooltip" title="状态">
+	                                <strong class="label label-primary" ng-switch-when="1">进行中</strong>
+	                                <strong class="label label-success" ng-switch-when="2">已完成</strong>
+	                                <strong class="label label-default" ng-switch-when="3">已取消</strong>
+                                </spna>
                             </div>
                             <div class="col-sm-1">
                                 <div class="btn-group">
@@ -74,7 +80,7 @@
                         <div id="introduction{{Project.ProjectId}}" class="panel-collapse collapse">
                             <div class="row panel-body"> {{Project.Introduction}} </div>
                         </div>
-                        <hr />
+                        <hr-sm />
                     </div>
                     <div class="text-center">
                         <ul class="pager">
@@ -101,10 +107,10 @@
                                 <div ng-show="createProjectForm.ProjectName.$dirty&&createProjectForm.ProjectName.$error.required" class="text-danger">请输入项目名称</div>
                                 <br>
                                 <label for="ProjectKey">项目Key<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" onchange="onChange(this.id)" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文)" ng-maxlength="255" required /> 
+                                <input type="text" class="form-control" id="ProjectKey" name="ProjectKey" ng-pattern="/^([a-zA-Z0-9])+$/" ng-model="Project.ProjectKey" placeholder="项目Key值(必须为英文或者数字)" ng-maxlength="255" required /> 
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.required" class="text-danger">请输入项目Key值</div>
                                 <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.maxlength" class="text-danger">Key值最大长度为255</div>
-                                <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$error.email" class="text-danger">Key值格式不合法</div>
+                                <div ng-show="createProjectForm.ProjectKey.$dirty&&createProjectForm.ProjectKey.$invalid" class="text-danger">Key值格式不合法</div>
                                 <div id="message" class="text-danger"></div>
                                 <div class="notic notic-info" ng-show="keyExist">
                                     <span class="text-danger">key已存在,请尝试其他key值</span>
@@ -117,7 +123,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i>关闭</button>
-                        <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create()"><i class="fa fa-save fa-fw"></i>保存</button>
+                        <button type="button" id="btnCreateProject" ng-disabled="createProjectForm.$invalid" class="btn btn-primary" data-loading-text="正在创建" ng-click="create();"><i class="fa fa-save fa-fw"></i>保存</button>
                     </div>
                 </div>
             </div>
@@ -191,12 +197,12 @@
     <div class="panel-body">
         <div class="panel panel-default" ng-controller="HistoryCtrl" ng-init="query()">
             <div ng-show="HistoryList.length<=0">
-                <div class="alert alert-success text-center">
+                <div class="alert alert-success text-center" style="margin-bottom: 0px;">
                     <h2>还没有变更记录<i class="fa fa-smile-o"></i></h2>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="row notice notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
+            <div class="panel-body" style="padding-bottom: 0px;padding-top: 0px;">
+                <div class="row notice-sm notice-info" ng-repeat="history in HistoryList" style="padding-top: 10px; padding-bottom: 5px;">
                     <div class="col-sm-9">
                         <strong><i class="fa fa-user fa-fw"></i>{{history.CreatorProfile_Nick}}</strong> 更新
                         <c ng-show="'{{history.TaskId}}'!=''">
@@ -206,7 +212,7 @@
                             <a href="/Issue/Detail/{{history.IssueId}}" data-toggle="tooltip" title="项目：{{history.ProjectName}}"><i class="fa fa-bug fa-fw"></i>{{history.Name}}</a>:
                         </c>
                         <c ng-show="'{{history.RawAssignToProfile.Nick}}'!='{{history.NewAssignToProfile.Nick}}' || {{history.RawStatus}}!={{history.NewStatus}}||{{history.RawPriority}}!={{history.NewPriority}}">
-                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}}">
+                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}} && '{{history.IssueId}}'!=''">
                             状态 从<span ng-switch on="{{history.RawStatus}}">
 								<strong class="label label-primary" ng-switch-when="1">打开</strong>
 								<strong class="label label-success" ng-switch-when="2">已解决</strong>
@@ -218,6 +224,21 @@
 								<strong class="label label-primary" ng-switch-when="1">打开</strong>
 								<strong class="label label-success" ng-switch-when="2">已解决</strong>
 								<strong class="label label-default" ng-switch-when="3">已关闭</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                        </c>
+                        <c ng-show="{{history.RawStatus}}!={{history.NewStatus}} && '{{history.TaskId}}'!=''">
+                            状态 从<span ng-switch on="{{history.RawStatus}}">
+								<strong class="label label-danger" ng-switch-when="1">新创建</strong>
+								<strong class="label label-primary" ng-switch-when="2">进行中</strong>
+								<strong class="label label-success" ng-switch-when="3">已完成</strong>
+								<strong class="label label-default" ng-switch-when="4">已取消</strong>
+                            </span>
+                            变为
+                            <span ng-switch on="{{history.NewStatus}}">
+								<strong class="label label-danger" ng-switch-when="1">新创建</strong>
+								<strong class="label label-primary" ng-switch-when="2">进行中</strong>
+								<strong class="label label-success" ng-switch-when="3">已完成</strong>
 								<strong class="label label-default" ng-switch-when="4">已取消</strong>
                             </span>
                         </c>

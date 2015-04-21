@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*- 
 
 from projectTeam.models import Project, ProjectStatus,database, Member, Task, Issue
-from projectTeam.services import issueservice
+from projectTeam.services import taskservice, issueservice
+
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 
@@ -37,7 +38,7 @@ def get(project_id):
     session.close()
     return p
 
-def query(project_name,status,page_no,order_by,current_user):
+def query(project_name,status,page_no,page_size,order_by,current_user):
     filters = []
     project_name = project_name.strip()
     if len(project_name) > 0:
@@ -52,7 +53,7 @@ def query(project_name,status,page_no,order_by,current_user):
     q = session.query(Project).filter(Project.ProjectId.in_(project_list))
     for f in filters:
         q = q.filter(f)
-    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no)
+    (row_count,page_count,page_no,page_size,data) = database.pager(q,order_by,page_no,page_size)
 
     session.close()
     return (row_count,page_count,page_no,page_size,data)
@@ -60,8 +61,13 @@ def query(project_name,status,page_no,order_by,current_user):
 def delete(project_id):
     session = database.get_session()
 
+    tasks = session.query(Task).filter(Task.ProjectId == project_id)
+    for task in tasks :
+        taskservice.delete(task.TaskId)
+    issues = session.query(Issue).filter(Issue.ProjectId == project_id)
+    for issue in issues:
+        issueservice.delete(issue.IssueId)
     session.query(Member).filter(Member.ProjectId == project_id).delete()
-    session.query(Task).filter(Task.ProjectId == project_id).delete()
     session.query(Project).filter(Project.ProjectId == project_id).delete()
 
     session.commit()
@@ -78,9 +84,13 @@ def update(project_id,project_name,project_introduction,status):
     return True
 
 
-def projectlist():
+def projectlist(current_user):
     session = database.get_session()
 
-    projectlist = session.query(Project)
+    projectlist = session.query(Member).filter(Member.UserId == current_user)
+    projectnamelist = []
+    for p in projectlist:
+        projectnamelist.append(p.Project.ProjectName)
+
     session.close()
-    return projectlist
+    return projectnamelist

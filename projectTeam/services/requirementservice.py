@@ -32,7 +32,7 @@ def create(requirement_name,version,description,creator):
 
 
 
-def query(status,page_no,order_by):
+def query(status,page_no,pagesize,order_by):
     filters = []
     if not status == 'all':
         filters.append(Requirement.Status == status)
@@ -44,7 +44,7 @@ def query(status,page_no,order_by):
     q=session.query(Requirement)
     for f in filters:
         requirementlist = q.filter(f)
-    (row_count,page_count,page_no,page_size,data) = database.pager(requirementlist,order_by,page_no)
+    (row_count,page_count,page_no,page_size,data) = database.pager(requirementlist,order_by,page_no,pagesize)
     session.close()
     return  (row_count,page_count,page_no,page_size,data)
 
