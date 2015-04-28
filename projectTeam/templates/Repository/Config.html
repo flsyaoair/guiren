@@ -1,0 +1,68 @@
+{% extends 'PowerTeamLayout.html'%}
+{% block navs %}
+{% if session['isadmin'] %}
+<li class="active"><a href="/Admin"><i class="fa fa-gear fa-fw"></i>系统设置</a></li>
+{% endif %}
+{% endblock %}
+{% block subcontent %}
+
+    <div class="col-sm-10">
+        <div class="panel panel-primary" ng-controller="RepositoryCategoryCtrl" ng-init="RepositoryCategoryId=((RepositoryCategoryId));query();">
+            <div class="panel-heading"><i class="fa fa-user fa-fw"></i>库分类设置</div>
+            <div class="panel-body">
+                 <select class="form-control" ng-model="CMPlatform.name">
+                    <option value="1">git</option>
+                    <option value="2">svn</option>
+                </select>
+            <div class="form-group"> 
+	            <label>url<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CMPlatform.url" placeholder="address" required />
+            </div>
+                        <div class="form-group"> 
+	            <label>用户<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CMPlatform.admin" placeholder="admin" required />
+            </div>
+                        <div class="form-group"> 
+	            <label>密码<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CMPlatform.password" placeholder="password" required />
+            </div>
+                        <div class="panel-body">
+                 <select class="form-control" ng-model="CIPlatform.name">
+                    <option value="1">hudson</option>
+
+                </select>
+            <div class="form-group"> 
+	            <label>url<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CIPlatform.url" placeholder="address" required />
+            </div>
+                        <div class="form-group"> 
+	            <label>用户<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CIPlatform.admin" placeholder="admin" required />
+            </div>
+                        <div class="form-group"> 
+	            <label>密码<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="CIPlatform.password" placeholder="password" required />
+            </div>
+            <div class="panel-body">
+                 <select class="form-control" ng-model="ReposPlatform.name">
+                    <option value="1">nexus</option>
+                 
+                </select>
+            <div class="form-group"> 
+	            <label>url<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="Reposlatform.url" placeholder="address" required />
+            </div>
+            <div class="form-group"> 
+	            <label>用户<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="ReposPlatform.admin" placeholder="admin" required />
+            </div>
+             <div class="form-group"> 
+	            <label>密码<span class="text-danger">*</span></label> 
+	            <input type="text" class="form-control" name="sunitemname" ng-model="RepsPlatform.password" placeholder="password" required />
+            </div>
+                <button  type="button"  class="btn btn-danger" ng-click="ConfigRepositoryCategory()"><i class="fa fa-trash-o fa-fw"></i>保存</button>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
