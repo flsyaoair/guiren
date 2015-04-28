@@ -14,9 +14,9 @@ def index():
 def category():
     return render_template('Admin/CategorySetting.html')
 
-@admin.route('/Admin/RepositorySetting')
-def repository():
-    return render_template('Admin/RepositorySetting.html')
+@admin.route('/Admin/ProjectList')
+def ProjectModules():
+    return render_template('Admin/ProjectModules.html')
 
 @admin.route('/QueryUser',methods=['POST'])
 def query():
@@ -101,7 +101,7 @@ def detail_Repository(repository_id):
     repository = repositoryservice.get(repository_id)
 #    tt=repository.RepositoryName
     return render_template('Repository/Detail.html',RepositoryId=repository_id,Repository=repository) 
-@admin.route('/RemoveRepository',methods=['POST'])
+
 def remove_Repository():
     repository_id = request.json['RepositoryId']
 #    repositoryCategory_id = request.json['RepositoryCategoryId']
@@ -111,18 +111,18 @@ def remove_Repository():
 @admin.route('/CreateRepositoryCategory',methods=['POST'])
 def create_RepositoryCategory():
     repositorycategoryname = request.json['RepositoryCategoryName']
-    repositoryid = request.json['RepositoryId']
+    project_id = request.json['ProjectId']
 #    repository = repositoryservice.get(repository_id)
 #    repositoryid=repository.RepositoryId
-    exist = repositoryservice.exist_repositoryprofile(repositoryid,repositorycategoryname)
+    exist = repositoryservice.exist_repositoryprofile(project_id,repositorycategoryname)
     if not exist:
-        repositoryservice.create_repositoryprofile(repositoryid,repositorycategoryname)
-    return jsonify(status=exist,RepositoryId=repositoryid)  
+        repositoryservice.create_repositoryprofile(project_id,repositorycategoryname)
+    return jsonify(status=exist,ProjectId=project_id)  
 @admin.route('/QueryRepositoryCategory',methods=['POST'])
 def query_RepositoryCategory():
     
-    repository_id = request.json['RepositoryId']
-    data = repositoryservice.query_repositoryprofile(repository_id)
+    project_id = request.json['ProjectId']
+    data = repositoryservice.query_repositoryprofile(project_id)
     repositoryCategory_list = []
     for i in data:
         repositoryCategory_list.append({'RepositoryCategoryId':i.RepositoryCategoryId,'RepositoryCategoryName':i.RepositoryCategoryName})
@@ -132,4 +132,30 @@ def remove_RepositoryCategory():
     repository_id = request.json['RepositoryId']
     repositoryCategory_id = request.json['RepositoryCategoryId']
     repositoryservice.remove_RepositoryCategory(repository_id,repositoryCategory_id)
-    return jsonify(removed=True)   
+    return jsonify(removed=True) 
+
+@admin.route('/Repository/Config/<int:repositorycategory_id>')
+def config_RepositoryCategory(repositorycategory_id):   
+    repository = repositoryservice.get_repositoryprofile(repositorycategory_id)
+#    tt=repository.RepositoryName
+    return render_template('Repository/Config.html',RepositoryCategoryId=repositorycategory_id) 
+@admin.route('/ConfigRepositoryCategory',methods=['POST'])
+def editConfigRepositoryCategory():
+    repositoryCategory_id = request.json['RepositoryCategoryId']
+    try:   
+        CMPlatform = request.json['CMPlatform']
+    except KeyError,e:
+        CMPlatform =''
+    try: 
+        CIPlatform = request.json['CIPlatform']
+
+    except KeyError,e:
+        CIPlatform =''    
+    try:
+        ReposPlatform = request.json['ReposPlatform']
+    except KeyError,e:
+        ReposPlatform =''        
+#     PlatformName= request.json['Name']
+    
+    return  jsonify()            
+  

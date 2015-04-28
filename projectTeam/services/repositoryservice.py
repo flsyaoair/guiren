@@ -1,7 +1,7 @@
 ﻿# -*- coding: UTF-8 -*-
 from projectTeam.models import database
 #from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
-from projectTeam.models.repos import Repository
+# from projectTeam.models.repos import Repository
 from projectTeam.models.repositoryprofile import RepositoryProfile
 from projectTeam.models.userprofile import UserProfile
 from projectTeam.powerteamconfig import *
@@ -80,6 +80,13 @@ def query_repositoryprofile(repository_id):
     session = database.get_session()
 
     list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id)
+    session.close()
+    return list
+def get_repositoryprofile(repositorycategory_id):
+    
+    session = database.get_session()
+
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryId == repositorycategory_id)
     session.close()
     return list
 #remove_Repository

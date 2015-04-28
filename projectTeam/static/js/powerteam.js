@@ -526,18 +526,19 @@ function RepositoryCtrl($scope, $http) {
 function RepositoryCategoryCtrl($scope, $http) {
     $scope.Success = false;
     $scope.Exist = false;
+    $scope.Platform = {}
 //    $scope.RepositoryId = $scope
 //    $scope.Query = { RepositoryId: RepositoryId, RepositoryCategoryName: '', RepositoryCategoryId: '' };
     $scope.RepositoryCategoryList = [];
     $scope.query = function () {
-        $http.post('/QueryRepositoryCategory',{"RepositoryId": $scope.RepositoryId}).success(function (result) {
+        $http.post('/QueryRepositoryCategory',{"ProjectId": $scope.ProjectId}).success(function (result) {
             $scope.RepositoryCategoryList = result.data;
         });
     }
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
-        $http.post('/CreateRepositoryCategory', {RepositoryId: $scope.RepositoryId,RepositoryCategoryName: $scope.RepositoryCategoryName }).success(function (result) {
+        $http.post('/CreateRepositoryCategory', {ProjectId: $scope.ProjectId,RepositoryCategoryName: $scope.RepositoryCategoryName }).success(function (result) {
             if (result.status) {
                 $scope.Success = false;
                 $scope.Exist = true;
@@ -552,12 +553,18 @@ function RepositoryCategoryCtrl($scope, $http) {
     $scope.RemoveRepositoryCategory = function (RepositoryCategoryId) {
         $scope.AddSuccess = false;
         $scope.RemoveSuccess = false;
-        $http.post('/RemoveRepositoryCategory', {'RepositoryId': $scope.RepositoryId,'RepositoryCategoryId': RepositoryCategoryId }).success(function (result) {
+        $http.post('/RemoveRepositoryCategory', {'ProjectId': $scope.ProjectId,'RepositoryCategoryId': RepositoryCategoryId }).success(function (result) {
             if (result.removed) {
                 $scope.RemoveSuccess = true;
                 $scope.query();
                 
             }
+        });
+    }
+    $scope.ConfigRepositoryCategory = function () {
+    	alert("yyyyyyy")
+        $http.post('/ConfigRepositoryCategory',{RepositoryCategoryId:$scope.RepositoryCategoryId,'CMPlatform':$scope.CMPlatform,'CIPlatform':$scope.CIPlatform,'ReopsPlatform':$scope.ReopsPlatform}).success(function (result) {
+        	alert("yyyyyyy") 
         });
     }
 }

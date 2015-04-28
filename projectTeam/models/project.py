@@ -23,3 +23,4 @@ class Project(BaseModel):
     Members = relationship("Member")
     Introduction = Column('Introduction', UnicodeText)
     ProjectKey = Column('ProjectKey', VARCHAR(255),nullable=False,unique=True)
+    RepositoryCategory = relationship('RepositoryProfile')
