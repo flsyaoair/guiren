@@ -1,4 +1,4 @@
-﻿{% extends 'PowerTeamLayout.html'%}
+{% extends 'PowerTeamLayout.html'%}
 {% block navs %}
 <li><a href="/Project/Dashboard/((ProjectId))"><i class="fa fa-tachometer fa-fw"></i>概览</a></li>
 <li><a href="/Project/Task/((ProjectId))"><i class="fa fa-tasks fa-fw"></i>任务</a></li>
@@ -29,6 +29,15 @@
                     {% endfor %}
                 </select>
                 <div ng-show="createIssueForm.CategoryId.$dirty&&Issue.CategoryId==-1" class="text-danger">请选择问题分类</div>
+            </div>
+             <div class="form-group">
+                <label>模块<span class="text-danger">*</span></label>
+                <select class="form-control" ng-model="Issue.ProjectModuleId">
+                    
+                    {% for projectmodule in ProjectModules %}
+                    <option value="((projectmodule.RepositoryCategoryId))">((projectmodule.RepositoryCategoryName))</option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="form-group">
                 <label>指派给<span class="text-danger">*</span></label>

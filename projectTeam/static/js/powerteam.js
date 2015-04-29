@@ -311,7 +311,7 @@ function IssueCtrl($scope, $http) {
 function IssueCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Issue = { Subject: null, AssignTo: -1, Priority: 2, Description: null, CategoryId: -1 };
+    $scope.Issue = { Subject: null, ProjectModuleId:null,AssignTo: -1, Priority: 2, Description: null, CategoryId: -1 };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');

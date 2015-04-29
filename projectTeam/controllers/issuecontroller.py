@@ -2,7 +2,7 @@
 
 from flask import Module,render_template,request,g,jsonify
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice, issueservice,commentservice,subcommentservice
+from projectTeam.services import teamservice, issueservice,commentservice,subcommentservice,repositoryservice
 from projectTeam.powerteamconfig import *
 
 issue = Module(__name__)
@@ -17,12 +17,13 @@ def list(project_id):
 @issue.route('/Issue/Create/<int:project_id>')
 def create(project_id):
     member_list = teamservice.member_in_project(project_id)
+    projectmodules = repositoryservice.query_repositoryprofile(project_id)
     category = issueservice.available_category()
-    return render_template('Issue/Create.html',ProjectId=project_id,MemberList=member_list,Category=category)
+    return render_template('Issue/Create.html',ProjectId=project_id,MemberList=member_list,Category=category,ProjectModules=projectmodules)
 
 @issue.route('/Issue/CreateNew',methods=['POST'])
 def create_new():
-    issueservice.create(request.json['ProjectId'],request.json['Subject'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],request.json['CategoryId'],g.user_id)
+    issueservice.create(request.json['ProjectId'],request.json['Subject'],request.json['ProjectModuleId'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],request.json['CategoryId'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])
 
 @issue.route('/Issue/Query',methods=['POST'])
@@ -46,18 +47,20 @@ def query():
 @issue.route('/Issue/Detail/<int:issue_id>')
 def detail(issue_id):
     issue = issueservice.get(issue_id)
+    projectmodules = repositoryservice.query_repositoryprofile(issue.ProjectId)
     member_list = teamservice.member_in_project(issue.ProjectId)
     category = issueservice.available_category()
     if issue.AssignTo == g.user_id:
         issue.AssignTo = -1
     history_list = issueservice.get_history(issue_id)
-    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,Creator=issue.CreatorProfile.Nick,ProjectKey=issue.ProjectProfile.ProjectKey,MemberList=member_list,Category=category,CurrentUser=g.user_id)
+    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,Creator=issue.CreatorProfile.Nick,ProjectKey=issue.ProjectProfile.ProjectKey,MemberList=member_list,Category=category,CurrentUser=g.user_id,ProjectModules=projectmodules)
 
 @issue.route('/Issue/Update',methods=['POST'])
 def update():
     ProjectId = request.json['ProjectId']
     IssueId = request.json['IssueId']
     subject = request.json['Subject']
+    projectmodule_id = request.json['ProjectModuleId']
     assign_to = request.json['AssignTo']
     if int(assign_to) == -1:
         assign_to = g.user_id
@@ -65,7 +68,7 @@ def update():
     category_id = request.json['CategoryId']
     status = request.json['Status']
     feedback = request.json['Feedback']
-    issueservice.update(ProjectId,IssueId,subject,category_id,assign_to,priority,status,feedback,g.user_id)
+    issueservice.update(ProjectId,IssueId,subject,projectmodule_id,category_id,assign_to,priority,status,feedback,g.user_id)
     return jsonify(updated=True)
 
 @issue.route('/Issue/Delete',methods=['POST'])

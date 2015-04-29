@@ -10,13 +10,14 @@ from projectTeam.services import userservice, mailservice
 from math import  ceil
 from projectTeam.models.comment import Comment, SubComment
 
-def create(project_id,subject,priority,assign_to,description,category_id,creator):
+def create(project_id,subject,projectmodule_id,priority,assign_to,description,category_id,creator):
     session = database.get_session()
     subject = subject.strip()
     issue = Issue()
     issue.ProjectId = project_id
     issue.CategoryId = category_id
     issue.Subject = subject
+    issue.ProjectModuleId = projectmodule_id
     issue.Priority = priority
     issue.Description = description
     issue.Status = IssueStatus.Open
@@ -102,7 +103,7 @@ def get_history(issue_id):
 
     return history_list
 
-def update(project_id,issue_id,subject,category_id,assign_to,priority,status,feedback,current_user):
+def update(project_id,issue_id,subject,projectmodule_id,category_id,assign_to,priority,status,feedback,current_user):
     session = database.get_session()
     subject = subject.strip()
     issue = session.query(Issue).filter(Issue.IssueId == issue_id).one()
@@ -133,6 +134,7 @@ def update(project_id,issue_id,subject,category_id,assign_to,priority,status,fee
         session.add(history)
 
     issue.Subject = subject
+    issue.ProjectModuleId = projectmodule_id
     issue.CategoryId = category_id
     issue.AssignTo = assign_to
     issue.Priority = priority

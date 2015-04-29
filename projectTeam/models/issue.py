@@ -5,6 +5,7 @@ from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey, Flo
 from sqlalchemy.orm import relationship
 from projectTeam.models.userprofile import UserProfile
 from projectTeam.models.project import Project 
+from projectTeam.models.repositoryprofile import RepositoryProfile
 
 class IssueStatus:
     Open = 1
@@ -71,3 +72,5 @@ class Issue(BaseModel):
     CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
+    ProjectModuleId = Column('ProjectModuleId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
+    ProjectModuleProfile = relationship("RepositoryProfile")
