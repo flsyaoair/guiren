@@ -560,9 +560,8 @@ function RepositoryCategoryCtrl($scope, $http) {
         });
     }
     $scope.ConfigRepositoryCategory = function () {
-    	alert("yyyyyyy")
-        $http.post('/ConfigRepositoryCategory',{RepositoryCategoryId:$scope.RepositoryCategoryId,'CMPlatform':$scope.CMPlatform,'CIPlatform':$scope.CIPlatform,'ReopsPlatform':$scope.ReopsPlatform}).success(function (result) {
-        	alert("yyyyyyy") 
+        $http.post('/ConfigRepositoryCategory',{RepositoryCategoryId:$scope.RepositoryCategoryId,'CMPlatform':$scope.CMPlatform,'CIPlatform':$scope.CIPlatform,'ReposPlatform':$scope.ReposPlatform}).success(function (result) {
+        
         });
     }
 }

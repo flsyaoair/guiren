@@ -140,26 +140,28 @@ def remove_RepositoryCategory():
 
 @admin.route('/ProjectModule/<int:repositorycategory_id>')
 def config_RepositoryCategory(repositorycategory_id):   
-    repository = repositoryservice.get_repositoryprofile(repositorycategory_id)
-#    tt=repository.RepositoryName
+    RepositoryCategory = repositoryservice.get_repositoryprofile(repositorycategory_id)
     return render_template('Repository/Config.html',RepositoryCategoryId=repositorycategory_id) 
 @admin.route('/ConfigRepositoryCategory',methods=['POST'])
 def editConfigRepositoryCategory():
     repositoryCategory_id = request.json['RepositoryCategoryId']
     try:   
         CMPlatform = request.json['CMPlatform']
+        CMPlatform = str(CMPlatform)
     except KeyError,e:
         CMPlatform =''
     try: 
         CIPlatform = request.json['CIPlatform']
+        CIPlatform = str(CIPlatform)
 
     except KeyError,e:
         CIPlatform =''    
     try:
         ReposPlatform = request.json['ReposPlatform']
+        ReposPlatform = str(ReposPlatform)
     except KeyError,e:
         ReposPlatform =''        
 #     PlatformName= request.json['Name']
-    
-    return  jsonify()            
+    RepositoryCategory = repositoryservice.update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatform)
+    return  jsonify(update=True)            
   

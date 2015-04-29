@@ -102,5 +102,11 @@ def remove_RepositoryCategory(project_id,repositoryCategory_id):
     session.close()
    
     return list
-
+def update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatform):
+    session = database.get_session()
+    Platformlist = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).update({'CMPlatform':CMPlatform,'CIPlatform':CIPlatform,'ReposPlatform':ReposPlatform})
+    session.commit()
+    session.close()
+   
+    return Platformlist
    
