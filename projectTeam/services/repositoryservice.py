@@ -38,21 +38,24 @@ def query_repository():
     session.close()
     return list
 
-def create_repositoryprofile(repository_id,repositorycategory_name):
+def create_repositoryprofile(project_id,repositorycategory_name):
     session = database.get_session()
     r = RepositoryProfile()
     repositorycategory_name = repositorycategory_name.strip()
-    r.RepositoryId=repository_id
+    r.ProjectId=project_id
     r.RepositoryCategoryName=repositorycategory_name
+    r.CMPlatform = ''
+    r.CIPlatform = ''
+    r.ReposPlatform = ''
     session.add(r)
     session.commit()
     session.close()
 
     
-def exist_repositoryprofile(repository_id,repositorycategory_name):
+def exist_repositoryprofile(project_id,repositorycategory_name):
     session = database.get_session()
 
-    c = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryName == repositorycategory_name,RepositoryProfile.RepositoryId == repository_id).count()
+    c = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryName == repositorycategory_name,RepositoryProfile.ProjectId == project_id).count()
 
     session.close()
 
@@ -75,11 +78,11 @@ def remove_Repository(repository_id):
     session.close()
    
    
-def query_repositoryprofile(repository_id):
+def query_repositoryprofile(project_id):
     
     session = database.get_session()
 
-    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id)
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id)
     session.close()
     return list
 def get_repositoryprofile(repositorycategory_id):
@@ -90,11 +93,11 @@ def get_repositoryprofile(repositorycategory_id):
     session.close()
     return list
 #remove_Repository
-def remove_RepositoryCategory(repository_id,repositoryCategory_id):
+def remove_RepositoryCategory(project_id,repositoryCategory_id):
     
     session = database.get_session()
 
-    list = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id,RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).delete()
+    list = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id,RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).delete()
     session.commit()
     session.close()
    

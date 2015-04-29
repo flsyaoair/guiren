@@ -81,39 +81,43 @@ def create_category():
     if not exist:
         issueservice.create_category(categoryname)
     return jsonify(status=exist)
-@admin.route('/CreateRepository',methods=['POST'])
-def create_Repository():
-    repositoryname = request.json['RepositoryName']
-    exist = repositoryservice.exist_repository(repositoryname)
-    if not exist:
-        repositoryservice.create_repository(repositoryname)
-    return jsonify(status=exist)
-@admin.route('/QueryRepository',methods=['POST'])
-def query_Repository():
-    
-    data = repositoryservice.query_repository()
-    repository_list = []
-    for i in data:
-        repository_list.append({'RepositoryId':i.RepositoryId,'RepositoryName':i.RepositoryName})
-    return jsonify(data=repository_list)
-@admin.route('/Repository/Detail/<int:repository_id>')
-def detail_Repository(repository_id):   
-    repository = repositoryservice.get(repository_id)
-#    tt=repository.RepositoryName
-    return render_template('Repository/Detail.html',RepositoryId=repository_id,Repository=repository) 
+# @admin.route('/CreateRepository',methods=['POST'])
+# def create_Repository():
+#     repositoryname = request.json['RepositoryName']
+#     exist = repositoryservice.exist_repository(repositoryname)
+#     if not exist:
+#         repositoryservice.create_repository(repositoryname)
+#     return jsonify(status=exist)
+# @admin.route('/QueryRepository',methods=['POST'])
+# def query_Repository():
+#     
+#     data = repositoryservice.query_repository()
+#     repository_list = []
+#     for i in data:
+#         repository_list.append({'RepositoryId':i.RepositoryId,'RepositoryName':i.RepositoryName})
+#     return jsonify(data=repository_list)
+# @admin.route('/Repository/Detail/<int:repository_id>')
+# def detail_Repository(repository_id):   
+#     repository = repositoryservice.get(repository_id)
+# 
+#     return render_template('Repository/Detail.html',RepositoryId=repository_id,Repository=repository) 
+# 
+# def remove_Repository():
+#     repository_id = request.json['RepositoryId']
+# 
+#     repositoryservice.remove_Repository(repository_id)
+#     return jsonify(removed=True)   
 
-def remove_Repository():
-    repository_id = request.json['RepositoryId']
-#    repositoryCategory_id = request.json['RepositoryCategoryId']
-    repositoryservice.remove_Repository(repository_id)
-    return jsonify(removed=True)   
+@admin.route('/Admin/ProjectList/<int:project_id>')
+def projectid(project_id):   
+
+ 
+    return render_template('Repository/Detail.html',ProjectId=project_id) 
 
 @admin.route('/CreateRepositoryCategory',methods=['POST'])
 def create_RepositoryCategory():
     repositorycategoryname = request.json['RepositoryCategoryName']
     project_id = request.json['ProjectId']
-#    repository = repositoryservice.get(repository_id)
-#    repositoryid=repository.RepositoryId
     exist = repositoryservice.exist_repositoryprofile(project_id,repositorycategoryname)
     if not exist:
         repositoryservice.create_repositoryprofile(project_id,repositorycategoryname)
@@ -129,12 +133,12 @@ def query_RepositoryCategory():
     return jsonify(data=repositoryCategory_list) 
 @admin.route('/RemoveRepositoryCategory',methods=['POST'])
 def remove_RepositoryCategory():
-    repository_id = request.json['RepositoryId']
+    repository_id = request.json['ProjectId']
     repositoryCategory_id = request.json['RepositoryCategoryId']
     repositoryservice.remove_RepositoryCategory(repository_id,repositoryCategory_id)
     return jsonify(removed=True) 
 
-@admin.route('/Repository/Config/<int:repositorycategory_id>')
+@admin.route('/ProjectModule/<int:repositorycategory_id>')
 def config_RepositoryCategory(repositorycategory_id):   
     repository = repositoryservice.get_repositoryprofile(repositorycategory_id)
 #    tt=repository.RepositoryName

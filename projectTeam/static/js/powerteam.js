@@ -486,49 +486,47 @@ function CategoryCtrl($scope, $http) {
     }
 }
 
-function RepositoryCtrl($scope, $http) {
-    $scope.Success = false;
-    $scope.Exist = false;
-    $scope.RepositoryList = [];
-    $scope.query = function () {
-        $http.post('/QueryRepository').success(function (result) {
-            $scope.RepositoryList = result.data;
-        });
-    }
-    $scope.create = function () {
-        $scope.Success = false;
-        $scope.Exist = false;
-        $http.post('/CreateRepository', { RepositoryName: $scope.RepositoryName }).success(function (result) {
-            if (result.status) {
-                $scope.Success = false;
-                $scope.Exist = true;
-            } else {
-                $scope.Success = true;
-                $scope.Exist = false;
-            }
-            $scope.query();
-        });
-    }
-    $scope.RemoveRepository = function (RepositoryId) {
-        $scope.AddSuccess = false;
-        $scope.RemoveSuccess = false;
-        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
-            if (result.removed) {
-                $scope.RemoveSuccess = true;
-                $scope.query();
-                window.location.href = "/Admin/RepositorySetting" 
-                
-            }
-        });
-    }
-}
+//function RepositoryCtrl($scope, $http) {
+//    $scope.Success = false;
+//    $scope.Exist = false;
+//    $scope.RepositoryList = [];
+//    $scope.query = function () {
+//        $http.post('/QueryRepository').success(function (result) {
+//            $scope.RepositoryList = result.data;
+//        });
+//    }
+//    $scope.create = function () {
+//        $scope.Success = false;
+//        $scope.Exist = false;
+//        $http.post('/CreateRepository', { RepositoryName: $scope.RepositoryName }).success(function (result) {
+//            if (result.status) {
+//                $scope.Success = false;
+//                $scope.Exist = true;
+//            } else {
+//                $scope.Success = true;
+//                $scope.Exist = false;
+//            }
+//            $scope.query();
+//        });
+//    }
+//    $scope.RemoveRepository = function (RepositoryId) {
+//        $scope.AddSuccess = false;
+//        $scope.RemoveSuccess = false;
+//        $http.post('/RemoveRepository', {'RepositoryId': RepositoryId }).success(function (result) {
+//            if (result.removed) {
+//                $scope.RemoveSuccess = true;
+//                $scope.query();
+//                window.location.href = "/Admin/RepositorySetting" 
+//                
+//            }
+//        });
+//    }
+//}
 
 function RepositoryCategoryCtrl($scope, $http) {
     $scope.Success = false;
     $scope.Exist = false;
     $scope.Platform = {}
-//    $scope.RepositoryId = $scope
-//    $scope.Query = { RepositoryId: RepositoryId, RepositoryCategoryName: '', RepositoryCategoryId: '' };
     $scope.RepositoryCategoryList = [];
     $scope.query = function () {
         $http.post('/QueryRepositoryCategory',{"ProjectId": $scope.ProjectId}).success(function (result) {
