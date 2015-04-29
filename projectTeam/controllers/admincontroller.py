@@ -111,7 +111,7 @@ def create_category():
 @admin.route('/Admin/ProjectList/<int:project_id>')
 def projectid(project_id):   
 
- 
+    repository = repositoryservice.query_repositoryprofile(project_id)
     return render_template('Repository/Detail.html',ProjectId=project_id) 
 
 @admin.route('/CreateRepositoryCategory',methods=['POST'])
@@ -164,4 +164,7 @@ def editConfigRepositoryCategory():
 #     PlatformName= request.json['Name']
     RepositoryCategory = repositoryservice.update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatform)
     return  jsonify(update=True)            
-  
+# def read_PlatformConfig(project_id,RepositoryCategoryName):
+#     platformlist = repositoryservice.read_PlatformConfig(project_id,RepositoryCategoryName)
+#     
+#     return jsonify()

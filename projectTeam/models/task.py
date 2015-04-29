@@ -1,6 +1,7 @@
 from projectTeam.models.database import BaseModel
 from projectTeam.models.userprofile import UserProfile 
 from projectTeam.models.project import Project 
+from projectTeam.models.repositoryprofile import RepositoryProfile
 
 from sqlalchemy import Column,DateTime,NVARCHAR,SMALLINT,Integer,ForeignKey, Float, UnicodeText, VARCHAR
 from sqlalchemy.orm import relationship
@@ -33,6 +34,8 @@ class TaskHistory(BaseModel):
     RawAssignToProfile = relationship('UserProfile', foreign_keys=RawAssignTo,primaryjoin=RawAssignTo == UserProfile.UserId)
     NewAssignTo = Column('NewAssignTo', Integer,ForeignKey('UserProfile.UserId'),nullable = False)
     NewAssignToProfile = relationship('UserProfile', foreign_keys=NewAssignTo,primaryjoin=NewAssignTo == UserProfile.UserId)
+#     ProjectModuleId = Column('ProjectModuleId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
+#     ProjectModuleProfile = relationship("RepositoryProfile")
 #    RawCategoryId = Column('RawCategoryId', Integer,ForeignKey('IssueCategory.CategoryId'),nullable = False)
 #    RawIssueCategory = relationship('IssueCategory', foreign_keys=RawCategoryId,primaryjoin=RawCategoryId == IssueCategory.CategoryId)
 #    NewCategoryId = Column('NewCategoryId', Integer,ForeignKey('IssueCategory.CategoryId'),nullable = False)
@@ -63,5 +66,6 @@ class Task(BaseModel):
     CreatorProfile = relationship('UserProfile', foreign_keys=Creator,primaryjoin=Creator == UserProfile.UserId)
     CreateDate = Column('CreateDate', DateTime,nullable=False)
     LastUpdateDate = Column('LastUpdateDate', DateTime,nullable=False)
-
+    ProjectModuleId = Column('ProjectModuleId', Integer,ForeignKey('RepositoryProfile.RepositoryCategoryId'),nullable = False)
+    ProjectModuleProfile = relationship("RepositoryProfile")
     

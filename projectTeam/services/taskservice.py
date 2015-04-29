@@ -11,7 +11,7 @@ from projectTeam.services import userservice, mailservice
 from math import  ceil
 from projectTeam.models.comment import Comment, SubComment
 
-def create(project_id,task_name,version,priority,assign_to,description,creator):
+def create(project_id,task_name,version,projectmodule_id,priority,assign_to,description,creator):
     session = database.get_session()
     task_name = task_name.strip()
     version =version.strip()
@@ -19,6 +19,7 @@ def create(project_id,task_name,version,priority,assign_to,description,creator):
     t.ProjectId = project_id
     t.TaskName = task_name
     t.Versions = version
+    t.ProjectModuleId = projectmodule_id
     t.Priority = priority
     t.Progress = 0
     if assign_to == -1:
@@ -94,7 +95,7 @@ def get_history(task_id):
 
     return history_list
     
-def update(project_id,task_id,task_name,version,assign_to,priority,progress,status,feedback,current_user):
+def update(project_id,task_id,task_name,version,projectmodule_id,assign_to,priority,progress,status,feedback,current_user):
     session = database.get_session()
 
     task_name = task_name.strip()
@@ -127,6 +128,7 @@ def update(project_id,task_id,task_name,version,assign_to,priority,progress,stat
         session.add(history)
     task.TaskName = task_name
     task.Versions = version
+    task.ProjectModuleId = projectmodule_id
     task.AssignTo = assign_to
     task.Priority = priority
     task.Progress = progress

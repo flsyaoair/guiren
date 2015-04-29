@@ -109,4 +109,10 @@ def update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatf
     session.close()
    
     return Platformlist
+def read_PlatformConfig(project_id,RepositoryCategoryName):
+    session = database.get_session()
+    Platformlist = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id,RepositoryProfile.RepositoryCategoryName == RepositoryCategoryName)
+    session.commit()
+    session.close()
+    return Platformlist
    

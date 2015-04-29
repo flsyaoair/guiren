@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*- 
 from flask import Module,render_template,request,jsonify,g
 from projectTeam.controllers.filters import login_filter
-from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice
+from projectTeam.services import teamservice,taskservice,projectservice,commentservice,subcommentservice,repositoryservice
 from projectTeam.models import Project
 from projectTeam.controllers.commentcontroller import *
 from projectTeam.powerteamconfig import *
@@ -39,17 +39,18 @@ def query():
 @task.route('/Task/Create/<int:project_id>')
 def create(project_id):
     member_list = teamservice.member_in_project(project_id)
-#    task = taskservice.get(member_list.TaskId)
-    return render_template('Task/Create.html',ProjectId=project_id,MemberList=member_list)
+    projectmodules = repositoryservice.query_repositoryprofile(project_id)
+    return render_template('Task/Create.html',ProjectId=project_id,MemberList=member_list,ProjectModules=projectmodules)
 
 @task.route('/Task/Detail/<int:task_id>')
 def detail(task_id):
     task = taskservice.get(task_id)
     history_list = taskservice.get_history(task_id)
+    projectmodules = repositoryservice.query_repositoryprofile(task.ProjectId)
     member_list = teamservice.member_in_project(task.ProjectId)
     if task.AssignTo == g.user_id:
         task.AssignTo = -1
-    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id)
+    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id,ProjectModules=projectmodules)
                                               
 @task.route('/Task/Update',methods=['POST'])
 def update():
@@ -57,6 +58,7 @@ def update():
     project_id = request.json['ProjectId']
     task_name = request.json['TaskName']
     version =  request.json['Versions']
+    projectmodule_id = request.json['ProjectModuleId']
     feedback = request.json['Feedback']
     assign_to = request.json['AssignTo']
     if assign_to == -1:
@@ -66,7 +68,7 @@ def update():
     status = request.json['StatusNew']
 #    effort = request.json['Effort']
 #    description = request.json['Description']
-    taskservice.update(project_id, task_id, task_name, version, assign_to, priority, progress, status, feedback, g.user_id)                
+    taskservice.update(project_id, task_id, task_name, version,projectmodule_id, assign_to, priority, progress, status, feedback, g.user_id)                
     return jsonify(updated=True)
 
 @task.route('/Task/Delete',methods=['POST'])
@@ -76,5 +78,5 @@ def delete():
 
 @task.route('/Task/CreateNew',methods=['POST'])
 def create_new():
-    taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
+    taskservice.create(request.json['ProjectId'],request.json['TaskName'],request.json['Versions'],request.json['ProjectModuleId'],request.json['Priority'],request.json['AssignTo'],request.json['Description'],g.user_id)
     return jsonify(created=True,ProjectId=request.json['ProjectId'])
