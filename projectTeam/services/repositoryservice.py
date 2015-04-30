@@ -9,6 +9,7 @@ from datetime import datetime
 from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 from projectTeam.services import userservice, mailservice
+from projectTeam.platform import git
 
 def create_repository(repositoryname):
     session = database.get_session()
@@ -105,12 +106,47 @@ def remove_RepositoryCategory(project_id,repositoryCategory_id):
 def update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatform):
     session = database.get_session()
     Platformlist = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).update({'CMPlatform':CMPlatform,'CIPlatform':CIPlatform,'ReposPlatform':ReposPlatform})
+    session.commit()
     session.close()
-   
+    
     return Platformlist
 def read_PlatformConfig(project_id,RepositoryCategoryId):
     session = database.get_session()
     modulerelationprofile = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id,RepositoryProfile.RepositoryCategoryId == RepositoryCategoryId).one()
     session.close()
     return modulerelationprofile
+
+#===============================================================================
+#  platform analysis git hudson nexus 
+#===============================================================================
+def stranalysis(modulerelation):
+    CMPlatform=modulerelation.CMPlatform
+    CIPlatform=modulerelation.CIPlatform
+    ReopsPlatform=modulerelation.ReposPlatform
+    if CMPlatform=='':
+        return 'ok'
+    else:
+        CMPlatform = eval(CMPlatform)
+        url=CMPlatform['url']
+        admin=CMPlatform['admin']
+        password=CMPlatform['password']
+        URL=url.replace("http://",'http://'+admin+':'+password+'@')
+        commitversion=git.getPage(URL)
+        return commitversion
+#     if  CIPlatform=='':
+#         print ''
+#     else:
+#         CIPlatform = eval(CIPlatform)
+#         url=CIPlatform['url']
+#         admin=CIPlatform['admin']
+#         password=CIPlatform['password']
+#     if  ReopsPlatform=='':
+#         print ''
+#     else:
+#         ReopsPlatform = eval(ReopsPlatform)
+#         url=ReopsPlatform['url']
+        
+    
+    
+
    
