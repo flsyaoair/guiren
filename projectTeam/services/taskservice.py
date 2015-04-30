@@ -196,3 +196,6 @@ def member_task(current_user):
     task_list = session.query(Task).filter(Task.ProjectId.in_(project_list)).all()
     
     return (task_list)
+def get_platformconfig():
+    session = database.get_session()
+    

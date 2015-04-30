@@ -1,7 +1,7 @@
 ﻿# -*- coding: UTF-8 -*-
 from projectTeam.models import database
 #from projectTeam.models.issue import Issue, IssueStatus, IssueCategory, IssueCategoryStatus, IssueHistory
-# from projectTeam.models.repos import Repository
+from projectTeam.models.repos import Repository
 from projectTeam.models.repositoryprofile import RepositoryProfile
 from projectTeam.models.userprofile import UserProfile
 from projectTeam.powerteamconfig import *
@@ -72,7 +72,7 @@ def remove_Repository(repository_id):
     
     session = database.get_session()
 
-    r1 = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id).delete()
+#     r1 = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryId == repository_id).delete()
     r2 = session.query(Repository).filter(Repository.RepositoryId == repository_id).delete()
     session.commit()
     session.close()
@@ -105,14 +105,12 @@ def remove_RepositoryCategory(project_id,repositoryCategory_id):
 def update_PlatformConfig(repositoryCategory_id,CMPlatform,CIPlatform,ReposPlatform):
     session = database.get_session()
     Platformlist = session.query(RepositoryProfile).filter(RepositoryProfile.RepositoryCategoryId == repositoryCategory_id).update({'CMPlatform':CMPlatform,'CIPlatform':CIPlatform,'ReposPlatform':ReposPlatform})
-    session.commit()
     session.close()
    
     return Platformlist
-def read_PlatformConfig(project_id,RepositoryCategoryName):
+def read_PlatformConfig(project_id,RepositoryCategoryId):
     session = database.get_session()
-    Platformlist = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id,RepositoryProfile.RepositoryCategoryName == RepositoryCategoryName)
-    session.commit()
+    modulerelationprofile = session.query(RepositoryProfile).filter(RepositoryProfile.ProjectId == project_id,RepositoryProfile.RepositoryCategoryId == RepositoryCategoryId).one()
     session.close()
-    return Platformlist
+    return modulerelationprofile
    

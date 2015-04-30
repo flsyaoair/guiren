@@ -48,12 +48,13 @@ def query():
 def detail(issue_id):
     issue = issueservice.get(issue_id)
     projectmodules = repositoryservice.query_repositoryprofile(issue.ProjectId)
+    modulerelation=repositoryservice.read_PlatformConfig(issue.ProjectId,issue.ProjectModuleId)
     member_list = teamservice.member_in_project(issue.ProjectId)
     category = issueservice.available_category()
     if issue.AssignTo == g.user_id:
         issue.AssignTo = -1
     history_list = issueservice.get_history(issue_id)
-    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,Creator=issue.CreatorProfile.Nick,ProjectKey=issue.ProjectProfile.ProjectKey,MemberList=member_list,Category=category,CurrentUser=g.user_id,ProjectModules=projectmodules)
+    return render_template('Issue/Detail.html',Issue=issue,HistoryList=history_list,Creator=issue.CreatorProfile.Nick,ProjectKey=issue.ProjectProfile.ProjectKey,MemberList=member_list,Category=category,CurrentUser=g.user_id,ModuleRelation=modulerelation)
 
 @issue.route('/Issue/Update',methods=['POST'])
 def update():

@@ -47,10 +47,11 @@ def detail(task_id):
     task = taskservice.get(task_id)
     history_list = taskservice.get_history(task_id)
     projectmodules = repositoryservice.query_repositoryprofile(task.ProjectId)
+    modulerelation=repositoryservice.read_PlatformConfig(task.ProjectId,task.ProjectModuleId)
     member_list = teamservice.member_in_project(task.ProjectId)
     if task.AssignTo == g.user_id:
         task.AssignTo = -1
-    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id,ProjectModules=projectmodules)
+    return render_template('Task/Detail.html',Task=task,HistoryList=history_list,Creator=task.CreatorProfile.Nick,ProjectKey=task.ProjectProfile.ProjectKey,MemberList=member_list,CurrentUser=g.user_id,ProjectModules=projectmodules,ModuleRelation=modulerelation)
                                               
 @task.route('/Task/Update',methods=['POST'])
 def update():
