@@ -191,14 +191,13 @@ function TaskCtrl($scope, $http) {
 function TaskCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Task = { TaskName: null, Versions: null,ProjectModuleId:null, Priority: 2, AssignTo: -1, Description: null };
+    $scope.Task = { TaskName: null, Versions: null,ProjectModuleId:'', Priority: 2, AssignTo: -1, Description: null };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');
         $scope.Task.Description = editor.getContent();
-        alert("ttttttttt")
         $http.post('/Task/CreateNew', $scope.Task).success(function (result) {
-            if (result.created) {
+        	if (result.created) {
                 $scope.AddSuccess = true;
                 btn.button('reset');
                 window.location.href = "/Project/Task/" + result.ProjectId;
@@ -311,7 +310,7 @@ function IssueCtrl($scope, $http) {
 function IssueCreateCtrl($scope, $http) {
     $scope.AddSuccess = false;
     editor = UE.getEditor('editor');
-    $scope.Issue = { Subject: null, ProjectModuleId:null,AssignTo: -1, Priority: 2, Description: null, CategoryId: -1 };
+    $scope.Issue = { Subject: null, ProjectModuleId:'',AssignTo: -1, Priority: 2, Description: null, CategoryId: -1 };
     $scope.create = function () {
         var btn = $("#btnCreate");
         btn.button('loading');
@@ -630,8 +629,8 @@ function ThemeItemCtrl($scope, $http) {
     $scope.Exist = false;
     $scope.query = function () {
         $http.post('/QueryThemeItem').success(function (result) { 
-        	alert("dfsdf ")
         	$scope.ThemeItemList = result.data;
+        	$scope.list=[1,2,3]
         });
     }
     $scope.create = function () {
@@ -649,6 +648,21 @@ function ThemeItemCtrl($scope, $http) {
             $scope.query();
         });
     }
+    $scope.test = function () {
+    	$scope.formData={};
+    	var value = document.getElementById("2").value;
+    	var value2 = document.getElementById("1").value;
+    	$scope.formData['name']=value;
+    	$scope.formData['id']=value2;
+    
+    	alert($scope.formData.name);
+
+       $http.post('/test/aa',$scope.formData).success(function (result) {
+    	   alert($scope.formData)
+
+
+    });
+}
 }   
 function ItemCtrl($scope, $http) {
 
@@ -657,18 +671,13 @@ function ItemCtrl($scope, $http) {
 
     editor = UE.getEditor('editor');
 
-//    $scope.Query = { PageNo: 1, RequirementName: '', Versions: '', Introduction: '', Status: 1, RowCount: 0, PageCount: 0 };
-    $scope.query = function () {
-        $http.post('/Item/Query',{'ThemeItemId':ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
-//            $scope.RequirementList = result.data;
-//            $scope.RequirementList2 = result.data2;
-//            $scope.Query.RowCount = result.row_count;
-//            $scope.Query.PageCount = result.page_count;
-//            $scope.Query.PageNo = result.page_no;
-//            window.location.href = '/Requirement';
-        	 
-        });
-    }
+
+//    $scope.query = function () {
+//        $http.post('/Item/Query',{'ThemeItemId':ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
+//
+//        	 
+//        });
+//    }
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
@@ -685,6 +694,9 @@ function ItemCtrl($scope, $http) {
         });
     }
     $scope.addItem = function () {
+//    	UE.getEditor('editor').setContent('欢迎光临');
+    	editor = UE.getEditor('editor');
+//    	UE.getEditor('editor');
      	counter++;
         x.push(counter);
         $scope.things=x

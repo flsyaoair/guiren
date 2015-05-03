@@ -30,8 +30,9 @@ def createNew_item():
 def detailItem(themeitem_id):
     
 #     themeitemid = request.json['themeitem_id']
-    SunItem_list = itemservice.get(themeitem_id)
-    return render_template('Item/Detail.html',ThemeItemId=themeitem_id,SunItemList=SunItem_list)
+    SunItem_list = itemservice.query_ThemeItem()
+
+    return render_template('Item/Detail.html',ThemeItemId=themeitem_id,SunItemList=SunItem_list[0])
 
 
 @item.route('/QueryThemeItem',methods=['POST'])
@@ -42,6 +43,11 @@ def query_ThemeItem():
     for i in data:
         ThemeItem_list.append({'ThemeItemId':i.ThemeItemId,'ThemeItemName':i.ThemeItemName})
     return jsonify(data=ThemeItem_list)
+@item.route('/test/aa',methods=['POST'])
+def test():
+    pp=request.json['value']
+    
+    return jsonify()
 # @requirement.route('/Requirement/Update',methods=['POST'])
 # def update():
 #     requirement_id = request.json['RequirementId']
