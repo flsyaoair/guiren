@@ -1,6 +1,5 @@
 ﻿var app = angular.module('PowerTeam', []);
 var x=[];
-var y=7
 counter=0;
 var INTEGER_REGEXP = /^\-?\d*$/;
 app.directive('integer', function () {
@@ -643,7 +642,6 @@ function ThemeItemCtrl($scope, $http) {
     $scope.query = function () {
         $http.post('/QueryThemeItem').success(function (result) { 
         	$scope.ThemeItemList = result.data;
-        	$scope.list=[1,2,3]
         });
     }
     $scope.create = function () {
@@ -661,40 +659,27 @@ function ThemeItemCtrl($scope, $http) {
             $scope.query();
         });
     }
-    $scope.test = function () {
-    	$scope.formData={};
-    	var value = document.getElementById("2").value;
-    	var value2 = document.getElementById("1").value;
-    	$scope.formData['name']=value;
-    	$scope.formData['id']=value2;
-    
-    	alert($scope.formData.name);
-
-       $http.post('/test/aa',$scope.formData).success(function (result) {
-    	   alert($scope.formData)
-
-
-    });
-}
 }   
 function ItemCtrl($scope, $http) {
-    
+	$scope.SunItem =[];
 	$scope.Success = false;
     $scope.Exist = false;
     $scope.ShowUE = false;
-
-//    $scope.List=[1];
-//    $(document).ready(function() {
-//        [$('#1').summernote()];
-//    
-//     });
-
-
+    var itemDescription=[];
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
-        $scope.Item.Description = editor.getContent();
-        $http.post('/CreateItem',$scope.Item).success(function (result) {
+        for (var i=1;i<=counter;i++)
+        {
+        var value = document.getElementById(i+"item").value;
+        var sHTML = $('#'+i).eq(1).code();
+        $scope.SunItem.push(value);
+        itemDescription.push($('#'+i).code(sHTML));
+        }
+        $scope.Item.Description = itemDescription;
+        alert($scope.Item.Description)
+        alert($scope.SunItem)
+        $http.post('/CreateItem',{"Item":$scope.Item,"SunItem":$scope.SunItem}).success(function (result) {
             if (result.status) {
                 $scope.Success = false;
                 $scope.Exist = true;
@@ -711,7 +696,7 @@ function ItemCtrl($scope, $http) {
 
 //    	
 //    	var value = document.getElementById("{{thing}}");
-//    	var value2 = document.getElementsByName("ue")
+//    	var value2 = document.getElementsByName("createTaskForm")
 //    	counter = counter.toString();
 //    	document.getElementsByName("ue")[0].id=0;
 //    	alert(document.getElementsByName("ue")[0].id);
