@@ -38,13 +38,13 @@ class MyHTMLParser(HTMLParser):
         elif self.i_text:
             self.links.append(data)
                   
-def getPage(url):
+def getPage(url,task_key):
 #     admin ='admin'
 #     password ='123456'
 #     ip='192.168.203.211/gitweb'
 #     reops ='CheckpointDataGateway'
 #     branch ='master'
-#     key='添加索引' 
+    task_key='添加索引' 
 #     url = 'http://admin:password@ip/?p=reops.git;a=shortlog;h=refs/heads/branch'
 #     url=url.replace('admin', admin)
 #     url=url.replace('password', password)
@@ -56,16 +56,19 @@ def getPage(url):
     hp = MyHTMLParser()   
     hp.feed(html)   
     hp.close()
-#     for i in hp.links:
-#         if key in i:           
-#                 key=i
-#     i=hp.links.index(key)
+    for i in hp.links:
+        if task_key in i: 
+#             存入commitversion数据库 返回页面commitversion
+                       
+                task_key=i
+        else:
+             print ''
+#            读取   commitversion数据库 返回    
+    i=hp.links.index(task_key)
     gitcommit= hp.links[2]
     commitversion=gitcommit[gitcommit.find('h=')+2:]
     print gitcommit
-#     print(hp.links[i-1]) 
-#     print(hp.links[i-2]) 
-#     print(hp.links[i-3]) 
+
     print(hp.links) 
 
     return commitversion

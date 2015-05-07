@@ -48,7 +48,8 @@ def detail(task_id):
     history_list = taskservice.get_history(task_id)
     projectmodules = repositoryservice.query_repositoryprofile(task.ProjectId)
     modulerelation=repositoryservice.read_PlatformConfig(task.ProjectId,task.ProjectModuleId)
-    cmversion=repositoryservice.stranalysis(modulerelation)
+    task_key='T'+task.TaskId+'-'+task.ProjectProfile.ProjectKey
+    cmversion=repositoryservice.stranalysis(modulerelation,task_key)
     member_list = teamservice.member_in_project(task.ProjectId)
     if task.AssignTo == g.user_id:
         task.AssignTo = -1

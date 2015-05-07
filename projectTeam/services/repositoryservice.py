@@ -119,7 +119,7 @@ def read_PlatformConfig(project_id,RepositoryCategoryId):
 #===============================================================================
 #  platform analysis git hudson nexus 
 #===============================================================================
-def stranalysis(modulerelation):
+def stranalysis(modulerelation,task_key):
     CMPlatform=modulerelation.CMPlatform
     CIPlatform=modulerelation.CIPlatform
     ReopsPlatform=modulerelation.ReposPlatform
@@ -131,7 +131,7 @@ def stranalysis(modulerelation):
         admin=CMPlatform['admin']
         password=CMPlatform['password']
         URL=url.replace("http://",'http://'+admin+':'+password+'@')
-        commitversion=git.getPage(URL)
+        commitversion=git.getPage(URL,task_key)
         return commitversion
 #     if  CIPlatform=='':
 #         print ''
