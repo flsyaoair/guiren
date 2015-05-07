@@ -32,7 +32,7 @@ def detailItem(themeitem_id):
 #     themeitemid = request.json['themeitem_id']
     SunItem_list = itemservice.query_ThemeItem()
 
-    return render_template('Item/Detail.html',ThemeItemId=themeitem_id,SunItemList=SunItem_list[0])
+    return render_template('Item/Detail.html',ThemeItemId=themeitem_id,SunItemList=SunItem_list)
 
 
 @item.route('/QueryThemeItem',methods=['POST'])

@@ -1,6 +1,7 @@
 ﻿var app = angular.module('PowerTeam', []);
 var x=[];
-counter=1;
+var y=7
+counter=0;
 var INTEGER_REGEXP = /^\-?\d*$/;
 app.directive('integer', function () {
     return {
@@ -24,7 +25,7 @@ app.directive('myitem', function() {
 	return {
 		
 	    restrict: 'E',
-	    template: '<div class="form-group"> <label>事项<span class="text-danger">*</span></label> <input type="text" class="form-control" name="sunitemname" ng-model="Item.SunItemName" placeholder="版本" required /></div>',
+	    template: '',
 	    transclude: true,
 
 
@@ -37,6 +38,18 @@ app.directive('myitem', function() {
 	}
 });
 
+app.directive('onFinishRenderFilters', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    };
+});
 
 $(function () {
     $('input, textarea').placeholder();
@@ -665,19 +678,18 @@ function ThemeItemCtrl($scope, $http) {
 }
 }   
 function ItemCtrl($scope, $http) {
-
+    
 	$scope.Success = false;
     $scope.Exist = false;
+    $scope.ShowUE = false;
 
-    editor = UE.getEditor('editor');
+//    $scope.List=[1];
+//    $(document).ready(function() {
+//        [$('#1').summernote()];
+//    
+//     });
 
 
-//    $scope.query = function () {
-//        $http.post('/Item/Query',{'ThemeItemId':ThemeItemId,'PageNo':$scope.Query.PageNo }).success(function (result) {
-//
-//        	 
-//        });
-//    }
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
@@ -694,15 +706,40 @@ function ItemCtrl($scope, $http) {
         });
     }
     $scope.addItem = function () {
-//    	UE.getEditor('editor').setContent('欢迎光临');
-    	editor = UE.getEditor('editor');
-//    	UE.getEditor('editor');
-     	counter++;
-        x.push(counter);
-        $scope.things=x
 
-    	
+
+
+//    	
+//    	var value = document.getElementById("{{thing}}");
+//    	var value2 = document.getElementsByName("ue")
+//    	counter = counter.toString();
+//    	document.getElementsByName("ue")[0].id=0;
+//    	alert(document.getElementsByName("ue")[0].id);
+   
+//    	counter=Number(counter);
+    	counter++;
+        x.push(counter);
+        $scope.things=x;
+//        i=counter-1
+
+       
+
+   
     }
+    $scope.delsunitem = function (){
+        x.pop();
+        $scope.things=x;
+    }
+    $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+        //下面是在table render完成后执行的js
+
+        $(document).ready(function() {
+            [$('#'+counter).summernote()];
+        
+         });
+
+    });
+
     $scope.detail = function (ThemeItemid) {
     	alert("aaaaaa")
     	$http.post('/DetailItem',{ThemeItemName:ThemeItemid}).success(function (result) {
