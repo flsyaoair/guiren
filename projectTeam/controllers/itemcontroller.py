@@ -19,17 +19,26 @@ def createNew_themeitem():
     itemservice.create_ThemeItem(request.json['ThemeItemName'],g.user_id)
     return jsonify(created=True)
 @item.route('/CreateItem',methods=['POST'])
-def createNew_item(): 
-    itemservice.create(request.json['SunItemName'],request.json['ThemeItemId'],request.json['Description'],g.user_id)
+def createNew_item():
+    SunItemfirst=request.json['Item']
+    ThemeItemId= SunItemfirst['ThemeItemId']
+    SunItemName= SunItemfirst['SunItemName']
+    Description= SunItemfirst['Description']
+    itemservice.create(ThemeItemId,SunItemName,Description,g.user_id)  
+    
+    try:
+        SunItemList=request.json['SunItem']
+        SunItemNameList= SunItemList['SunItemName']
+        DescriptionList= SunItemList['Description']
+        for i in range(0,len(SunItemNameList)):
+            itemservice.create(ThemeItemId,SunItemNameList[i],DescriptionList[i],g.user_id)      
+    except KeyError,e: 
+        print "no sunitemlist"    
     return jsonify(created=True)
-#def list(project_id):
-#
-#    return render_template('Requirement/List.html',ProjectId=project_id,MemberList=member_list,ProjectNameList=project_name)
-#
+
 @item.route('/Item/Detail/<int:themeitem_id>')
 def detailItem(themeitem_id):
-    
-#     themeitemid = request.json['themeitem_id']
+
     SunItem_list = itemservice.query_ThemeItem()
 
     return render_template('Item/Detail.html',ThemeItemId=themeitem_id,SunItemList=SunItem_list)
@@ -43,11 +52,15 @@ def query_ThemeItem():
     for i in data:
         ThemeItem_list.append({'ThemeItemId':i.ThemeItemId,'ThemeItemName':i.ThemeItemName})
     return jsonify(data=ThemeItem_list)
-@item.route('/test/aa',methods=['POST'])
-def test():
-    pp=request.json['value']
-    
-    return jsonify()
+
+@item.route('/QueryItem',methods=['POST'])
+def query_Item():
+    item_list =[] 
+    themeitemid=request.json['ThemeItemId']
+    itemlist = itemservice.get(themeitemid)
+    for i in itemlist:
+        item_list.append({'SunItemName':i.SunItemName,'Description':i.Description})
+    return jsonify(data=item_list)
 # @requirement.route('/Requirement/Update',methods=['POST'])
 # def update():
 #     requirement_id = request.json['RequirementId']

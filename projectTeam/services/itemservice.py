@@ -19,7 +19,7 @@ def create_ThemeItem(ThemeItem_name,creator):
     session.close()
 
 
-def create(SunItem_name,ThemeItem_id,description,creator):
+def create(ThemeItem_id,SunItem_name,description,creator):
     session = database.get_session()
     sunItem_name =SunItem_name.strip() 
     I = SunItem()
@@ -56,9 +56,9 @@ def query_ThemeItem():
 
 def get(themeitemid):
     session = database.get_session()
-    SunItemList = session.query(SunItem).filter(SunItem.ThemeItemId==themeitemid).one()
+    ItemList = session.query(SunItem).filter(SunItem.ThemeItemId==themeitemid).all()
     session.close()
-    return  SunItemList
+    return  ItemList
 #
 #
 #
@@ -76,5 +76,11 @@ def get(themeitemid):
 #    session.close()
 #    return True
    
-        
+# def query_Item(ThemeItem_Id):
+#     
+#     session = database.get_session()
+# 
+#     list = session.query(SunItem).all()
+#     session.close()
+#     return list      
 

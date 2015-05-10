@@ -661,24 +661,34 @@ function ThemeItemCtrl($scope, $http) {
     }
 }   
 function ItemCtrl($scope, $http) {
-	$scope.SunItem =[];
+	$scope.SunItem ={};
 	$scope.Success = false;
     $scope.Exist = false;
     $scope.ShowUE = false;
     var itemDescription=[];
+    var sunitemnamelist=[];
+    $scope.query = function () {
+        $http.post('/QueryItem',{'ThemeItemId': $scope.Item.ThemeItemId}).success(function (result) { 
+        	$scope.ItemList = result.data;
+//        	alert($scope.ItemList)
+        });
+    }
     $scope.create = function () {
         $scope.Success = false;
         $scope.Exist = false;
+//        alert(counter);
         for (var i=1;i<=counter;i++)
         {
         var value = document.getElementById(i+"item").value;
         var sHTML = $('#'+i).eq(1).code();
-        $scope.SunItem.push(value);
+        sunitemnamelist.push(value);
         itemDescription.push($('#'+i).code(sHTML));
         }
-        $scope.Item.Description = itemDescription;
-        alert($scope.Item.Description)
-        alert($scope.SunItem)
+        $scope.SunItem.SunItemName = sunitemnamelist
+        $scope.SunItem.Description = itemDescription;
+        $scope.Item.Description = $('#0').code(sHTML);
+//        alert($scope.SunItem.Description)
+//        alert($scope.SunItem)
         $http.post('/CreateItem',{"Item":$scope.Item,"SunItem":$scope.SunItem}).success(function (result) {
             if (result.status) {
                 $scope.Success = false;
@@ -692,28 +702,15 @@ function ItemCtrl($scope, $http) {
     }
     $scope.addItem = function () {
 
-
-
-//    	
-//    	var value = document.getElementById("{{thing}}");
-//    	var value2 = document.getElementsByName("createTaskForm")
-//    	counter = counter.toString();
-//    	document.getElementsByName("ue")[0].id=0;
-//    	alert(document.getElementsByName("ue")[0].id);
-   
-//    	counter=Number(counter);
     	counter++;
         x.push(counter);
         $scope.things=x;
-//        i=counter-1
 
-       
-
-   
     }
-    $scope.delsunitem = function (){
+    $scope.delItem = function (){
         x.pop();
         $scope.things=x;
+        counter--;
     }
     $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
         //下面是在table render完成后执行的js
@@ -724,14 +721,6 @@ function ItemCtrl($scope, $http) {
          });
 
     });
-
-    $scope.detail = function (ThemeItemid) {
-    	alert("aaaaaa")
-    	$http.post('/DetailItem',{ThemeItemName:ThemeItemid}).success(function (result) {
-        
-    	     alert("qqqqqqqqqqq")
-    	});
-    }
 
 } 
 
